@@ -212,11 +212,18 @@ const submitLogin = async () => {
                 <Link :href="route('mading.index')" prefetch preserve-scroll preserve-state
                     class="sm:hidden flex justify-center w-full mb-6">
                     <p
-                        class="flex items-center gap-2 font-bold text-lg bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-blue-800 to-blue-900 shadow-md border px-4 py-2 rounded-full transition-all">
+                        class="flex items-center gap-2 font-bold text-lg bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-blue-800 to-blue-900 shadow border px-4 py-2 rounded-full transition-all">
                         <i class="bi bi-megaphone text-blue-700 text-xl"></i>
                         Nusantara School News Board
                     </p>
                 </Link>
+
+                <!-- DIVIDER -->
+                    <div class="sm:hidden mb-6 flex items-center px-2 my-4">
+                        <hr class="flex-grow border-gray-300" />
+                        <span class="mx-3 text-sm font-semibold text-gray-500">Nusantara Member Directory</span>
+                        <hr class="flex-grow border-gray-300" />
+                    </div>
 
                 <h4 class="mb-2 text-2xl sm:block hidden font-bold capitalize text-[#063970]">Sign In</h4>
                 <p class="mb-8 text-sm sm:block hidden sm:text-left text-center text-slate-500">
