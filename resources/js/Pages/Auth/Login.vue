@@ -212,7 +212,7 @@ const submitLogin = async () => {
                     </div>
 
                     <Link :href="route('mading.index')" prefetch preserve-scroll preserve-state
-                        class="sm:hidden flex justify-center -mt-4 items-center bg-gradient-to-br from-[#1e1b4b] via-[#312e81] to-[#4c1d95] mx-6 hover:from-[#052c5a] hover:via-[#09406f] hover:to-[#0c5490] backdrop-blur-sm px-6 py-2 mb-3 rounded-full transition duration-200 animated-gradient">
+                        class="sm:hidden flex justify-center -mt-4 items-center bg-gradient-to-br from-[#1e1b4b] via-[#312e81] to-[#4c1d95] mx-6 hover:from-[#052c5a] hover:via-[#09406f] hover:to-[#0c5490] backdrop-blur-sm px-6 mb-3 rounded-full transition duration-200 animated-gradient">
                         <p class="font-semibold text-white opacity-95">
                             <i class="bi bi-megaphone mr-2"></i> Mading Sekolah Nusantara
                         </p>
@@ -348,6 +348,8 @@ const submitLogin = async () => {
 
 <style>
 .animated-gradient {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
     background: linear-gradient(270deg, #1e1b4b, #312e81, #4c1d95);
     /* from-indigo-500 to-purple-600 back to indigo */
     background-size: 600% 100%;
