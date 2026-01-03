@@ -69,7 +69,7 @@ const toggleFocus = (field, status) => {
 
         <div class="text-center mb-4 py-4">
             <div class="flex justify-center -mb-10 -mt-6 sm:-mt-12">
-                <div class="no-select h-60 pl-3 flex items-center justify-center">
+                <div class="no-select h-60 flex items-center justify-center">
                     <img :src="props.loginUrl" class="w-full mt-4 h-full object-cover" alt="Logo Sekolah">
                 </div>
             </div>

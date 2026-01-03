@@ -159,6 +159,7 @@ const submitLogin = async () => {
                     <Link class="text-2xl hover:text-amber-500 font-semibold">SMK NUSANTARA</Link>
                 </h3>
 
+
                 <p class="mt-2 text-center fade-in-fast scale-soft opacity-90 text-sm md:text-base">
                     Nusantara Learning Management System
                 </p>
@@ -199,130 +200,169 @@ const submitLogin = async () => {
 
 
         <!-- Right Panel -->
-        <div class="flex min-h-screen flex-col items-center justify-center w-full p-6 bg-white md:w-1/2 fade-in-fast">
+        <div class="flex flex-col items-center justify-center w-full sm:p-6 bg-white md:w-1/2 fade-in-fast">
             <div
-                class="w-full max-w-md text-start bg-white/60 backdrop-blur-md sm:p-6 sm:rounded-2xl sm:shadow-lg sm:border sm:border-gray-100 scale-soft">
+                class="w-full sm:max-w-md text-start bg-white/60 backdrop-blur-md sm:p-6 sm:rounded-2xl sm:shadow-lg sm:border sm:border-gray-100 scale-soft">
 
-                <div class="no-select h-60 pl-3 sm:hidden flex items-center justify-center">
-                    <img :src="props.mobileUrl" class="w-full h-full object-cover leading-none" alt="Logo Sekolah">
+                <div class="w-full sm:hidden block p-4 m-0">
+                    <div class="no-select h-40 mt-3 sm:hidden flex items-center justify-center">
+                        <img :src="props.mobileUrl" class="w-full h-full object-contain leading-none"
+                            alt="Logo Sekolah">
+                    </div>
+
+                    <Link :href="route('mading.index')" prefetch preserve-scroll preserve-state
+                        class="sm:hidden flex justify-center -mt-4 items-center bg-gradient-to-br from-[#1e1b4b] via-[#312e81] to-[#4c1d95] mx-10 hover:from-[#052c5a] hover:via-[#09406f] hover:to-[#0c5490] backdrop-blur-sm px-6 py-2 mb-3 rounded-full transition duration-200 animated-gradient">
+                        <p class="font-semibold text-white opacity-95">
+                            <i class="bi bi-megaphone mr-2"></i> Mading Sekolah Nusantara
+                        </p>
+                    </Link>
                 </div>
 
-                <h4 class="mb-2 text-2xl sm:block hidden font-bold capitalize text-[#063970]">Sign In</h4>
-                <p class="mb-8 -mt-3 text-sm sm:text-left text-center text-slate-500">Nusantara <span
-                        class="sm:hidden inline-block">School</span> Member Directory</p>
+                <div class="p-6 border rounded-xl mx-3 sm:mx-0 sm:rounded-none sm:border-none sm:shadow-none shadow-md">
+                    <h4 class="mb-2 text-2xl font-bold capitalize text-[#063970]">Sign In</h4>
 
-                <!-- Login Form -->
-                <form @submit.prevent="submitLogin">
+                    <p class="mb-4 text-sm sm:text-left text-slate-500">
+                        Nusantara Member Directory</p>
 
-                    <!-- EMAIL -->
-                    <div class="relative mb-6">
-                        <input type="email" v-model="form.email" @input="updateSuggestion"
-                            @focus="isEmailFocused = true; updateSuggestion()"
-                            @blur="isEmailFocused = false; clearSuggestions()" placeholder=" " required
-                            class="peer pl-4 w-full px-3 py-3 border border-gray-300 rounded-xl bg-white/70 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
+                    <!-- Login Form -->
+                    <form @submit.prevent="submitLogin">
 
-                        <label :class="[
-                            'absolute left-5 px-1 text-base bg-white transition-all pointer-events-none',
-                            (form.email || isEmailFocused)
-                                ? '-top-3 text-blue-600 text-sm'
-                                : 'top-3 text-gray-500 text-base'
-                        ]">Email Address</label>
+                        <!-- EMAIL -->
+                        <div class="relative mb-6">
+                            <input type="email" v-model="form.email" @input="updateSuggestion"
+                                @focus="isEmailFocused = true; updateSuggestion()"
+                                @blur="isEmailFocused = false; clearSuggestions()" placeholder=" " required
+                                class="peer pl-4 w-full px-3 py-3 border border-gray-300 rounded-xl bg-white/70 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
 
-                        <!-- Suggestions -->
-                        <ul v-if="suggestions.length"
-                            class="absolute z-20 w-full bg-white border border-gray-300 rounded-lg shadow-xl mt-1 animate-fade">
+                            <label :class="[
+                                'absolute left-5 px-1 text-base bg-white transition-all pointer-events-none',
+                                (form.email || isEmailFocused)
+                                    ? '-top-3 text-blue-600 text-sm'
+                                    : 'top-3 text-gray-500 text-base'
+                            ]">Email Address</label>
 
-                            <li v-for="email in suggestions" :key="email"
-                                class="px-4 py-2 flex justify-between items-center hover:bg-gray-100 cursor-pointer">
+                            <!-- Suggestions -->
+                            <ul v-if="suggestions.length"
+                                class="absolute z-20 w-full bg-white border border-gray-300 rounded-lg shadow-xl mt-1 animate-fade">
 
-                                <div class="flex items-center gap-2 w-full" @click="chooseEmail(email)">
-                                    <i class="bi bi-clock-history text-gray-500"></i>
-                                    {{ email }}
-                                </div>
+                                <li v-for="email in suggestions" :key="email"
+                                    class="px-4 py-2 flex justify-between items-center hover:bg-gray-100 cursor-pointer">
 
-                                <button type="button" @click.stop="deleteSingleEmail(email)"
-                                    class="text-gray-400 hover:text-red-500">
-                                    <i class="bi bi-x-lg"></i>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
+                                    <div class="flex items-center gap-2 w-full" @click="chooseEmail(email)">
+                                        <i class="bi bi-clock-history text-gray-500"></i>
+                                        {{ email }}
+                                    </div>
 
-                    <!-- PASSWORD -->
-                    <div class="relative mb-4">
-                        <input :type="showPassword ? 'text' : 'password'" v-model="form.password" required minlength="6"
-                            placeholder=" " @focus="isPasswordFocused = true" @blur="isPasswordFocused = false"
-                            class="peer pl-4 w-full px-3 py-3 border border-gray-300 rounded-xl bg-white/70 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
-
-                        <label :class="[
-                            'absolute left-5 px-1 text-base bg-white transition-all pointer-events-none',
-                            (form.password || isPasswordFocused)
-                                ? '-top-3 text-blue-600 text-sm'
-                                : 'top-3 text-gray-500 text-base'
-                        ]">Password</label>
-
-                        <button type="button" class="absolute text-gray-500 right-5 top-3.5" @click="togglePassword">
-                            <i :class="showPassword ? 'bi bi-eye' : 'bi bi-eye-slash'"></i>
-                        </button>
-                    </div>
-
-                    <!-- REMEMBER | FORGOT -->
-                    <div class="flex items-center justify-between px-2 mb-4">
-                        <div class="hidden md:flex items-center gap-2">
-                            <input type="checkbox" v-model="form.remember" class="rounded-sm" />
-                            <span class="text-slate-700 text-sm">Remember Me</span>
+                                    <button type="button" @click.stop="deleteSingleEmail(email)"
+                                        class="text-gray-400 hover:text-red-500">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                </li>
+                            </ul>
                         </div>
 
-                        <small class="font-semibold text-slate-700 text-sm">
-                            Forgot password?
-                            <Link :href="route('password.request')" prefetch preserve-scroll
-                                class="text-blue-600 hover:underline">
-                                Click Here
+                        <!-- PASSWORD -->
+                        <div class="relative mb-4">
+                            <input :type="showPassword ? 'text' : 'password'" v-model="form.password" required
+                                minlength="6" placeholder=" " @focus="isPasswordFocused = true"
+                                @blur="isPasswordFocused = false"
+                                class="peer pl-4 w-full px-3 py-3 border border-gray-300 rounded-xl bg-white/70 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
+
+                            <label :class="[
+                                'absolute left-5 px-1 text-base bg-white transition-all pointer-events-none',
+                                (form.password || isPasswordFocused)
+                                    ? '-top-3 text-blue-600 text-sm'
+                                    : 'top-3 text-gray-500 text-base'
+                            ]">Password</label>
+
+                            <button type="button" class="absolute text-gray-500 right-5 top-3.5"
+                                @click="togglePassword">
+                                <i :class="showPassword ? 'bi bi-eye' : 'bi bi-eye-slash'"></i>
+                            </button>
+                        </div>
+
+                        <!-- REMEMBER | FORGOT -->
+                        <div class="flex items-center justify-between px-2 mb-4">
+                            <div class="hidden md:flex items-center gap-2">
+                                <input type="checkbox" v-model="form.remember" class="rounded-sm" />
+                                <span class="text-slate-700 text-sm">Remember Me</span>
+                            </div>
+
+                            <small class="font-semibold text-slate-700 text-sm">
+                                Forgot password?
+                                <Link :href="route('password.request')" prefetch preserve-scroll
+                                    class="text-blue-600 hover:underline">
+                                    Click Here
+                                </Link>
+                            </small>
+                        </div>
+
+                        <!-- SUBMIT -->
+                        <div class="mb-3">
+                            <button type="submit" :disabled="form.processing"
+                                class="w-full py-2 font-semibold text-white bg-gradient-to-br from-[#063970] via-[#0a4e8c] to-[#0f6ab4] rounded-xl hover:from-[#052c5a] hover:via-[#09406f] hover:to-[#0c5490] transition-all flex justify-center items-center gap-2">
+
+                                <svg v-if="form.processing" class="w-5 h-5 animate-spin text-white" fill="none"
+                                    viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4" />
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                                </svg>
+
+                                <span>{{ form.processing ? 'Loading...' : 'LOG IN' }}</span>
+                            </button>
+                        </div>
+
+                        <!-- REGISTER -->
+                        <div class="text-center text-sm mb-4">
+                            Don't have an account?
+                            <Link :href="route('register')" prefetch preserve-scroll preserve-state :only="[]"
+                                class="font-semibold text-blue-600 hover:underline">
+                                Sign up
                             </Link>
-                        </small>
-                    </div>
+                        </div>
 
-                    <!-- SUBMIT -->
-                    <div class="mb-3">
-                        <button type="submit" :disabled="form.processing"
-                            class="w-full py-2 font-semibold text-white bg-gradient-to-br from-[#063970] via-[#0a4e8c] to-[#0f6ab4] rounded-xl hover:from-[#052c5a] hover:via-[#09406f] hover:to-[#0c5490] transition-all flex justify-center items-center gap-2">
+                        <!-- DIVIDER -->
+                        <div class="flex items-center px-2 my-4">
+                            <hr class="flex-grow border-gray-300" />
+                            <span class="mx-3 text-sm font-semibold text-black">OR</span>
+                            <hr class="flex-grow border-gray-300" />
+                        </div>
 
-                            <svg v-if="form.processing" class="w-5 h-5 animate-spin text-white" fill="none"
-                                viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                    stroke-width="4" />
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-                            </svg>
+                        <!-- GOOGLE -->
+                        <a :href="route('google.redirect')"
+                            class="mt-6 w-full flex items-center justify-center gap-2 py-2 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all">
+                            <img src="https://img.icons8.com/color/20/000000/google-logo.png" />
+                            Log in with Google
+                        </a>
 
-                            <span>{{ form.processing ? 'Loading...' : 'LOG IN' }}</span>
-                        </button>
-                    </div>
-
-                    <!-- REGISTER -->
-                    <div class="text-center text-sm mb-4">
-                        Don't have an account?
-                        <Link :href="route('register')" prefetch preserve-scroll preserve-state :only="[]"
-                            class="font-semibold text-blue-600 hover:underline">
-                            Sign up
-                        </Link>
-                    </div>
-
-                    <!-- DIVIDER -->
-                    <div class="flex items-center px-2 my-4">
-                        <hr class="flex-grow border-gray-300" />
-                        <span class="mx-3 text-sm font-semibold text-black">OR</span>
-                        <hr class="flex-grow border-gray-300" />
-                    </div>
-
-                    <!-- GOOGLE -->
-                    <a :href="route('google.redirect')"
-                        class="mt-6 w-full flex items-center justify-center gap-2 py-2 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all">
-                        <img src="https://img.icons8.com/color/20/000000/google-logo.png" />
-                        Log in with Google
-                    </a>
-
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </template>
+
+<style>
+.animated-gradient {
+    background: linear-gradient(270deg, #1e1b4b, #312e81, #4c1d95);
+    /* from-indigo-500 to-purple-600 back to indigo */
+    background-size: 600% 100%;
+    animation: gradientMove 5s linear infinite;
+}
+
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+</style>
