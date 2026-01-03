@@ -212,7 +212,7 @@ const submitLogin = async () => {
                 <Link :href="route('mading.index')" prefetch preserve-scroll preserve-state
                     class="sm:hidden flex justify-center w-full mb-6">
                     <p
-                        class="flex items-center gap-2 font-bold text-lg bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-blue-800 to-blue-900 shadow-md px-4 py-2 rounded-full transition-all">
+                        class="flex items-center gap-2 font-bold text-lg bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-blue-800 to-blue-900 shadow-md border px-4 py-2 rounded-full transition-all">
                         <i class="bi bi-megaphone text-blue-700 text-xl"></i>
                         Nusantara School News Board
                     </p>
