@@ -230,13 +230,13 @@ const submitLogin = async () => {
                         <input type="email" v-model="form.email" @input="updateSuggestion"
                             @focus="isEmailFocused = true; updateSuggestion()"
                             @blur="isEmailFocused = false; clearSuggestions()" placeholder=" " required
-                            class="peer pl-4 w-full px-3 py-3 border border-gray-300 rounded-full bg-white/70 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
+                            class="peer pl-4 w-full px-3 py-2 border border-gray-300 rounded-full bg-white/70 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
 
                         <label :class="[
                             'absolute left-5 px-1 text-base bg-white transition-all pointer-events-none',
                             (form.email || isEmailFocused)
                                 ? '-top-3 text-blue-600 text-sm'
-                                : 'top-3 text-gray-500 text-base'
+                                : 'top-2 text-gray-500 text-base'
                         ]">Email Address</label>
 
                         <!-- Suggestions -->
@@ -263,16 +263,16 @@ const submitLogin = async () => {
                     <div class="relative mb-4">
                         <input :type="showPassword ? 'text' : 'password'" v-model="form.password" required minlength="6"
                             placeholder=" " @focus="isPasswordFocused = true" @blur="isPasswordFocused = false"
-                            class="peer pl-4 w-full px-3 py-3 border border-gray-300 rounded-full bg-white/70 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
+                            class="peer pl-4 w-full px-3 py-2 border border-gray-300 rounded-full bg-white/70 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
 
                         <label :class="[
                             'absolute left-5 px-1 text-base bg-white transition-all pointer-events-none',
                             (form.password || isPasswordFocused)
                                 ? '-top-3 text-blue-600 text-sm'
-                                : 'top-3 text-gray-500 text-base'
+                                : 'top-2 text-gray-500 text-base'
                         ]">Password</label>
 
-                        <button type="button" class="absolute text-gray-500 right-5 top-3.5" @click="togglePassword">
+                        <button type="button" class="absolute text-gray-500 right-5 top-2" @click="togglePassword">
                             <i :class="showPassword ? 'bi bi-eye' : 'bi bi-eye-slash'"></i>
                         </button>
                     </div>
