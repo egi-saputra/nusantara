@@ -200,7 +200,8 @@ const submitLogin = async () => {
 
 
         <!-- Right Panel -->
-        <div class="flex flex-col items-center justify-center w-full sm:p-6 bg-white md:w-1/2 fade-in-fast">
+        <div
+            class="flex min-h-screen flex-col items-center justify-center w-full sm:p-6 bg-white md:w-1/2 fade-in-fast">
             <div
                 class="w-full sm:max-w-md text-start bg-white/60 backdrop-blur-md sm:p-6 sm:rounded-2xl sm:shadow-lg sm:border sm:border-gray-100 scale-soft">
 
@@ -211,14 +212,15 @@ const submitLogin = async () => {
                     </div>
 
                     <Link :href="route('mading.index')" prefetch preserve-scroll preserve-state
-                        class="sm:hidden flex justify-center -mt-4 items-center bg-gradient-to-br from-[#1e1b4b] via-[#312e81] to-[#4c1d95] mx-10 hover:from-[#052c5a] hover:via-[#09406f] hover:to-[#0c5490] backdrop-blur-sm px-6 py-2 mb-3 rounded-full transition duration-200 animated-gradient">
+                        class="sm:hidden flex justify-center -mt-4 items-center bg-gradient-to-br from-[#1e1b4b] via-[#312e81] to-[#4c1d95] mx-6 hover:from-[#052c5a] hover:via-[#09406f] hover:to-[#0c5490] backdrop-blur-sm px-6 py-2 mb-3 rounded-full transition duration-200 animated-gradient">
                         <p class="font-semibold text-white opacity-95">
                             <i class="bi bi-megaphone mr-2"></i> Mading Sekolah Nusantara
                         </p>
                     </Link>
                 </div>
 
-                <div class="p-6 border rounded-xl mx-3 sm:mx-0 sm:rounded-none sm:border-none sm:shadow-none shadow-md">
+                <div
+                    class="p-6 border rounded-xl mx-3 mb-12 sm:mx-0 sm:rounded-none sm:border-none sm:shadow-none shadow-md">
                     <h4 class="mb-2 text-2xl font-bold capitalize text-[#063970]">Sign In</h4>
 
                     <p class="mb-4 text-sm sm:text-left text-slate-500">

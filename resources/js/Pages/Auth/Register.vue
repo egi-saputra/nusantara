@@ -74,7 +74,7 @@ const toggleFocus = (field, status) => {
                 </div>
             </div>
 
-            <div class="sm:hidden block -mb-8 mt-4 py-4 no-select">
+            <div class="sm:hidden block -mb-10 py-4 no-select">
                 <p class="mb-4 text-sm text-slate-500">Nusantara Learning Management System</p>
             </div>
         </div>
