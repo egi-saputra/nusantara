@@ -32,7 +32,7 @@ const formatTime = (date) => {
         <!-- Header -->
         <div class="mb-12 px-4 w-full text-center">
 
-            <Link :href="route('login')" prefetch preserve-scroll preserve-state
+            <Link :href="route('login')"
                 class="flex flex-col w-full sm:flex-row items-center justify-center gap-4 sm:gap-6">
                 <h1
                     class="text-3xl sm:text-6xl font-extrabold tracking-tight font-poppins text-gray-900 leading-tight text-center sm:text-left">
