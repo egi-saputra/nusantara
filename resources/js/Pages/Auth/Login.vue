@@ -230,7 +230,7 @@ const submitLogin = async () => {
                         <input type="email" v-model="form.email" @input="updateSuggestion"
                             @focus="isEmailFocused = true; updateSuggestion()"
                             @blur="isEmailFocused = false; clearSuggestions()" placeholder=" " required
-                            class="peer pl-4 w-full px-3 py-3 border border-gray-300 rounded-xl bg-white/70 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
+                            class="peer pl-4 w-full px-3 py-3 border border-gray-300 rounded-full bg-white/70 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
 
                         <label :class="[
                             'absolute left-5 px-1 text-base bg-white transition-all pointer-events-none',
@@ -263,7 +263,7 @@ const submitLogin = async () => {
                     <div class="relative mb-4">
                         <input :type="showPassword ? 'text' : 'password'" v-model="form.password" required minlength="6"
                             placeholder=" " @focus="isPasswordFocused = true" @blur="isPasswordFocused = false"
-                            class="peer pl-4 w-full px-3 py-3 border border-gray-300 rounded-xl bg-white/70 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
+                            class="peer pl-4 w-full px-3 py-3 border border-gray-300 rounded-full bg-white/70 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
 
                         <label :class="[
                             'absolute left-5 px-1 text-base bg-white transition-all pointer-events-none',
@@ -296,7 +296,7 @@ const submitLogin = async () => {
                     <!-- SUBMIT -->
                     <div class="mb-3">
                         <button type="submit" :disabled="form.processing"
-                            class="w-full py-2 font-semibold text-white bg-gradient-to-br from-[#063970] via-[#0a4e8c] to-[#0f6ab4] rounded-xl hover:from-[#052c5a] hover:via-[#09406f] hover:to-[#0c5490] transition-all flex justify-center items-center gap-2">
+                            class="w-full py-2 font-semibold text-white bg-gradient-to-br from-[#063970] via-[#0a4e8c] to-[#0f6ab4] rounded-full hover:from-[#052c5a] hover:via-[#09406f] hover:to-[#0c5490] transition-all flex justify-center items-center gap-2">
 
                             <svg v-if="form.processing" class="w-5 h-5 animate-spin text-white" fill="none"
                                 viewBox="0 0 24 24">
@@ -327,7 +327,7 @@ const submitLogin = async () => {
 
                     <!-- GOOGLE -->
                     <a :href="route('google.redirect')"
-                        class="mt-6 w-full flex items-center justify-center gap-2 py-2 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all">
+                        class="mt-6 w-full flex items-center justify-center gap-2 py-2 border border-gray-300 rounded-full hover:bg-gray-50 transition-all">
                         <img src="https://img.icons8.com/color/20/000000/google-logo.png" />
                         Log in with Google
                     </a>
