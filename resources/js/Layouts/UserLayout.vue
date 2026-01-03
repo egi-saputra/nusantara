@@ -169,8 +169,8 @@ const dashboardHref = computed(() => {
                     <!-- Nama Sekolah -->
                     <div class="flex items-center text-[#063970]">
                         <!-- Logo Sekolah SPA-friendly -->
-                        <img :src="props.logoUrl" @error="e => e.target.src = '/storage/logo_app/fallback.png'"
-                            class="h-16 -ml-10 sm:block hidden object-contain" alt="Logo Sekolah" loading="lazy" />
+                        <img :src="props.logoUrl" class="h-16 -ml-10 sm:block hidden object-contain" alt="Logo Sekolah"
+                            loading="lazy" />
                         <span
                             class="sm:text-lg text-base sm:-ml-6 ml-4 font-raleway font-extrabold dark:text-white text-[#063970]">
                             SMK NUSANTARA
@@ -206,9 +206,9 @@ const dashboardHref = computed(() => {
                                             class="px-4 py-3 cursor-pointer hover:bg-gray-50 transition flex justify-between items-center">
                                             <div class="flex flex-col overflow-hidden">
                                                 <p class="font-medium max-w-60 text-gray-700 truncate">{{ notif.judul
-                                                }}</p>
+                                                    }}</p>
                                                 <p class="text-gray-500 text-sm max-w-60 truncate">{{ notif.pengumuman
-                                                }}</p>
+                                                    }}</p>
                                             </div>
                                             <ChevronRightIcon class="w-5 h-5 text-gray-400 mt-1" />
                                         </li>
