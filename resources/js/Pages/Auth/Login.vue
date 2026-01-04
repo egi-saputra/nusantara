@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { XMarkIcon, CheckCircleIcon, LinkIcon } from '@heroicons/vue/24/solid'
+import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/vue/24/solid'
 import { useForm, Link, usePage } from '@inertiajs/inertia-vue3'
 import AlertError from '@/Components/Modals/AlertError.vue'
 import { useAlert } from '@/Composables/useAlert.js';
@@ -124,7 +124,7 @@ const submitLogin = async () => {
 </script>
 
 <template>
-    <div class="flex flex-col h-screen md:flex-row bg-gradient-to-br from-white to-blue-50 overflow-hidden">
+    <div class="flex flex-col h-screen md:flex-row bg-gradient-to-br from-white to-blue-50">
 
         <!-- Alert Error -->
         <AlertError ref="alertError" title="Login Failed" />
@@ -133,7 +133,7 @@ const submitLogin = async () => {
         <!-- <div
             class="sm:flex hidden flex-col justify-start items-start w-full md:w-1/2 p-10 bg-gradient-to-br from-[#1e1b4b] via-[#312e81] to-[#4c1d95] text-white relative overflow-hidden pb-24"> -->
         <div
-            class="sm:flex hidden flex-col justify-start items-start w-full md:w-1/2 p-10 bg-gradient-to-br from-[#063970] via-[#0a4e8c] to-[#0f6ab4] text-white relative overflow-hidden pb-24">
+            class="sm:flex hidden flex-col justify-start items-start w-full md:w-1/2 p-10 bg-gradient-to-br from-[#063970] via-[#0a4e8c] to-[#0f6ab4] text-white relative pb-24">
 
             <!-- Decorative Waves -->
             <div class="absolute bottom-0 left-0 w-full opacity-20 pointer-events-none">
@@ -204,26 +204,29 @@ const submitLogin = async () => {
             <div
                 class="w-full max-w-md text-start bg-white/60 backdrop-blur-md sm:p-6 sm:rounded-2xl sm:shadow-lg sm:border sm:border-gray-100 scale-soft">
 
-                <div class="no-select h-40 sm:hidden flex items-center justify-center">
-                    <img :src="props.mobileUrl" class="w-full h-full object-cover leading-none mb-4" alt="Logo Sekolah">
+                <div class="no-select h-60 sm:hidden flex items-center justify-center">
+                    <img :src="props.mobileUrl" class="w-full h-full object-cover leading-none" alt="Logo Sekolah">
                 </div>
 
                 <!-- Header Mobile -->
                 <Link :href="route('mading.index')" prefetch preserve-scroll preserve-state
-                    class="sm:hidden flex justify-center w-full mb-6">
+                    class="sm:hidden flex -mt-6 w-full mb-6">
                     <p
-                        class="flex items-center gap-2 font-bold text-lg bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-blue-800 to-blue-900 shadow border px-4 py-2 rounded-full transition-all">
-                        <i class="bi bi-megaphone text-blue-700 text-xl"></i>
-                        Nusantara School News Board
+                        class="flex justify-center w-full items-center gap-3 font-bold sm:text-lg shadow-md bg-gradient-to-br from-[#0f6ab4] via-[#0a4e8c] to-[#063970] border border-gray-300 px-3 py-2 rounded-full transition-all">
+                        <ChevronLeftIcon class="w-5 h-5 text-white animate-slide-left" />
+
+                        <span class="text-white tracking-wide">Nusantara News Board</span>
+
+                        <ChevronRightIcon class="w-5 h-5 text-white animate-slide-right" />
                     </p>
                 </Link>
 
                 <!-- DIVIDER -->
-                    <div class="sm:hidden mb-6 flex items-center px-2 my-4">
-                        <hr class="flex-grow border-gray-300" />
-                        <span class="mx-3 text-sm font-semibold text-gray-500">Nusantara Member Directory</span>
-                        <hr class="flex-grow border-gray-300" />
-                    </div>
+                <div class="sm:hidden mb-6 flex items-center px-2 my-4">
+                    <hr class="flex-grow border-gray-300" />
+                    <span class="mx-3 text-sm font-semibold text-gray-500">Nusantara Member Directory</span>
+                    <hr class="flex-grow border-gray-300" />
+                </div>
 
                 <h4 class="mb-2 text-2xl sm:block hidden font-bold capitalize text-[#063970]">Sign In</h4>
                 <p class="mb-8 text-sm sm:block hidden sm:text-left text-center text-slate-500">
@@ -237,7 +240,7 @@ const submitLogin = async () => {
                         <input type="email" v-model="form.email" @input="updateSuggestion"
                             @focus="isEmailFocused = true; updateSuggestion()"
                             @blur="isEmailFocused = false; clearSuggestions()" placeholder=" " required
-                            class="peer pl-4 w-full px-3 py-2 border border-gray-300 rounded-full bg-white/70 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
+                            class="peer pl-4 w-full px-3 py-2 border border-gray-300 rounded-xl bg-white/70 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
 
                         <label :class="[
                             'absolute left-5 px-1 text-base bg-white transition-all pointer-events-none',
@@ -270,7 +273,7 @@ const submitLogin = async () => {
                     <div class="relative mb-4">
                         <input :type="showPassword ? 'text' : 'password'" v-model="form.password" required minlength="6"
                             placeholder=" " @focus="isPasswordFocused = true" @blur="isPasswordFocused = false"
-                            class="peer pl-4 w-full px-3 py-2 border border-gray-300 rounded-full bg-white/70 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
+                            class="peer pl-4 w-full px-3 py-2 border border-gray-300 rounded-xl bg-white/70 backdrop-blur focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all" />
 
                         <label :class="[
                             'absolute left-5 px-1 text-base bg-white transition-all pointer-events-none',
@@ -303,7 +306,7 @@ const submitLogin = async () => {
                     <!-- SUBMIT -->
                     <div class="mb-3">
                         <button type="submit" :disabled="form.processing"
-                            class="w-full py-2 font-semibold text-white bg-gradient-to-br from-[#063970] via-[#0a4e8c] to-[#0f6ab4] rounded-full hover:from-[#052c5a] hover:via-[#09406f] hover:to-[#0c5490] transition-all flex justify-center items-center gap-2">
+                            class="w-full py-2 font-semibold text-white bg-gradient-to-br from-[#063970] via-[#0a4e8c] to-[#0f6ab4] rounded-xl hover:from-[#052c5a] hover:via-[#09406f] hover:to-[#0c5490] transition-all flex justify-center items-center gap-2">
 
                             <svg v-if="form.processing" class="w-5 h-5 animate-spin text-white" fill="none"
                                 viewBox="0 0 24 24">
@@ -334,7 +337,7 @@ const submitLogin = async () => {
 
                     <!-- GOOGLE -->
                     <a :href="route('google.redirect')"
-                        class="mt-6 w-full flex items-center justify-center gap-2 py-2 border border-gray-300 rounded-full hover:bg-gray-50 transition-all">
+                        class="mt-6 w-full flex items-center justify-center gap-2 py-2 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all">
                         <img src="https://img.icons8.com/color/20/000000/google-logo.png" />
                         Log in with Google
                     </a>
@@ -344,3 +347,41 @@ const submitLogin = async () => {
         </div>
     </div>
 </template>
+
+<style>
+@keyframes slide-right {
+
+    0%,
+    100% {
+        transform: translateX(0);
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: translateX(6px);
+        opacity: 1;
+    }
+}
+
+@keyframes slide-left {
+
+    0%,
+    100% {
+        transform: translateX(0);
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: translateX(-6px);
+        opacity: 1;
+    }
+}
+
+.animate-slide-right {
+    animation: slide-right 1.2s ease-in-out infinite;
+}
+
+.animate-slide-left {
+    animation: slide-left 1.2s ease-in-out infinite;
+}
+</style>

@@ -113,9 +113,11 @@ function submit() {
 <template>
     <MenuLayout>
         <div>
-            <div class="mx-auto sm:bg-white sm:border sm:border-gray-300 sm:rounded-2xl sm:shadow-xl md:p-8">
-                <h1 class="sm:text-2xl text-lg font-bold text-gray-800 mb-6 text-left flex items-center gap-2">
-                    <PencilSquareIcon class="w-6 h-6 text-gray-800" />
+            <div
+                class="mx-auto sm:bg-white dark:bg-[#0F172A] sm:border sm:border-gray-300 sm:rounded-2xl sm:shadow-xl md:p-8">
+                <h1
+                    class="sm:text-2xl text-lg dark:text-gray-100 font-bold text-gray-800 mb-6 text-left flex items-center gap-2">
+                    <PencilSquareIcon class="w-6 h-6" />
                     Edit Question Details
                 </h1>
 
@@ -124,12 +126,12 @@ function submit() {
                     <!-- Question Type, Score, Attachment Type -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="text-gray-700 font-semibold mb-2 flex items-center gap-2">
+                            <label class="text-gray-700 dark:text-gray-300 font-semibold mb-2 flex items-center gap-2">
                                 <AdjustmentsHorizontalIcon class="w-5 h-5 text-indigo-600" />
                                 Question Type
                             </label>
                             <select v-model="form.tipe_soal"
-                                class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
+                                class="w-full dark:bg-gray-300 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
                                 <option value="PG">Multiple Choice</option>
                                 <option value="Essay">Essay</option>
                             </select>
@@ -145,12 +147,12 @@ function submit() {
 
                         <!-- Attachment File -->
                         <div>
-                            <label class="text-gray-700 font-semibold mb-2 flex items-center gap-2">
+                            <label class="text-gray-700 dark:text-gray-300 font-semibold mb-2 flex items-center gap-2">
                                 <PaperClipIcon class="w-5 h-5 text-indigo-600" />
                                 Attachment Type
                             </label>
                             <select v-model="form.jenis_lampiran"
-                                class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
+                                class="w-full border dark:bg-gray-300 border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
                                 <option value="Tanpa Lampiran">No Attachment</option>
                                 <option value="Gambar">Image</option>
                                 <option value="Video">Video</option>
@@ -160,57 +162,58 @@ function submit() {
 
                     <!-- File / Link Attachment -->
                     <div v-if="form.jenis_lampiran === 'Gambar'">
-                        <label class="text-gray-700 font-semibold mb-1 flex items-center gap-2">
+                        <label class="text-gray-700 dark:text-gray-300 font-semibold mb-1 flex items-center gap-2">
                             <PhotoIcon class="w-5 h-5 text-blue-600" />
                             Upload Image
                         </label>
-                        <input type="file" @change="handleFile" class="border p-2 rounded-lg w-full" />
+                        <input type="file" @change="handleFile" class="border p-2 rounded-lg w-full dark:bg-gray-300" />
                         <p v-if="form.lampiran_file" class="text-green-600 mt-1">{{ form.lampiran_file.name }}</p>
                         <p v-else-if="form.link_lampiran" class="text-gray-500 mt-1">Current: {{ form.link_lampiran }}
                         </p>
                     </div>
                     <div v-else-if="form.jenis_lampiran === 'Video'">
-                        <label class="text-gray-700 font-semibold mb-1 flex items-center gap-2">
+                        <label class="text-gray-700 dark:text-gray-300 font-semibold mb-1 flex items-center gap-2">
                             <VideoCameraIcon class="w-5 h-5 text-purple-600" />
                             Video Link
                         </label>
                         <input type="text" v-model="form.link_lampiran" placeholder="Enter video URL"
-                            class="w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition" />
+                            class="w-full dark:bg-gray-300 border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition" />
                     </div>
 
                     <!-- Question -->
                     <div>
-                        <label class="text-gray-700 font-extrabold tracking-wide mb-2 flex items-center gap-2">
+                        <label
+                            class="text-gray-700 dark:text-gray-300 font-extrabold tracking-wide mb-2 flex items-center gap-2">
                             <InformationCircleIcon class="w-5 h-5 text-amber-600" />
                             Question
                         </label>
                         <textarea v-model="form.soal"
-                            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none dark:bg-gray-300 focus:ring-2 focus:ring-blue-400 transition"
                             rows="4" placeholder="Enter the question"></textarea>
                     </div>
 
                     <!-- Multiple Choice Options -->
                     <div v-if="form.tipe_soal === 'PG'" class="grid grid-cols-1 gap-4">
                         <div v-for="key in opsiState" :key="key">
-                            <label class="font-semibold">Option {{ key.toUpperCase() }}</label>
+                            <label class="font-semibold dark:text-gray-300">Option {{ key.toUpperCase() }}</label>
                             <input v-model="form['opsi_' + key]"
-                                class="w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition" />
+                                class="w-full border dark:bg-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition" />
                         </div>
                         <button v-if="opsiState.length < 5" type="button" @click="addOpsi"
-                            class="flex items-center gap-1 text-blue-600 font-semibold">
+                            class="flex items-center dark:text-gray-300 gap-1 text-blue-600 font-semibold">
                             <PlusIcon class="w-4 h-4" /> Add
                         </button>
                     </div>
 
                     <!-- Correct Answer -->
                     <div>
-                        <label class="text-gray-700 font-semibold mb-2 flex items-center gap-2">
+                        <label class="text-gray-700 dark:text-gray-300 font-semibold mb-2 flex items-center gap-2">
                             <CheckCircleIcon class="w-5 h-5 text-green-600" />
                             Correct Answer
                         </label>
                         <input v-if="form.tipe_soal === 'Essay'" v-model="form.jawaban_benar" type="text"
                             placeholder="Essay Answer"
-                            class="w-full border pl-3 border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition" />
+                            class="w-full border pl-3 dark:bg-gray-300 border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition" />
                         <select v-else v-model="form.jawaban_benar"
                             class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
                             <option v-for="key in opsiState" :key="key" :value="'opsi_' + key">

@@ -39,6 +39,8 @@ Route::get('/central-login', [CentralController::class, 'showLoginForm'])->name(
 Route::post('/central-login', [CentralController::class, 'central'])->name('auth.central');
 
 Route::resource('mading', MadingController::class)->only(['index']);
+Route::get('/mading/{id}', [MadingController::class, 'show'])
+    ->name('mading.show');
 
 Route::middleware(['auth'])->group(function () {
     Route::delete('/pengumuman/delete-all', [PengumumanController::class, 'deleteAll'])->name('pengumuman.deleteAll');
@@ -95,13 +97,45 @@ Route::middleware('auth', 'verified')->group(function () {
         ]);
     })->name('admin.dashboard')->middleware(['auth']);
 
-    Route::get('/guru/dashboard', fn() =>
-        Inertia::render('Guru/Dashboard')
-    )->name('guru.dashboard');
+    Route::get('/guru/dashboard', function () {
+        $user = Auth::user();
 
-    Route::get('/proktor/dashboard', fn() =>
-        Inertia::render('Proktor/Dashboard')
-    )->name('proktor.dashboard');
+        $usersCount = [
+            'admin'   => User::where('role', 'admin')->count(),
+            'proktor' => User::where('role', 'proktor')->count(),
+            'guru'    => User::where('role', 'guru')->count(),
+            'siswa'   => User::where('role', 'siswa')->count(),
+            'total'   => User::count(),
+        ];
+
+        return Inertia::render('Guru/Dashboard', [
+            'auth' => [
+                'user' => $user,
+                'role' => $user->role,
+            ],
+            'usersCount' => $usersCount,
+        ]);
+    })->name('guru.dashboard')->middleware(['auth']);
+
+    Route::get('/proktor/dashboard', function () {
+        $user = Auth::user();
+
+        $usersCount = [
+            'admin'   => User::where('role', 'admin')->count(),
+            'proktor' => User::where('role', 'proktor')->count(),
+            'guru'    => User::where('role', 'guru')->count(),
+            'siswa'   => User::where('role', 'siswa')->count(),
+            'total'   => User::count(),
+        ];
+
+        return Inertia::render('Proktor/Dashboard', [
+            'auth' => [
+                'user' => $user,
+                'role' => $user->role,
+            ],
+            'usersCount' => $usersCount,
+        ]);
+    })->name('proktor.dashboard')->middleware(['auth']);
 
     Route::get('/siswa/dashboard', function () {
         $user = Auth::user();

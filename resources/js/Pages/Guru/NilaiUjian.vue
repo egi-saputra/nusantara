@@ -162,7 +162,7 @@ const exportExcel = async () => {
     <MenuLayout>
         <div class="sm:space-y-6 space-y-4">
 
-            <h1 class="text-xl md:text-2xl font-bold text-gray-800 flex items-center gap-2">
+            <h1 class="text-xl md:text-2xl dark:text-gray-100 font-bold text-gray-800 flex items-center gap-2">
                 <ClipboardDocumentCheckIcon class="w-6 h-6 text-blue-600" />
                 Assessment Summary
             </h1>
@@ -173,7 +173,7 @@ const exportExcel = async () => {
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
 
                     <select v-model="filter.soal_id"
-                        class="border p-2 rounded sm:rounded-lg w-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
+                        class="border p-2 rounded sm:rounded-lg w-full dark:bg-[#0F172A] dark:text-gray-200 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-gray-200 dark:focus:border-gray-200">
                         <option value="">-- Select Quiz Title --</option>
                         <option v-for="s in uniqueSoal" :key="s.id" :value="s.id">
                             {{ s.title }}
@@ -181,13 +181,13 @@ const exportExcel = async () => {
                     </select>
 
                     <select v-model="filter.mapel_id"
-                        class="border p-2 rounded sm:rounded-lg w-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
+                        class="border p-2 rounded sm:rounded-lg w-full bg-gray-50 focus:ring-blue-500 dark:bg-[#0F172A] dark:text-gray-200 focus:border-blue-500 dark:focus:ring-gray-200 dark:focus:border-gray-200">
                         <option value="">-- Select Subject --</option>
                         <option v-for="m in listMapel" :value="m.id">{{ m.mapel }}</option>
                     </select>
 
                     <select v-model="filter.kelas_id"
-                        class="border p-2 rounded sm:rounded-lg w-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
+                        class="border p-2 rounded sm:rounded-lg w-full bg-gray-50 focus:ring-blue-500 dark:focus:ring-gray-200 dark:focus:border-gray-200 dark:bg-[#0F172A] dark:text-gray-200 focus:border-blue-500">
                         <option value="">-- Select Class --</option>
                         <option v-for="k in listKelas" :value="k.id">{{ k.kelas }}</option>
                     </select>
@@ -196,7 +196,7 @@ const exportExcel = async () => {
                 <div class="flex sm:justify-end">
 
                     <button @click="generate"
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded sm:rounded-lg w-full sm:w-auto flex items-center justify-center gap-2">
+                        class="bg-blue-600 hover:bg-blue-700 dark:hover:bg-[#15123f] dark:bg-[#063970] text-white px-4 py-2 rounded sm:rounded-lg w-full sm:w-auto flex items-center justify-center gap-2">
 
                         <template v-if="loading">
                             <ArrowPathIcon class="w-5 h-5 animate-spin text-white" />

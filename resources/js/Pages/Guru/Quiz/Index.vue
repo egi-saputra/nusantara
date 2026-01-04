@@ -74,11 +74,12 @@ function confirmDeleteItem(id) {
         <div class="sm:p-4 sm:block hidden p-0">
             <div class="flex justify-between items-center mb-4" v-if="soal.data && soal.data.length">
                 <div class="flex w-full justify-between space-x-2">
-                    <h1 class="text-2xl sm:inline-block hidden font-extrabold text-gray-800">Quiz / Exam Question List
+                    <h1 class="text-2xl sm:inline-block hidden font-extrabold text-gray-800 dark:text-white">Quiz / Exam
+                        Question List
                     </h1>
 
                     <Link href="/guru/soal/create"
-                        class="flex px-5 py-2 mb-4 sm:mb-0 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 transition">
+                        class="flex px-5 py-2 mb-4 sm:mb-0 bg-blue-600 dark:bg-[#1e1b4b] text-white font-medium rounded-lg shadow hover:bg-blue-700 transition">
                         + Create New Quiz
                     </Link>
                 </div>
@@ -93,14 +94,14 @@ function confirmDeleteItem(id) {
                 </svg>
                 <p class="text-gray-500 mb-4">No quizzes or questions available.</p>
                 <Link href="/guru/soal/create"
-                    class="px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700 transition">
+                    class="px-4 py-2 bg-blue-600 dark:bg-[#041C32] text-white rounded shadow hover:bg-blue-700 transition">
                     Create Quiz Now!
                 </Link>
             </div>
 
-            <div v-else class="sm:overflow-x-auto p-6 pt-8 rounded bg-white md:rounded shadow pb-24">
+            <div v-else class="sm:overflow-x-auto p-6 pt-8 rounded bg-white dark:bg-[#041C32] md:rounded shadow pb-24">
                 <table class="w-full text-left border-collapse whitespace-nowrap">
-                    <thead class="bg-[#063970] text-white text-center">
+                    <thead class="bg-[#063970] dark:bg-[#0F172A] text-white text-center">
                         <tr>
                             <th class="p-3 border-b font-medium">No</th>
                             <th class="p-3 border-b font-medium">Subject</th>
@@ -112,14 +113,14 @@ function confirmDeleteItem(id) {
                             <th class="p-3 border-b font-medium"></th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white">
+                    <tbody class="bg-white dark:bg-gray-300">
                         <tr v-for="(item, index) in soal.data" :key="item.id" class="hover:bg-gray-50 transition">
                             <td class="p-3 text-center border-b">{{ index + 1 }}</td>
                             <td class="p-3 border-b">{{ item.mapel?.mapel ?? '-' }}</td>
                             <td class="p-3 text-center border-b">{{ item.kelas }}</td>
                             <td class="p-3 border-b text-center font-semibold text-indigo-600">{{ item.token }}</td>
                             <td class="p-3 text-center border-b"
-                                :class="item.status === 'Aktif' ? 'text-green-600 font-semibold' : 'text-gray-400 font-medium'">
+                                :class="item.status === 'Aktif' ? 'text-green-600 font-semibold' : 'text-gray-900 font-medium'">
                                 {{ item.status === 'Aktif' ? 'Active' : item.status === 'Tidak Aktif' ? 'Inactive' :
                                     item.status }}
                             </td>
@@ -139,10 +140,10 @@ function confirmDeleteItem(id) {
                                 </button>
 
                                 <div v-if="openDropdown === item.id"
-                                    class="absolute right-12 md:right-16 -mt-8 w-36 bg-white border rounded-lg shadow-lg z-10">
+                                    class="absolute right-12 md:right-16 -mt-8 w-36 bg-white dark:bg-[#1e1b4b] border dark:border-none rounded-lg shadow-lg z-10">
 
                                     <Link :href="`/guru/soal/${item.id}`"
-                                        class="flex items-center px-4 py-2 w-full hover:bg-gray-100 font-medium">
+                                        class="flex items-center px-4 py-2 w-full hover:bg-gray-300 rounded-t-lg dark:text-white dark:hover:text-gray-800 font-medium">
                                         <EyeIcon class="w-4 h-4 mr-2" /> Preview
                                     </Link>
 
@@ -157,7 +158,8 @@ function confirmDeleteItem(id) {
                 </table>
             </div>
 
-            <div class="mt-6 flex justify-between items-center text-gray-700" v-if="soal.data.length">
+            <div class="mt-6 flex justify-between items-center dark:text-gray-500 text-gray-700"
+                v-if="soal.data.length">
                 <Link v-if="soal.prev_page_url" :href="soal.prev_page_url"
                     class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition">
                     Previous
@@ -172,17 +174,17 @@ function confirmDeleteItem(id) {
 
         <!-- MOBILE VERSION -->
         <div class="sm:hidden block p-0">
-            <div class="flex mb-4" v-if="soal.data && soal.data.length">
-                <div class="flex w-full flex-col">
+            <div class="flex justify-end w-full mb-2 mt-3" v-if="soal.data && soal.data.length">
+                <div class="flex flex-col">
                     <Link href="/guru/quiz/create"
-                        class="flex py-2 w-full justify-center mb-3 bg-blue-600 text-white font-medium rounded shadow hover:bg-blue-700 transition">
+                        class="flex py-2 px-6 justify-end mb-3 bg-blue-600 dark:bg-[#02478b] text-white font-medium rounded shadow hover:bg-blue-700 transition">
                         + Create New Quiz
                     </Link>
                 </div>
             </div>
 
             <div v-if="!soal.data || soal.data.length === 0"
-                class="text-center py-20 bg-white rounded-xl shadow border border-gray-200">
+                class="text-center py-20 bg-white dark:bg-[#0B1F3A] rounded-xl shadow border border-gray-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-4 h-12 w-12 text-gray-400" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -190,19 +192,19 @@ function confirmDeleteItem(id) {
                 </svg>
                 <p class="text-gray-500 mb-4">No quizzes or questions available.</p>
                 <Link href="/guru/quiz/create"
-                    class="px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700 transition">
+                    class="px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700 dark:bg-[#02478b] transition">
                     Create Quiz Now!
                 </Link>
             </div>
 
             <div v-else class="grid grid-cols-1 gap-6">
                 <div v-for="(item, index) in soal.data" :key="item.id"
-                    class="bg-white rounded shadow hover:shadow-lg border border-gray-200 transition p-6 flex flex-col justify-between">
+                    class="bg-white dark:bg-[#0B1F3A] rounded shadow hover:shadow-lg border dark:border-gray-600 border-gray-200 transition p-6 flex flex-col justify-between">
 
                     <!-- Header -->
                     <div class="flex items-center justify-between mb-5">
-                        <h2 class="text-lg font-bold text-gray-800 truncate flex items-center gap-2">
-                            <ClipboardDocumentCheckIcon class="w-5 h-5 text-blue-500" />
+                        <h2 class="text-lg font-bold text-gray-800 dark:text-gray-200 truncate flex items-center gap-2">
+                            <ClipboardDocumentCheckIcon class="w-5 h-5 dark:text-white text-blue-500" />
                             {{ item.mapel?.mapel ?? '-' }}
                         </h2>
                         <!-- <span :class="item.status === 'Aktif'
@@ -234,11 +236,11 @@ function confirmDeleteItem(id) {
                     <!-- Actions -->
                     <div class="grid grid-cols-2 gap-3 mb-6">
                         <Link :href="`/guru/soal/${item.id}`"
-                            class="flex items-center justify-center gap-2 px-6 py-2 bg-gray-700 text-white rounded hover:bg-gray-800 transition font-semibold">
+                            class="flex items-center justify-center gap-2 px-6 py-2 bg-gray-700 dark:bg-[#02478b] text-white rounded hover:bg-gray-800 transition font-semibold">
                             <EyeIcon class="w-5 h-5" /> Detail
                         </Link>
                         <button @click="confirmDeleteItem(item.id)"
-                            class="flex items-center justify-center gap-2 px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition font-semibold">
+                            class="flex items-center justify-center gap-2 px-6 py-2 bg-red-600 text-white rounded dark:bg-red-800 dark:hover:bg-red-900 hover:bg-red-700 transition font-semibold">
                             <TrashIcon class="w-5 h-5" /> Delete
                         </button>
                     </div>

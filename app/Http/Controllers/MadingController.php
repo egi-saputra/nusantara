@@ -34,4 +34,13 @@ class MadingController extends Controller
         ]);
     }
 
+    public function show($id)
+    {
+        $announcement = Pengumuman::findOrFail($id);
+
+        return Inertia::render('Mading/Show', [
+            'announcement' => $announcement
+        ]);
+    }
+
 }

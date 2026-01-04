@@ -33,7 +33,7 @@ class QuizController extends Controller
         return Inertia::render('Guru/Quiz/Index', [
             'soal' => $soal,
             'mapel' => Mapel::select('id', 'mapel')->orderBy('mapel')->get(),
-            'title' => 'Exam Question List',
+            'title' => 'Quiz List',
         ]);
     }
 
@@ -93,7 +93,7 @@ class QuizController extends Controller
         return Inertia::render('Guru/Quiz/Show', [
             'soal' => $soal,
             'mapel' => Mapel::select('id', 'mapel')->orderBy('mapel')->get(),
-            'title' => 'Quiz Management',
+            'title' => 'Question List',
         ]);
     }
 }

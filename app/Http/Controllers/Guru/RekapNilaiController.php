@@ -35,7 +35,8 @@ class RekapNilaiController extends Controller
             ->get();
 
         return Inertia::render('Guru/NilaiUjian', [
-            'rekap' => $rekap
+            'rekap' => $rekap,
+            'title' => 'Assessment'
         ]);
     }
 

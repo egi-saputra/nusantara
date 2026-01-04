@@ -99,3 +99,41 @@ input:-webkit-autofill:active {
 .swal2-timer-progress-bar {
     background-color: #2563eb !important; /* Tailwind blue-600 */
 }
+
+#theme-transition-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    /* background: linear-gradient(to bottom right, #1e1b4b, #312e81, #4c1d95); */
+    background: rgb(15 23 42); /* slate-900 */
+    clip-path: circle(0% at 0% 0%);
+}
+
+/* MASUK (0 → 100) */
+#theme-transition-layer.reveal-in {
+    animation: revealIn 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* KELUAR (100 → 0) */
+#theme-transition-layer.reveal-out {
+    animation: revealOut 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes revealIn {
+    from {
+        clip-path: circle(0% at 0% 0%);
+    }
+    to {
+        clip-path: circle(150% at 0% 0%);
+    }
+}
+
+@keyframes revealOut {
+    from {
+        clip-path: circle(150% at 0% 0%);
+    }
+    to {
+        clip-path: circle(0% at 0% 0%);
+    }
+}

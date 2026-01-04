@@ -64,7 +64,8 @@ const hapus = (id) => {
                         List of <span class="sm:inline-block hidden">Vocational Programs</span>
                         <span class="inline-block sm:hidden">Programs</span>
                     </h1>
-                    <p class="text-sm text-gray-500">Manage vocational program data at school</p>
+                    <p class="text-sm text-gray-500">Manage vocational program <span class="sm:inline-block hidden">data
+                            at school</span></p>
                 </div>
                 <Link :href="route('admin.kejuruan.create')"
                     class="px-4 py-2 rounded bg-blue-800 text-white hover:bg-blue-900 transition">

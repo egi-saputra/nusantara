@@ -82,46 +82,50 @@ function confirmDeleteAll() {
 
     <MenuLayout>
         <!-- <template #header> -->
-        <h2 class="md:text-2xl text-xl font-bold md:font-extrabold text-gray-800 mb-6">Quiz / Exam Question Details
+        <h2 class="md:text-2xl text-xl font-bold dark:text-white md:font-extrabold text-gray-800 mb-6">Quiz / Exam
+            Question Details
         </h2>
         <!-- </template> -->
 
         <!-- Info Soal -->
         <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-            <div class="p-3 bg-white rounded-lg border border-gray-200 shadow-sm">
-                <p class="text-gray-500 text-sm">Quiz Token</p>
-                <p class="font-bold text-indigo-600">{{ soal.token }}</p>
+            <div class="p-3 bg-white dark:bg-[#0B1F3A] rounded-lg border border-gray-200 shadow-sm">
+                <p class="text-gray-500 dark:text-gray-400 text-sm">Quiz Token</p>
+                <p class="font-bold text-indigo-600 dark:text-white">{{ soal.token }}</p>
             </div>
-            <div class="p-3 bg-white rounded-lg border border-gray-200 shadow-sm">
-                <p class="text-gray-500 text-sm">Quiz Status</p>
-                <p class="font-bold" :class="soal.status === 'Aktif' ? 'text-green-600' : 'text-gray-700'">
+            <div class="p-3 bg-white dark:bg-[#0B1F3A] rounded-lg border border-gray-200 shadow-sm">
+                <p class="text-gray-500 dark:text-gray-400 text-sm">Quiz Status</p>
+                <p class="font-bold"
+                    :class="soal.status === 'Aktif' ? 'text-green-600' : 'text-gray-700 dark:text-gray-200'">
                     {{ soal.status === 'Aktif' ? 'Active' : soal.status === 'Tidak Aktif' ? 'Inactive' : soal.status }}
                 </p>
             </div>
-            <div class="p-3 bg-white rounded-lg border border-gray-200 shadow-sm">
-                <p class="text-gray-500 text-sm">Quiz Format</p>
-                <p class="font-semibold">{{ soal.tipe_soal === 'Berurutan' ? 'Sequential' : soal.tipe_soal === 'Acak' ?
-                    'Shuffle'
-                    : soal.tipe_soal }}</p>
+            <div class="p-3 bg-white dark:bg-[#0B1F3A] rounded-lg border border-gray-200 shadow-sm">
+                <p class="text-gray-500 dark:text-gray-400 text-sm">Quiz Format</p>
+                <p class="font-semibold dark:text-gray-200">{{ soal.tipe_soal === 'Berurutan' ? 'Sequential' :
+                    soal.tipe_soal
+                        === 'Acak' ?
+                        'Shuffle'
+                        : soal.tipe_soal }}</p>
             </div>
-            <div class="p-3 bg-white rounded-lg border border-gray-200 shadow-sm">
-                <p class="text-gray-500 text-sm">Exam Duration</p>
-                <p class="font-semibold">{{ soal.waktu }} minutes</p>
+            <div class="p-3 bg-white dark:bg-[#0B1F3A] rounded-lg border border-gray-200 shadow-sm">
+                <p class="text-gray-500 dark:text-gray-400 text-sm">Exam Duration</p>
+                <p class="font-semibold dark:text-gray-200">{{ soal.waktu }} minutes</p>
             </div>
-            <div class="p-3 bg-white rounded-lg border border-gray-200 shadow-sm">
-                <p class="text-gray-500 text-sm">Subject</p>
-                <p class="font-semibold">{{ soal.mapel?.mapel ?? '-' }}</p>
+            <div class="p-3 bg-white dark:bg-[#0B1F3A] rounded-lg border border-gray-200 shadow-sm">
+                <p class="text-gray-500 dark:text-gray-400 text-sm">Subject</p>
+                <p class="font-semibold dark:text-gray-200">{{ soal.mapel?.mapel ?? '-' }}</p>
             </div>
-            <div class="p-3 bg-white rounded-lg border border-gray-200 shadow-sm">
-                <p class="text-gray-500 text-sm">Class Unit</p>
-                <p class="font-semibold">{{ soal.kelas }}</p>
+            <div class="p-3 bg-white dark:bg-[#0B1F3A] rounded-lg border border-gray-200 shadow-sm">
+                <p class="text-gray-500 text-sm dark:text-gray-400">Class Unit</p>
+                <p class="font-semibold dark:text-gray-200">{{ soal.kelas }}</p>
             </div>
         </div>
 
         <!-- Tombol -->
         <div class="mb-6 flex flex-col md:flex-row justify-between gap-4">
             <Link href="/guru/soal"
-                class="md:flex hidden items-center justify-center px-5 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition gap-2">
+                class="md:flex hidden items-center justify-center px-5 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 dark:bg-gray-800 dark:hover:bg-gray-900 transition gap-2">
                 <ArrowLeftIcon class="w-5 h-5" />
                 <span>Back to Quiz</span>
             </Link>
@@ -143,26 +147,28 @@ function confirmDeleteAll() {
         <!-- Bank Soal -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
             <div v-if="!soal.bank_soal || soal.bank_soal.length === 0"
-                class="col-span-full text-center text-gray-400 p-6 bg-gray-50 rounded-lg shadow">
+                class="col-span-full text-center text-gray-400 p-6 bg-gray-50 dark:bg-[#0B1F3A] rounded-lg shadow">
                 No questions have been added to this quiz yet.
             </div>
 
             <div v-for="(item, index) in soal.bank_soal" :key="item.id"
-                class="bg-white rounded-xl shadow-lg border border-gray-200 p-5 flex flex-col justify-between hover:shadow-2xl transition transform">
+                class="bg-white dark:bg-[#0B1F3A] rounded-xl shadow-lg border border-gray-200 p-5 flex flex-col justify-between hover:shadow-2xl transition transform">
 
                 <div class="flex justify-between items-start mb-3">
                     <span class="text-gray-400 font-semibold">No {{ index + 1 }}</span>
-                    <span class="text-sm font-bold px-4 py-1 rounded-full bg-indigo-100 text-indigo-700">
+                    <span
+                        class="text-sm font-bold px-4 py-1 rounded-full bg-indigo-100 dark:bg-orange-600 dark:shadow-md dark:text-white text-indigo-700">
                         {{ item.tipe_soal === 'PG' ? 'Multiple Choice' : item.tipe_soal === 'Essay' ? 'Typescript' :
                             item.tipe_soal }}
                     </span>
                 </div>
 
-                <p class="font-bold flex items-center gap-2">
+                <p class="font-bold flex items-center dark:text-white gap-2">
                     <InformationCircleIcon class="text-blue-600 w-5 h-5" />
                     Question :
                 </p>
-                <p class="ml-8 text-sm font-raleway mb-4 line-clamp-3" :title="item.soal">{{ item.soal
+                <p class="ml-8 text-sm font-raleway dark:text-gray-400 mb-4 line-clamp-3" :title="item.soal">{{
+                    item.soal
                     }}
                 </p>
 
@@ -180,13 +186,13 @@ function confirmDeleteAll() {
                     <span v-else class="text-gray-400">No Attachment</span>
                 </p> -->
 
-                <p class="font-bold flex items-center gap-2">
+                <p class="font-bold flex dark:text-white items-center gap-2">
                     <CheckBadgeIcon class="text-green-600 w-5 h-5" />
                     Correct Answer :
                 </p>
 
                 <p class="mb-3 ml-8 text-sm line-clamp-3"
-                    :class="getCorrectAnswerText(item) ? 'text-gray-800' : 'text-gray-400'">
+                    :class="getCorrectAnswerText(item) ? 'text-gray-800 dark:text-gray-400' : 'text-gray-400'">
                     {{
                         getCorrectAnswerText(item)
                             ? getCorrectAnswerText(item)

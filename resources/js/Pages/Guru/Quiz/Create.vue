@@ -25,12 +25,14 @@ const form = useForm({
 
         <div class="sm:py-8 sm:pb-0 pb-10 sm:px-4 min-h-screen">
             <div
-                class="mx-auto border md:text-base text-sm border-gray-300 bg-white rounded-lg md:shadow-xl p-6 md:p-8">
+                class="mx-auto border dark:bg-[#041C32] md:text-base text-sm border-gray-300 dark:border-gray-700 bg-white rounded-lg md:shadow-xl p-6 md:p-8">
                 <div class="mb-6">
-                    <h1 class="text-2xl sm:inline-block hidden font-extrabold text-gray-800 text-left">
-                        Create / Add Quiz
+                    <h1
+                        class="text-2xl sm:inline-block hidden font-extrabold text-gray-800 text-left dark:text-gray-100">
+                        <span class="text-3xl pt-1 font-bold">+</span> Create / Add Quiz
                     </h1>
-                    <p class="text-gray-500 sm:text-base text-sm">This page is intended to create or add the quizzes.
+                    <p class="text-gray-500 dark:text-gray-400 sm:text-base text-sm">This page is intended to create or
+                        add the quizzes.
                     </p>
                 </div>
 
@@ -39,21 +41,21 @@ const form = useForm({
 
                     <!-- Title -->
                     <div class="mb-4">
-                        <label class="block text-gray-700 font-semibold">Title Quiz</label>
+                        <label class="block text-gray-700 dark:text-gray-200 font-semibold">Title Quiz</label>
                         <input v-model="form.title" type="text" placeholder="e.g., ( ASAS GANJIL 2025 )"
-                            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition capitalize-input" />
+                            class="w-full border dark:bg-gray-300 border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition capitalize-input" />
                         <p v-if="form.errors.title" class="text-red-600 text-sm mt-1">{{ form.errors.title }}</p>
                     </div>
 
                     <div class="flex w-full mb-4 flex-col sm:flex-row gap-4">
                         <!-- MAPEL (SELECT) -->
                         <div class="w-full">
-                            <label class="block text-gray-700 font-semibold">
+                            <label class="block dark:text-gray-200 text-gray-700 font-semibold">
                                 Subjects
                             </label>
 
                             <select v-model="form.mapel_id"
-                                class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
+                                class="w-full border border-gray-300 dark:bg-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
                                 <option value="">-- Choose subjects --</option>
                                 <option v-for="m in mapel" :key="m.id" :value="m.id">
                                     {{ m.mapel }}
@@ -66,9 +68,10 @@ const form = useForm({
 
                         <!-- KELAS -->
                         <div class="w-full">
-                            <label class="block text-gray-700 font-semibold">Class Unit (for class)</label>
+                            <label class="block dark:text-gray-200 text-gray-700 font-semibold">Class Unit (for
+                                class)</label>
                             <input v-model="form.kelas" type="text" placeholder="e.g., ( XII BR - MP / XI BR / X MP )."
-                                class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition uppercase-input" />
+                                class="w-full border border-gray-300 dark:bg-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition uppercase-input" />
                             <p v-if="form.errors.kelas" class="text-red-600 text-sm mt-1">{{ form.errors.kelas }}</p>
                         </div>
                     </div>

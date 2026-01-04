@@ -1,13 +1,18 @@
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
-import { usePage, router, Link } from '@inertiajs/vue3';
-import { CalendarDaysIcon, ClockIcon, MegaphoneIcon } from '@heroicons/vue/24/solid'
+import { ref, computed } from 'vue';
+import { usePage, Link } from '@inertiajs/vue3';
+import {
+    CalendarDaysIcon,
+    ArrowLeftIcon
+} from '@heroicons/vue/24/solid';
+import { ChevronRightIcon } from '@heroicons/vue/24/outline';
 
 const page = usePage();
 
-// Data pengumuman utama
+// Data pengumuman
 const pengumuman = computed(() => page.props.announcements || []);
 
+// Helpers
 const formatDate = (date) => {
     if (!date) return "-";
     return new Date(date).toLocaleDateString('id-ID', {
@@ -17,114 +22,123 @@ const formatDate = (date) => {
     });
 };
 
-const formatTime = (date) => {
-    if (!date) return "-";
-    return new Date(date).toLocaleTimeString('id-ID', {
-        hour: '2-digit',
-        minute: '2-digit'
-    });
+const truncate = (text, length = 120) => {
+    if (!text) return '';
+    return text.length > length ? text.slice(0, length) + '…' : text;
+};
+
+// Pagination
+const perPage = 10;
+const currentPage = ref(1);
+
+const totalPages = computed(() =>
+    Math.ceil(pengumuman.value.length / perPage)
+);
+
+const paginatedPengumuman = computed(() => {
+    const start = (currentPage.value - 1) * perPage;
+    return pengumuman.value.slice(start, start + perPage);
+});
+
+const goToPage = (page) => {
+    if (page < 1 || page > totalPages.value) return;
+    currentPage.value = page;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 </script>
 
 <template>
-    <div class="w-full py-4 sm:py-10 md:px-10 max-w-6xl mx-auto">
+    <div class="w-full py-6 sm:py-10 md:px-10 max-w-4xl mx-auto">
 
         <!-- Header -->
-        <div class="mb-12 px-4 w-full text-center">
-
-            <Link :href="route('login')" prefetch preserve-scroll preserve-state
-                class="flex flex-col w-full sm:flex-row items-center justify-center gap-4 sm:gap-6">
-                <h1
-                    class="text-3xl sm:text-6xl font-extrabold tracking-tight font-poppins text-gray-900 leading-tight text-center sm:text-left">
-                    Mading <span class="text-indigo-600">Sekolah Nusantara</span>
-                </h1>
-            </Link>
+        <div class="mb-12 px-4 text-center">
+            <h1 class="text-3xl sm:text-6xl font-extrabold tracking-tight text-gray-900">
+                Mading <span class="text-indigo-600">Sekolah Nusantara</span>
+            </h1>
 
             <p class="text-gray-500 mt-3 text-sm sm:text-lg font-light">
                 Pengumuman, informasi, dan berita terbaru sekolah
             </p>
 
-            <!-- Decorative line -->
             <div
                 class="mt-5 w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-600 mx-auto rounded-full animated-gradient">
             </div>
         </div>
 
-        <!-- Empty State -->
+        <!-- Empty -->
         <div v-if="pengumuman.length === 0" class="text-gray-400 italic text-center py-20 text-lg">
             Belum ada pengumuman.
         </div>
 
-        <!-- Magazine Grid -->
-        <div class="grid grid-cols-1 px-4">
-            <div v-for="item in pengumuman" :key="item.id" class="group relative overflow-hidden rounded-2xl shadow-xl bg-white 
-                           border border-gray-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
-                <!-- Accent bar -->
+        <!-- List Preview -->
+        <div class="grid grid-cols-1 gap-4 px-4">
+            <Link :href="route('login')"
+                class="inline-flex items-center gap-2 font-bold text-gray-500 hover:text-indigo-600 transition">
+                <ArrowLeftIcon class="w-5 h-5" />
+                Back to Sign In
+            </Link>
+
+            <Link v-for="item in paginatedPengumuman" :key="item.id" :href="route('mading.show', item.id)" class="group relative overflow-hidden rounded-xl bg-white border border-gray-200
+                       transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5">
+                <!-- Accent -->
                 <div
-                    class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-indigo-500 to-purple-600 animated-gradient">
+                    class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-indigo-500 to-purple-600 animated-gradient">
                 </div>
 
-                <!-- Background Fade -->
-                <div
-                    class="absolute inset-0 opacity-0 group-hover:opacity-10 transition duration-300 bg-gradient-to-br from-indigo-200 to-purple-200">
-                </div>
+                <div class="p-5 flex gap-3 items-start">
+                    <!-- Content -->
+                    <div class="flex-1">
+                        <h2 class="font-semibold text-gray-800 text-base sm:text-lg
+                                   line-clamp-1 group-hover:text-indigo-700 transition">
+                            {{ truncate(item.judul, 60) }}
+                        </h2>
 
-                <div class="p-6 relative z-10">
-                    <h2 class="font-bold font-xl sm:text-2xl text-gray-800 mb-3 group-hover:text-indigo-700 transition">
-                        <i class="bi bi-megaphone mr-2 animate-shake sm:text-2xl text-blue-600"></i> {{ item.judul
-                        }}
-                    </h2>
-
-                    <div class="sm:border-dashed sm:border sm:rounded sm:p-4 sm:flex sm:w-full">
-                        <p class="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-4">
-                            {{ item.pengumuman }}
+                        <p class="text-sm text-gray-600 mt-1 sm:mb-4 line-clamp-2">
+                            {{ truncate(item.pengumuman, 140) }}
                         </p>
-                    </div>
 
-                    <div class="text-xs text-gray-600 mt-4 pt-3 border-t border-gray-100 space-y-2">
-
-                        <!-- Timestamp Created -->
-                        <div class="flex items-center gap-2">
-                            <CalendarDaysIcon class="w-4 h-4 text-gray-600" />
-                            <span>Dibuat: {{ formatDate(item.created_at) }} • {{ formatTime(item.created_at) }}</span>
+                        <div class="mt-2 sm:flex hidden items-center gap-2 text-xs text-gray-500">
+                            <CalendarDaysIcon class="w-4 h-4" />
+                            <span>{{ formatDate(item.created_at) }}</span>
                         </div>
-
-                        <!-- Timestamp Updated -->
-                        <!-- <div class="flex items-center gap-2" v-if="item.updated_at">
-                            <ClockIcon class="w-4 h-4 text-purple-600" />
-                            <span>Diupdate: {{ formatDate(item.updated_at) }} • {{ formatTime(item.updated_at) }}</span>
-                        </div> -->
-
-                        <!-- Receiver Info -->
-                        <!-- <div class="text-gray-500">
-                            Penerima: <span class="font-medium">{{ item.penerima }}</span>
-                            <span v-if="item.kelas"> | Kelas: {{ item.kelas.kelas }}</span>
-                        </div> -->
-
                     </div>
+
+                    <!-- Chevron -->
+                    <ChevronRightIcon class="sm:w-10 sm:h-10 w-8 h-8 text-gray-400 mt-2 sm:mt-6
+                               group-hover:text-indigo-600
+                               group-hover:translate-x-1 -mr-2
+                               transition-all duration-300" />
                 </div>
-            </div>
+            </Link>
         </div>
 
+        <!-- Pagination -->
+        <div v-if="totalPages > 1" class="flex justify-center items-center gap-2 mt-10 px-4">
+            <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1" class="px-3 py-2 rounded-lg border text-sm font-medium
+                       disabled:opacity-40 disabled:cursor-not-allowed
+                       hover:bg-indigo-50 hover:text-indigo-600">
+                Prev
+            </button>
+
+            <button v-for="page in totalPages" :key="page" @click="goToPage(page)"
+                class="w-10 h-10 rounded-lg text-sm font-semibold transition" :class="page === currentPage
+                    ? 'bg-indigo-600 text-white shadow'
+                    : 'border hover:bg-indigo-50 hover:text-indigo-600'">
+                {{ page }}
+            </button>
+
+            <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages" class="px-3 py-2 rounded-lg border text-sm font-medium
+                       disabled:opacity-40 disabled:cursor-not-allowed
+                       hover:bg-indigo-50 hover:text-indigo-600">
+                Next
+            </button>
+        </div>
     </div>
 </template>
 
 <style>
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.2s;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
-}
-
 .animated-gradient {
-    height: 0.5rem;
-    /* 2 = 0.5rem */
     background: linear-gradient(270deg, #6366f1, #8b5cf6, #6366f1);
-    /* from-indigo-500 to-purple-600 back to indigo */
     background-size: 600% 100%;
     animation: gradientMove 5s linear infinite;
 }

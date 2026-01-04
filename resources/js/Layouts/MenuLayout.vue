@@ -12,7 +12,7 @@ import ProktorSidebar from '@/Components/Proktor/Sidebar.vue';
 import GuruSidebar from '@/Components/Guru/Sidebar.vue';
 import SiswaSidebar from '@/Components/Siswa/Sidebar.vue';
 import { BellIcon } from '@heroicons/vue/24/outline'
-import { ChevronRightIcon } from '@heroicons/vue/24/solid'
+import { ChevronRightIcon, UserIcon, ArrowRightOnRectangleIcon } from '@heroicons/vue/24/solid'
 
 const props = defineProps({
     disableSwal: { type: Boolean, default: false },
@@ -151,7 +151,7 @@ const navLinks = computed(() => {
         ],
         guru: [
             { name: 'Dashboard', href: route('guru.dashboard') },
-            { name: 'Quiz Management', href: route('guru.soal.index') },
+            // { name: 'Quiz Management', href: route('guru.soal.index') },
         ],
         siswa: [
             { name: 'Dashboard', href: route('siswa.dashboard') },
@@ -175,12 +175,62 @@ const goBack = () => {
 // const goBack = () => {
 //     Inertia.visit(route(`${page.props.auth.role}.dashboard`));
 // }
+
+// DARK MODE
+const isDark = ref(false)
+
+const applyTheme = (dark) => {
+    const html = document.documentElement
+    if (dark) {
+        html.classList.add('dark')
+    } else {
+        html.classList.remove('dark')
+    }
+    localStorage.setItem('theme', dark ? 'dark' : 'light')
+}
+
+const toggleDarkMode = () => {
+    const html = document.documentElement
+    const layer = document.getElementById('theme-transition-layer')
+
+    // reset class
+    layer.classList.remove('reveal-in', 'reveal-out')
+
+    // IN
+    layer.classList.add('reveal-in')
+
+    // ganti theme DI TENGAH
+    setTimeout(() => {
+        isDark.value = !isDark.value
+        html.classList.toggle('dark', isDark.value)
+        localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
+    }, 600)
+
+    // OUT (arah SAMA)
+    setTimeout(() => {
+        layer.classList.remove('reveal-in')
+        layer.classList.add('reveal-out')
+    }, 600)
+
+    // bersih
+    setTimeout(() => {
+        layer.classList.remove('reveal-out')
+        layer.style.clipPath = 'circle(0% at 0% 0%)'
+    }, 1200)
+}
+
+onMounted(() => {
+    const theme = localStorage.getItem('theme')
+    isDark.value = theme === 'dark'
+    applyTheme(isDark.value)
+})
 </script>
 
 <template>
-    <div class="h-screen bg-gray-100 flex flex-col overflow-hidden">
+    <div class="h-screen bg-gray-100 dark:bg-[#0B1F3A] flex flex-col overflow-hidden">
         <!-- Navbar SPA -->
-        <nav class="bg-white border-b border-gray-300 sticky top-0 z-50">
+        <nav
+            class="bg-white dark:bg-[#041C32] sm:dark:bg-[#0F172A] border-b border-gray-300 dark:sm:border-gray-600 dark:border-[#1e1b4b] sticky top-0 z-50">
             <div class="max-w-7xl mx-auto sm:px-0 px-2">
                 <div class="flex justify-between h-16">
 
@@ -209,11 +259,12 @@ const goBack = () => {
                     </div>
 
                     <div class="flex">
-                        <div class="relative">
+                        <div class="sm:block hidden relative">
                             <!-- Icon Bell -->
                             <button ref="bellButtonRef" @click="toggleNotifDropdown"
                                 class="relative p-2 rounded-full transition">
-                                <BellIcon class="w-6 h-6 mt-3 sm:-mr-4 hover:text-gray-900 text-gray-500" />
+                                <BellIcon
+                                    class="w-6 h-6 mt-3 sm:-mr-4 hover:text-gray-900 text-gray-500 dark:text-white dark:hover:text-gray-300" />
                                 <span v-if="hasUnread"
                                     class="absolute top-2 right-2 w-2 h-2 rounded-full bg-blue-500 animate-ping"></span>
                             </button>
@@ -221,7 +272,7 @@ const goBack = () => {
                             <!-- Dropdown -->
                             <transition name="fade">
                                 <div ref="notifDropdownRef" v-if="showingNotifDropdown"
-                                    class="absolute sm:-right-6 right-0 sm:mt-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-30">
+                                    class="absolute -right-10 md:-right-6 sm:mt-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-30">
 
                                     <!-- Header -->
                                     <h3
@@ -259,7 +310,7 @@ const goBack = () => {
                             <Dropdown align="right" width="48">
                                 <template #trigger>
                                     <button
-                                        class="inline-flex items-center px-3 py-2 border border-transparent font-medium rounded-md text-gray-500 bg-white text-sm hover:text-gray-700">
+                                        class="inline-flex items-center px-3 py-2 border border-transparent font-medium rounded-md text-gray-500 bg-white dark:bg-[#0F172A] dark:text-white dark:hover:text-gray-300 hover:text-gray-700 text-sm">
                                         {{ $page.props.auth.user.name }}
                                         <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                             fill="currentColor">
@@ -280,7 +331,7 @@ const goBack = () => {
                         <!-- Gear Icon responsive -->
                         <div class="flex items-center sm:hidden">
                             <button @click="showingNavigationDropdown = !showingNavigationDropdown"
-                                class="inline-flex items-center justify-center p-2 rounded-md text-[#063970] dark:text-white transition-transform duration-300 ease-in-out transform responsive-toggle-button">
+                                class="inline-flex items-center justify-center p-2 rounded-md text-[#063970] dark:text-white transition-transform duration-150 ease-in-out transform responsive-toggle-button">
                                 <Cog6ToothIcon :class="showingNavigationDropdown ? 'rotate-90' : 'rotate-0'"
                                     class="h-6 w-6 transform transition-transform duration-300 ease-in-out text-gray-700 dark:text-white" />
                             </button>
@@ -289,36 +340,51 @@ const goBack = () => {
                 </div>
             </div>
 
-            <!-- Responsive Navigation Menu -->
-            <div class="sm:hidden overflow-hidden transition-all duration-300 ease-in-out responsive-menu"
-                :style="{ maxHeight: showingNavigationDropdown ? '500px' : '0px' }">
-                <div class="border-t py-2 space-y-1">
-                    <ResponsiveNavLink v-for="link in navLinks" :key="link.name" :href="link.href"
-                        :active="page.url.startsWith(link.href)">
-                        {{ link.name }}
-                    </ResponsiveNavLink>
-                </div>
-
-                <div class="py-3 pb-1 border-t border-gray-200">
-                    <div class="space-y-1">
-                        <ResponsiveNavLink :href="route('logout')" method="post" as="button">Log Out</ResponsiveNavLink>
+            <!-- Responsive Dropend Navigation Menu -->
+            <transition enter-active-class="transition ease-out duration-300" enter-from-class="translate-x-10"
+                enter-to-class="translate-x-0" leave-active-class="transition ease-in duration-300"
+                leave-from-class="opacity-100 translate-x-0" leave-to-class="opacity-0 translate-x-10">
+                <div v-if="showingNavigationDropdown" ref="dropdownMenu"
+                    class="absolute sm:top-12 top-14 right-0 mr-3 w-48 bg-white dark:bg-gradient-to-br dark:from-[#041C32] dark:via-[#0F172A] dark:to-[#1e1b4b] border dark:border-none border-gray-200 rounded-md shadow-lg dark:shadow-none z-50">
+                    <div class="py-2 flex flex-col gap-1">
+                        <ResponsiveNavLink :href="route('dashboard')" prefetch preserve-state preserve-scroll
+                            class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#0F172A] rounded-md dark:text-white">
+                            <UserIcon class="w-5 h-5 text-blue-500" />
+                            Dashboard
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('logout')" method="post" as="button"
+                            class="flex items-center gap-2 dark:text-white dark:hover:text-gray-800 px-4 py-2 hover:bg-gray-100 rounded-md">
+                            <ArrowRightOnRectangleIcon class="w-5 h-5 text-red-500" />
+                            Log Out
+                        </ResponsiveNavLink>
                     </div>
                 </div>
-            </div>
+            </transition>
         </nav>
 
         <!-- Main area: Sidebar + Content -->
         <div class="flex flex-1 min-h-0">
 
             <!-- SIDEBAR (auto width + scrollable) -->
-            <component :is="SidebarComponent" class="hidden md:block bg-white border-r border-gray-300 pt-4
+            <component :is="SidebarComponent" class="hidden md:block bg-white dark:bg-[#0F172A] dark:border-gray-600 border-r border-gray-300 pt-4
                overflow-y-auto overflow-x-hidden" />
 
             <!-- MAIN CONTENT (otomatis menyesuaikan) -->
-            <div class="flex-1 px-4 sm:px-8 py-6 bg-gray-100 overflow-auto">
+            <div class="flex-1 px-4 sm:px-8 py-6 bg-gray-100 dark:bg-[#020617] overflow-auto">
                 <slot />
             </div>
 
         </div>
     </div>
 </template>
+<style>
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.2s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+</style>

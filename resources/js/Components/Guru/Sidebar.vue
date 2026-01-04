@@ -14,7 +14,7 @@ import {
 
 // MENU ITEMS (pakai routeName seperti versi sebelumnya)
 const menuItems = [
-    { name: 'Dashboard', routeName: 'guru.dashboard', icon: HomeIcon },
+    { name: 'Teacher Dashboard', routeName: 'guru.dashboard', icon: HomeIcon },
     { name: 'Learning Materials', routeName: 'guru.soal.index', icon: ClipboardDocumentIcon },
     {
         name: 'Exam Management',
@@ -95,8 +95,8 @@ const leave = (el) => {
                 <!-- MENU TANPA CHILD -->
                 <div v-if="!item.children">
                     <Link :href="item.href"
-                        class="flex w-full items-center gap-3 px-4 py-2 font-semibold text-gray-600 rounded hover:bg-gray-100 transition"
-                        :class="item.isActive ? 'bg-blue-100 text-[#063970]' : ''">
+                        class="flex w-full items-center gap-3 px-4 py-2 font-semibold text-gray-600 dark:text-white rounded dark:hover:!bg-[#1e1b4b] hover:bg-gray-100 transition"
+                        :class="item.isActive ? 'bg-gray-100 dark:bg-[#1e1b4b] dark:!text-gray-200' : ''">
                         <component :is="item.icon" class="w-5 h-5" />
                         <span class="flex-1">{{ item.name }}</span>
                     </Link>
@@ -105,7 +105,7 @@ const leave = (el) => {
                 <!-- MENU DROPDOWN -->
                 <div v-else class="relative">
                     <button @click="toggleDropdown(item.name)"
-                        class="w-full flex items-center justify-between gap-3 px-4 py-2 font-semibold rounded hover:bg-gray-100 transition text-gray-600">
+                        class="w-full flex items-center justify-between gap-3 px-4 py-2 font-semibold rounded hover:bg-gray-100 transition dark:hover:bg-[#1e1b4b] dark:text-white text-gray-600">
                         <div class="flex items-center gap-3">
                             <component :is="item.icon" class="w-5 h-5" />
                             <span>{{ item.name }}</span>
@@ -119,20 +119,21 @@ const leave = (el) => {
                         <div v-show="isDropdownOpen(item.name)" ref="dropdownRefs"
                             class="pl-12 mt-1 -space-y-1 overflow-hidden">
                             <Link v-for="(child, idx) in item.children" :key="child.name" :href="route(child.routeName)"
-                                class="relative block w-full pr-4 pl-2 py-1 text-gray-600">
+                                class="relative block w-full pr-4 pl-2 py-1 dark:text-white text-gray-600">
                                 <!-- Titik -->
-                                <span class="absolute left-0 top-4 h-2 w-2 rounded-full bg-gray-500"></span>
+                                <span
+                                    class="absolute left-0 top-4 h-2 w-2 rounded-full bg-gray-500 dark:bg-white"></span>
 
                                 <!-- Container teks dengan padding agar BG mulai di sini -->
                                 <span class="relative w-full ml-4 block rounded transition px-2 py-1" :class="route().current(child.routeName)
-                                    ? 'text-gray-600 font-semibold bg-gray-100'
-                                    : 'hover:text-gray-600 hover:bg-gray-100'">
+                                    ? 'text-gray-600 dark:text-gray-100 font-semibold dark:bg-[#1e1b4b] bg-gray-100'
+                                    : 'dark:hover:bg-[#1e1b4b] hover:bg-gray-100'">
                                     {{ child.name }}
                                 </span>
 
                                 <!-- Garis vertical di samping titik -->
                                 <span v-if="idx < item.children.length - 1"
-                                    class="absolute left-1 top-5 z-20 -bottom-5 border-l border-gray-500"></span>
+                                    class="absolute left-1 top-5 z-20 dark:border-white -bottom-5 border-l border-gray-500"></span>
                             </Link>
                         </div>
                     </transition>

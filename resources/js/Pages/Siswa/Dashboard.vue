@@ -1,7 +1,7 @@
 <script setup>
 import UserLayout from '@/Layouts/UserLayout.vue';
 import { ref, computed } from 'vue'
-import { Head, usePage, router } from '@inertiajs/vue3'
+import { Head, usePage, router, Link } from '@inertiajs/vue3'
 import { route } from 'ziggy-js'
 import {
     UserIcon,
@@ -49,8 +49,11 @@ const menuItems = [
 const siswa = computed(() => page.props.siswa || {});
 
 const goTo = (url) => {
-    router.visit(url);
-}
+    router.visit(url, {
+        preserveScroll: true,
+        preserveState: true,
+    });
+};
 
 const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text)
@@ -132,11 +135,13 @@ const copyToClipboard = (text) => {
 
             <!-- Mobile Menu Buttons -->
             <div class="grid md:hidden grid-cols-2 sm:grid-cols-3 gap-4">
-                <button v-for="item in menuItems" :key="item.title" @click="goTo(item.route)" class="flex flex-col items-center justify-center gap-2 p-4 bg-white rounded-xl shadow hover:shadow-lg 
-               transition transform hover:-translate-y-1 w-full">
+                <Link v-for="item in menuItems" :key="item.title" :href="item.route" preserve-scroll preserve-state
+                    class="flex flex-col items-center justify-center gap-2 p-4 bg-white rounded-xl shadow hover:shadow-lg transition transform w-full">
                     <component :is="item.icon" class="w-10 h-10 text-blue-500" />
-                    <span class="text-sm font-medium text-gray-700 text-center">{{ item.title }}</span>
-                </button>
+                    <span class="text-sm font-medium text-gray-700 text-center">
+                        {{ item.title }}
+                    </span>
+                </Link>
             </div>
 
             <!-- Card Siswa -->
