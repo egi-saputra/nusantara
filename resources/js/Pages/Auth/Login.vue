@@ -6,6 +6,7 @@ import AlertError from '@/Components/Modals/AlertError.vue'
 import { useAlert } from '@/Composables/useAlert.js';
 import axios from 'axios';
 import { MegaphoneIcon, DocumentTextIcon, BuildingLibraryIcon } from '@heroicons/vue/24/outline';
+import NusaverseWave from '@/Components/NusaverseWave.vue';
 
 const props = defineProps({
     // loginUrl: { type: String, default: '' },
@@ -133,16 +134,18 @@ const submitLogin = async () => {
         <!-- <div
             class="sm:flex hidden flex-col justify-start items-start w-full md:w-1/2 p-10 bg-gradient-to-br from-[#1e1b4b] via-[#312e81] to-[#4c1d95] text-white relative overflow-hidden pb-24"> -->
         <div
-            class="sm:flex hidden flex-col justify-start items-start w-full md:w-1/2 p-10 bg-gradient-to-br from-[#063970] via-[#0a4e8c] to-[#0f6ab4] text-white relative pb-24">
+            class="sm:flex hidden flex-col justify-start items-start w-full md:w-1/2 p-10 bg-gradient-to-br from-[#063970] via-[#0a4e8c] to-[#0f6ab4] text-white relative overflow-hidden pb-24">
 
             <!-- Decorative Waves -->
-            <div class="absolute bottom-0 left-0 w-full opacity-20 pointer-events-none">
-                <svg viewBox="0 0 1440 320" class="w-full h-28 md:h-40">
+            <!-- <div class="absolute bottom-0 left-0 w-full opacity-20 pointer-events-none">
+                <svg viewBox="0 0 1440 320" preserveAspectRatio="none" class="w-full h-32 md:h-44 block">
                     <path fill="#ffffff" fill-opacity="0.3"
-                        d="M0,192L60,208C120,224,240,256,360,245.3C480,235,600,181,720,170.7C840,160,960,192,1080,181.3C1200,171,1320,117,1380,90.7L1440,64V320H0Z">
-                    </path>
+                        d="M0,192L60,208C120,224,240,256,360,245.3C480,235,600,181,720,170.7C840,160,960,192,1080,181.3C1200,171,1320,117,1380,90.7L1440,64V320H0Z" />
                 </svg>
-            </div>
+            </div> -->
+
+            <!-- Decorative Animation Waves -->
+            <NusaverseWave />
 
             <!-- TOP AREA -->
             <div class="w-full relative mb-4 z-10">

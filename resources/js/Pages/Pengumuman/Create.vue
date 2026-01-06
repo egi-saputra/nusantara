@@ -93,10 +93,10 @@ async function deleteAllAnnouncements() {
 
 <template>
     <MenuLayout>
-        <div class="max-w-5xl mx-auto space-y-14 px-4 py-8">
+        <div class="max-w-5xl mx-auto space-y-14 sm:px-4 sm:py-6">
 
             <!-- CREATE FORM -->
-            <div class="rounded-3xl border border-white/20 dark:border-white/10
+            <div class="rounded-xl border border-white/20 dark:border-white/10
                        bg-white/70 dark:bg-white/5
                        backdrop-blur-xl shadow-xl p-6 sm:p-8">
 
@@ -180,7 +180,7 @@ async function deleteAllAnnouncements() {
 
                     <!-- ACTION -->
                     <div class="flex justify-end gap-3 pt-4">
-                        <button type="button" @click="form.reset()" class="px-6 py-3 rounded-xl bg-gray-600 hover:bg-gray-700
+                        <button type="button" @click="form.reset()" class="px-6 py-3 rounded-xl bg-gray-600 hover:bg-gray-700 dark:bg-transparent dark:hover:bg-gray-800 dark:border
                                    text-white font-semibold flex items-center gap-2">
                             <ArrowPathIcon class="w-5 h-5" />
                             Reset
@@ -190,7 +190,7 @@ async function deleteAllAnnouncements() {
                                    bg-gradient-to-r from-indigo-600 to-purple-600
                                    hover:opacity-90 text-white font-semibold
                                    flex items-center gap-2">
-                            <PaperAirplaneIcon class="w-5 h-5" />
+                            <PaperAirplaneIcon class="w-5 h-5 sm:inline-block hidden" />
                             {{ isSubmitting ? 'Sending...' : 'Send Message' }}
                         </button>
                     </div>
@@ -198,7 +198,7 @@ async function deleteAllAnnouncements() {
             </div>
 
             <!-- ANNOUNCEMENT LIST -->
-            <div class="rounded-3xl border border-white/20 dark:border-white/10
+            <div class="rounded-xl border border-white/20 dark:border-white/10
                        bg-white/70 dark:bg-white/5
                        backdrop-blur-xl shadow-xl p-6 sm:p-8">
 

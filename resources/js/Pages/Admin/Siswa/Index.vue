@@ -75,10 +75,10 @@ const hapus = (id) => {
     <Head title="Student List" />
 
     <MenuLayout>
-        <div class="sm:bg-white sm:rounded-lg sm:shadow sm:p-6">
+        <div class="sm:bg-white/60 dark:sm:bg-gray-800/60 sm:backdrop-blur-md sm:rounded sm:shadow sm:p-6">
 
             <!-- Header -->
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div class="flex flex-col dark:text-gray-200 sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <div>
                     <h1 class="text-xl font-semibold">List of All Students</h1>
                     <p class="text-sm text-gray-500">Manage student data</p>
@@ -88,96 +88,104 @@ const hapus = (id) => {
             <!-- Filter Bar -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                 <input v-model="search" type="text" placeholder="Search student name..."
-                    class="w-full px-4 py-2 border rounded text-sm focus:ring-indigo-500 focus:border-indigo-500" />
+                    class="w-full rounded border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-700/60 px-3 py-2
+                          text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
 
-                <select v-model="sort" class="w-full px-4 py-2 border rounded text-sm">
+                <select v-model="sort"
+                    class="w-full rounded border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-700/60 px-3 py-2 text-gray-900 dark:text-gray-300
+                           placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
                     <option value="asc">Sort A – Z</option>
                     <option value="desc">Sort Z – A</option>
                 </select>
 
                 <button @click="resetFilter"
-                    class="flex items-center justify-center gap-2 px-4 py-2 rounded border bg-gray-700 text-white hover:bg-gray-800 transition text-sm">
+                    class="flex items-center justify-center gap-2 px-4 py-2 rounded border bg-gray-700 dark:hover:bg-gray-800 text-white dark:bg-transparent hover:bg-gray-800 transition text-sm">
                     <ArrowPathIcon class="w-4 h-4" /> Reset
                 </button>
             </div>
 
             <!-- Desktop Table -->
             <div class="hidden md:block">
-                <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
+                <h2 class="text-xl font-semibold dark:text-gray-300 mb-4 flex items-center gap-2">
                     <InformationCircleIcon class="w-6 h-6 text-blue-500" />
                     Student List Updates Automatically
                 </h2>
 
-                <table class="w-full border rounded-lg">
-                    <thead class="bg-blue-800 text-white">
-                        <tr>
-                            <th class="px-4 py-2 text-center border-r">No</th>
-                            <th class="px-4 py-2 text-center border-r">Full Name</th>
-                            <th class="px-4 py-2 text-center border-r">NIS / NISN</th>
-                            <th class="px-4 py-2 text-center border-r">Class / Major</th>
-                            <th class="px-4 py-2 text-center border-r">Account Status</th>
-                            <th class="px-4 py-2 text-center">Actions</th>
-                        </tr>
-                    </thead>
+                <div
+                    class="hidden md:block rounded-lg overflow-hidden shadow-lg bg-white/60 dark:bg-gray-800/60 backdrop-blur-md">
+                    <table class="w-full border-collapse">
 
-                    <tbody>
-                        <tr v-for="(s, index) in paginatedSiswa" :key="s.id" class="border-t">
-                            <td class="px-4 py-2 text-center border-r">
-                                {{ (currentPage - 1) * perPage + index + 1 }}
-                            </td>
+                        <thead class="bg-blue-800 text-white">
+                            <tr>
+                                <th class="px-4 py-2 text-center border-r whitespace-nowrap">No</th>
+                                <th class="px-4 py-2 text-center border-r whitespace-nowrap">Full Name</th>
+                                <th class="px-4 py-2 text-center border-r whitespace-nowrap">NIS / NISN</th>
+                                <th class="px-4 py-2 text-center border-r whitespace-nowrap">Class / Major</th>
+                                <th class="px-4 py-2 text-center border-r whitespace-nowrap">Account Status</th>
+                                <th class="px-4 py-2 text-center whitespace-nowrap">Actions</th>
+                            </tr>
+                        </thead>
 
-                            <td class="px-4 py-2 border-r">{{ s.nama_lengkap ?? '-' }}</td>
+                        <tbody>
+                            <tr v-for="(s, index) in paginatedSiswa" :key="s.id"
+                                class="border-t dark:border-none hover:bg-gray-200 dark:hover:bg-gray-700 dark:text-gray-300">
+                                <td class="px-4 py-2 text-center">
+                                    {{ (currentPage - 1) * perPage + index + 1 }}
+                                </td>
 
-                            <td class="px-4 py-2 border-r">
-                                {{ s.nis ?? '-' }} / {{ s.nisn ?? '-' }}
-                            </td>
+                                <td class="px-4 py-2">{{ s.nama_lengkap ?? '-' }}</td>
 
-                            <td class="px-4 py-2 border-r">
-                                {{ s.kelas?.kelas ?? '-' }} / {{ s.kejuruan?.kejuruan ?? '-' }}
-                            </td>
+                                <td class="px-4 py-2 text-center">
+                                    {{ s.nis ?? '-' }} / {{ s.nisn ?? '-' }}
+                                </td>
 
-                            <td class="px-4 py-2 border-r">
-                                <span class="font-semibold" :class="{
-                                    'text-green-700': s.status === 'Activated',
-                                    'text-red-700': s.status === 'Deactivated'
-                                }">
-                                    {{ s.status === 'Activated' ? 'Active' : 'Inactive' }}
-                                </span>
-                            </td>
+                                <td class="px-4 py-2 text-center">
+                                    {{ s.kelas?.kelas ?? '-' }} / {{ s.kejuruan?.kejuruan ?? '-' }}
+                                </td>
 
-                            <td class="px-6 justify-center py-2 flex gap-2">
-                                <Link :href="route('admin.siswa.edit', s.id)"
-                                    class="text-indigo-600 hover:text-indigo-800">
-                                    <PencilSquareIcon class="w-5 h-5" />
-                                </Link>
+                                <td class="px-4 py-2 text-center">
+                                    <span class="font-semibold" :class="{
+                                        'text-green-700 dark:text-green-500': s.status === 'Activated',
+                                        'text-red-700 dark-text-red-500': s.status === 'Deactivated'
+                                    }">
+                                        {{ s.status === 'Activated' ? 'Active' : 'Inactive' }}
+                                    </span>
+                                </td>
 
-                                <button @click="hapus(s.id)" class="text-red-600 hover:text-red-800">
-                                    <TrashIcon class="w-5 h-5" />
-                                </button>
-                            </td>
-                        </tr>
+                                <td class="px-6 justify-center py-2 flex gap-2">
+                                    <Link :href="route('admin.siswa.edit', s.id)"
+                                        class="text-blue-600 dark:text-gray-100 dark:hover:text-gray-300 hover:text-blue-800">
+                                        <PencilSquareIcon class="w-5 h-5" />
+                                    </Link>
 
-                        <tr v-if="filteredSiswa.length === 0">
-                            <td colspan="6" class="text-center py-6 text-gray-500">
-                                No student data available
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                    <button @click="hapus(s.id)" class="text-red-600 hover:text-red-800">
+                                        <TrashIcon class="w-5 h-5" />
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr v-if="filteredSiswa.length === 0">
+                                <td colspan="6" class="text-center py-6 text-gray-500">
+                                    No student data available
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
 
             <!-- Mobile Card View -->
             <div class="md:hidden grid grid-cols-1 gap-4">
-                <h2 class="text-lg font-semibold flex items-center gap-2">
+                <h2 class="text-lg font-semibold dark:text-gray-300 flex items-center gap-2">
                     <InformationCircleIcon class="w-6 h-6 text-blue-500" />
                     Student List Updates Automatically
                 </h2>
 
                 <div v-for="(s, index) in paginatedSiswa" :key="s.id"
-                    class="relative rounded-lg border p-5 shadow hover:shadow-lg transition">
+                    class="relative rounded border z-30 p-5 shadow hover:shadow-lg transition">
 
-                    <div
-                        class="absolute inset-y-0 left-0 w-1 rounded-l-2xl bg-gradient-to-b from-indigo-500 to-purple-500">
+                    <div class="absolute z-20 inset-x-0 top-0 h-1 rounded-t bg-gradient-to-r from-blue-500 to-pink-500">
                     </div>
 
                     <div class="flex items-center gap-3 mt-2">
@@ -187,14 +195,15 @@ const hapus = (id) => {
                                     class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg">
                                     {{ s.nama_lengkap.charAt(0).toUpperCase() }}
                                 </div>
-                                <h3 class="font-semibold mb-3 text-gray-800">{{ s.nama_lengkap }}</h3>
+                                <h3 class="font-semibold mb-3 dark:text-gray-300 text-gray-800">{{ s.nama_lengkap }}
+                                </h3>
                             </div>
 
-                            <p class="text-sm mb-2 ml-10 text-gray-500">
+                            <p class="text-sm mb-2 ml-10 dark:text-gray-400 text-gray-500">
                                 NIS / NISN: {{ s.nis }} / {{ s.nisn }}
                             </p>
 
-                            <p class="text-sm mb-4 ml-10 text-gray-500">
+                            <p class="text-sm mb-4 ml-10 dark:text-gray-400 text-gray-500">
                                 Class: {{ s.kelas?.kelas ?? '-' }} ({{ s.kejuruan?.kejuruan ?? '-' }})
                             </p>
 
@@ -228,22 +237,22 @@ const hapus = (id) => {
             <div class="flex items-center justify-center gap-2 mt-6">
                 <button @click="currentPage--" :disabled="currentPage === 1" class="px-3 py-1 rounded-md text-sm"
                     :class="currentPage === 1
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'">
+                        ? 'bg-gray-100 dark:bg-transparent text-gray-400 cursor-not-allowed'
+                        : 'bg-gray-100 dark:bg-transparent text-gray-600 hover:bg-gray-200'">
                     ‹ Prev
                 </button>
 
                 <button v-for="p in visiblePages" :key="p" @click="currentPage = p" class="px-3 py-1 rounded-md text-sm"
                     :class="p === currentPage
-                        ? 'bg-indigo-600 text-white'
+                        ? 'bg-blue-600 text-white'
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'">
                     {{ p }}
                 </button>
 
                 <button @click="currentPage++" :disabled="currentPage === totalPages"
                     class="px-3 py-1 rounded-md text-sm" :class="currentPage === totalPages
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'">
+                        ? 'bg-gray-100 dark:bg-transparent text-gray-400 cursor-not-allowed'
+                        : 'bg-gray-100 dark:bg-transparent text-gray-600 hover:bg-gray-200'">
                     Next ›
                 </button>
             </div>

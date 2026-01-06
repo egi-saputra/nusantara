@@ -13,6 +13,22 @@ input:-webkit-autofill:active {
     transition: background-color 5000s ease-in-out 0s;
 }
 
+:root {
+    --wave-back: rgba(255, 255, 255, 0.08);
+    --wave-mid: rgba(255, 255, 255, 0.16);
+    --wave-front: rgba(255, 255, 255, 0.28);
+}
+
+.dark {
+    --wave-back: rgba(255, 255, 255, 0.04);
+    --wave-mid: rgba(255, 255, 255, 0.08);
+    --wave-front: rgba(255, 255, 255, 0.14);
+}
+
+svg path {
+    will-change: transform;
+}
+
 @supports ((-webkit-backdrop-filter: blur(0)) or (backdrop-filter: blur(0))) {
     .glass {
         -webkit-backdrop-filter: blur(20px);

@@ -101,7 +101,7 @@ const goTo = (url) => {
 
         <!-- Welcome Section -->
         <div
-            class="bg-gradient-to-r mb-6 from-blue-500 to-indigo-600 text-white rounded-lg shadow hover:shadow-lg transition-all duration-300 sm:p-6 p-4 flex flex-col sm:flex-row items-center sm:text-left text-center gap-4">
+            class="bg-gradient-to-r mb-6 from-blue-500 to-indigo-600 text-white rounded-lg shadow hover:shadow-lg dark:bg-gradient-to-br dark:sm:from-[#1e1b4b] dark:sm:via-[#312e81] dark:sm:to-[#4c1d95] dark:from-[#063970] dark:via-[#0a4e8c] dark:to-[#1e1b4b] border dark:border-[#1e1b4b] transition-all duration-300 sm:p-6 p-4 flex flex-col sm:flex-row items-center sm:text-left text-center gap-4">
             <UserIcon class="w-12 h-12 text-white" />
             <div>
                 <h1 class="sm:text-3xl text-xl font-bold">Welcome, {{ userName }}! 👋</h1>
@@ -113,74 +113,97 @@ const goTo = (url) => {
         <div class="sm:grid hidden mb-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
             <!-- Admin -->
-            <div class="bg-white rounded-lg shadow p-5 flex items-center gap-4 hover:shadow-lg transition">
+            <div
+                class="bg-white dark:bg-gradient-to-br dark:from-[#1e1b4b] dark:via-[#312e81] dark:to-[#4c1d95] rounded-lg shadow p-5 flex items-center gap-4 hover:shadow-lg transition">
                 <UserIcon class="w-10 h-10 text-red-500" />
                 <div>
-                    <p class="text-gray-500">Admin</p>
-                    <h3 class="text-xl font-bold">{{ page.props.usersCount.admin }}</h3>
+                    <p class="text-gray-500 dark:text-white">Admin</p>
+                    <h3 class="text-xl font-bold dark:text-white">{{ page.props.usersCount.admin }}</h3>
                 </div>
             </div>
 
             <!-- Proktor -->
-            <div class="bg-white rounded-lg shadow p-5 flex items-center gap-4 hover:shadow-lg transition">
-                <UserGroupIcon class="w-10 h-10 text-purple-500" />
+            <div
+                class="bg-white dark:bg-gradient-to-br dark:from-[#1e1b4b] dark:via-[#312e81] dark:to-[#4c1d95] rounded-lg shadow p-5 flex items-center gap-4 hover:shadow-lg transition">
+                <UserGroupIcon class="w-10 h-10 dark:text-orange-500 text-purple-500" />
                 <div>
-                    <p class="text-gray-500">Proktor</p>
-                    <h3 class="text-xl font-bold">{{ page.props.usersCount.proktor }}</h3>
+                    <p class="text-gray-500 dark:text-white">Proktor</p>
+                    <h3 class="text-xl font-bold dark:text-white">{{ page.props.usersCount.proktor }}</h3>
                 </div>
             </div>
 
             <!-- Guru -->
-            <div class="bg-white rounded-lg shadow p-5 flex items-center gap-4 hover:shadow-lg transition">
+            <div
+                class="bg-white dark:bg-gradient-to-br dark:from-[#1e1b4b] dark:via-[#312e81] dark:to-[#4c1d95] rounded-lg shadow p-5 flex items-center gap-4 hover:shadow-lg transition">
                 <AcademicCapIcon class="w-10 h-10 text-green-500" />
                 <div>
-                    <p class="text-gray-500">Guru</p>
-                    <h3 class="text-xl font-bold">{{ page.props.usersCount.guru }}</h3>
+                    <p class="text-gray-500 dark:text-white">Guru</p>
+                    <h3 class="text-xl font-bold dark:text-white">{{ page.props.usersCount.guru }}</h3>
                 </div>
             </div>
 
             <!-- Siswa -->
-            <div class="bg-white rounded-lg shadow p-5 flex items-center gap-4 hover:shadow-lg transition">
+            <div
+                class="bg-white dark:bg-gradient-to-br dark:from-[#1e1b4b] dark:via-[#312e81] dark:to-[#4c1d95] rounded-lg shadow p-5 flex items-center gap-4 hover:shadow-lg transition">
                 <ClipboardDocumentListIcon class="w-10 h-10 text-blue-500" />
                 <div>
-                    <p class="text-gray-500">Siswa</p>
-                    <h3 class="text-xl font-bold">{{ page.props.usersCount.siswa }}</h3>
+                    <p class="text-gray-500 dark:text-white">Siswa</p>
+                    <h3 class="text-xl font-bold dark:text-white">{{ page.props.usersCount.siswa }}</h3>
                 </div>
             </div>
         </div>
 
         <!-- Informasi tambahan / widget -->
-        <div class="bg-white sm:block hidden rounded-lg shadow p-6">
-            <h2 class="font-semibold text-lg text-gray-700 mb-4">Aktivitas Terbaru</h2>
+        <div
+            class="bg-white dark:bg-gradient-to-br dark:from-[#1e1b4b] dark:via-[#312e81] dark:to-[#4c1d95] sm:block hidden rounded-lg shadow p-6">
+            <h2 class="font-semibold text-lg dark:text-white text-gray-700 mb-4">Aktivitas Terbaru</h2>
             <ul class="space-y-2">
-                <li class="flex items-center gap-2">
+                <li class="flex items-center dark:text-white gap-2">
                     <CheckBadgeIcon class="w-5 h-5 text-green-500" />
                     Peserta baru mendaftar 3 menit yang lalu
                 </li>
-                <li class="flex items-center gap-2">
+                <li class="flex items-center dark:text-white gap-2">
                     <ClipboardDocumentListIcon class="w-5 h-5 text-blue-500" />
                     Ujian baru ditambahkan
                 </li>
-                <li class="flex items-center gap-2">
+                <li class="flex items-center dark:text-white gap-2">
                     <AcademicCapIcon class="w-5 h-5 text-yellow-500" />
                     Nilai ujian diperbarui
                 </li>
             </ul>
         </div>
 
+        <!-- Mobile Menu Buttons -->
         <div class="max-w-7xl mx-auto space-y-6">
-            <!-- Mobile Menu Buttons -->
             <div class="grid md:hidden grid-cols-2 sm:grid-cols-3 gap-4">
                 <Link v-for="item in menuItems" :key="item.title" :href="item.route" prefetch="hover" preserve-scroll
                     preserve-state
-                    class="flex flex-col items-center justify-center gap-2 p-4 bg-white rounded-xl shadow hover:shadow-lg transition transform w-full">
-                    <component :is="item.icon" class="w-10 h-10 text-blue-500" />
-                    <span class="text-sm font-medium text-gray-700 text-center">
+                    class="flex flex-col items-center justify-center gap-2 p-4 bg-white rounded-xl dark:bg-gradient-to-br dark:from-[#063970] dark:via-[#0a4e8c] dark:to-[#1e1b4b] transition transform w-full">
+                    <component :is="item.icon" class="w-10 h-10 dark:text-gray-300 text-blue-500" />
+                    <span class="text-sm font-medium dark:text-gray-100 text-gray-700 text-center">
                         {{ item.title }}
                     </span>
                 </Link>
             </div>
         </div>
     </UserLayout>
+
+    <!-- MOBILE BOTTOM NAV -->
+    <!-- <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200
+           md:hidden safe-bottom">
+        <div class="flex justify-around items-center h-16">
+
+            <button v-for="item in menuItems" :key="item.title" @click="goTo(item.route)" class="flex flex-col items-center justify-center gap-1 w-full h-full
+                   transition-all" :class="isActive(item.route)
+                    ? 'text-indigo-600'
+                    : 'text-gray-400 hover:text-indigo-500'">
+                <component :is="item.icon" class="w-6 h-6" :class="isActive(item.route) ? 'scale-110' : ''" />
+                <span class="text-[11px] font-medium leading-none">
+                    {{ item.title }}
+                </span>
+            </button>
+
+        </div>
+    </nav> -->
 
 </template>

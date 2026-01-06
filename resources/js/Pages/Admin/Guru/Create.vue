@@ -21,15 +21,16 @@ const submit = () => {
     <Head title="Add Teacher Data" />
 
     <MenuLayout>
-        <div class="bg-white rounded-lg shadow p-6">
-            <h1 class="text-xl font-semibold mb-6">Add Teacher</h1>
+        <div class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-xl p-6 transition">
+            <h1 class="text-xl dark:text-gray-200 font-semibold mb-6">Add Teacher</h1>
 
             <form @submit.prevent="submit" class="space-y-4">
 
                 <!-- Dropdown User -->
                 <div>
-                    <label class="block text-sm font-medium mb-1">Select User</label>
-                    <select v-model="form.user_id" class="w-full rounded-lg border-gray-300">
+                    <label class="block text-sm dark:text-gray-400 font-medium mb-1">Select User</label>
+                    <select v-model="form.user_id"
+                        class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-700/50 px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
                         <option value="">-- select teacher user --</option>
                         <option v-for="u in props.users" :key="u.id" :value="u.id">
                             {{ u.name }}
@@ -43,8 +44,10 @@ const submit = () => {
 
                 <!-- Full Name -->
                 <div>
-                    <label class="block text-sm font-medium mb-1">Full Name + Title (Optional)</label>
-                    <input v-model="form.nama_lengkap" type="text" class="w-full rounded-lg border-gray-300" />
+                    <label class="block text-sm font-medium dark:text-gray-400 mb-1">Full Name + Title
+                        (Optional)</label>
+                    <input v-model="form.nama_lengkap" type="text"
+                        class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-700/50 px-4 py-2 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" />
 
                     <div v-if="form.errors.nama_lengkap" class="text-red-500 text-sm">
                         {{ form.errors.nama_lengkap }}
@@ -52,10 +55,11 @@ const submit = () => {
                 </div>
 
                 <div class="flex justify-end gap-2 pt-4">
-                    <Link :href="route('admin.guru.index')" class="px-4 py-2 rounded-lg border">
+                    <Link :href="route('admin.guru.index')"
+                        class="px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
                         Cancel
                     </Link>
-                    <button type="submit" class="px-4 py-2 rounded-lg bg-indigo-600 text-white"
+                    <button type="submit" class="px-4 py-2 rounded-lg hover:bg-blue-800 bg-blue-600 text-white"
                         :disabled="form.processing">
                         Save
                     </button>

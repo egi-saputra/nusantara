@@ -23,47 +23,54 @@ const submit = () => {
     <Head title="Add Vocational Program" />
 
     <MenuLayout>
-        <div class="bg-white rounded-lg shadow p-6">
-            <h1 class="text-xl font-semibold mb-6">Add Vocational Program Data</h1>
+        <div class="max-w-3xl mx-auto p-6">
 
-            <form @submit.prevent="submit" class="space-y-4">
+            <!-- Glassmorphism container -->
+            <div class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-xl p-6 transition">
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Add Vocational Program Data</h1>
 
-                <!-- Vocational Program Name -->
-                <div>
-                    <label class="block text-sm font-medium mb-1">Program Name</label>
-                    <input v-model="form.kejuruan" type="text" class="w-full rounded-lg border-gray-300" />
-                    <div v-if="form.errors.kejuruan" class="text-red-500 text-sm">
-                        {{ form.errors.kejuruan }}
+                <form @submit.prevent="submit" class="space-y-4">
+
+                    <!-- Vocational Program Name -->
+                    <div>
+                        <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Program
+                            Name</label>
+                        <input v-model="form.kejuruan" type="text"
+                            class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-700/50 px-4 py-2 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" />
+                        <div v-if="form.errors.kejuruan" class="text-red-600 dark:text-red-400 text-sm mt-1">
+                            {{ form.errors.kejuruan }}
+                        </div>
                     </div>
-                </div>
 
-                <!-- Head of Program -->
-                <div>
-                    <label class="block text-sm font-medium mb-1">Head of Program</label>
-                    <select v-model="form.guru_id" class="w-full rounded-lg border-gray-300">
-                        <option value="">-- Select Teacher --</option>
-                        <option v-for="g in props.guru" :key="g.id" :value="g.id">
-                            {{ g.nama_lengkap }}
-                        </option>
-                    </select>
-
-                    <div v-if="form.errors.guru_id" class="text-red-500 text-sm">
-                        {{ form.errors.guru_id }}
+                    <!-- Head of Program -->
+                    <div>
+                        <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Head of
+                            Program</label>
+                        <select v-model="form.guru_id"
+                            class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-700 50 px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                            <option value="">-- Select Teacher --</option>
+                            <option v-for="g in props.guru" :key="g.id" :value="g.id">{{ g.nama_lengkap }}</option>
+                        </select>
+                        <div v-if="form.errors.guru_id" class="text-red-600 dark:text-red-400 text-sm mt-1">
+                            {{ form.errors.guru_id }}
+                        </div>
                     </div>
-                </div>
 
-                <!-- Buttons -->
-                <div class="flex justify-end gap-2 pt-4">
-                    <Link :href="route('admin.kejuruan.index')" class="px-4 py-2 rounded-lg border">
-                        Cancel
-                    </Link>
-                    <button type="submit" class="px-4 py-2 rounded-lg bg-indigo-600 text-white"
-                        :disabled="form.processing">
-                        Save
-                    </button>
-                </div>
+                    <!-- Buttons -->
+                    <div class="flex justify-end gap-3 pt-4">
+                        <Link :href="route('admin.kejuruan.index')" class="px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300
+                         hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                            Cancel
+                        </Link>
+                        <button type="submit"
+                            class="px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition">
+                            Save
+                        </button>
+                    </div>
 
-            </form>
+                </form>
+            </div>
+
         </div>
     </MenuLayout>
 </template>
