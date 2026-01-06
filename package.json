@@ -23,6 +23,7 @@
         "@inertiajs/inertia": "^0.11.1",
         "@inertiajs/inertia-vue3": "^0.6.0",
         "@inertiajs/progress": "^0.2.7",
+        "@vueuse/core": "^14.1.0",
         "exceljs": "^4.4.0",
         "file-saver": "^2.0.5",
         "lucide-vue-next": "^0.561.0",

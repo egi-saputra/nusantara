@@ -75,52 +75,81 @@ const goToIndex = (id) => {
 
 <template>
     <MenuLayout>
-        <div class="w-full py-4 sm:py-10 md:px-10 max-w-6xl mx-auto">
+        <div class="w-full py-3 sm:py-12 sm:px-6 max-w-7xl mx-auto">
 
-            <!-- Header -->
-            <div class="mb-12 px-4 text-center">
-                <h1 class="text-2xl sm:text-6xl font-extrabold tracking-tight font-poppins text-gray-900 leading-tight">
-                    Mading <span class="text-indigo-600">Sekolah Nusantara</span>
+            <!-- HEADER -->
+            <div class="mb-14 text-center">
+                <h1 class="text-3xl sm:text-6xl font-extrabold tracking-tight
+                           text-gray-900 dark:text-white">
+                    Mading
+                    <span class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
+                               bg-clip-text text-transparent">
+                        Sekolah Nusantara
+                    </span>
                 </h1>
 
-                <p class="text-gray-500 mt-3 text-sm sm:text-lg font-light">
+                <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm sm:text-lg">
                     Pengumuman, informasi, dan berita terbaru sekolah
                 </p>
 
-                <!-- Decorative line -->
-                <div class="mt-5 w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-600 mx-auto rounded-full"></div>
+                <div class="mt-6 w-28 h-1 mx-auto rounded-full
+                           bg-gradient-to-r from-indigo-500 to-purple-600">
+                </div>
             </div>
 
-            <!-- Empty State -->
-            <div v-if="pengumuman.length === 0" class="text-gray-400 italic text-center py-20 text-lg">
-                Belum ada pengumuman.
+            <!-- EMPTY STATE -->
+            <div v-if="pengumuman.length === 0"
+                class="text-center py-24 text-gray-400 dark:text-gray-500 italic text-lg">
+                Belum ada pengumuman 📭
             </div>
 
-            <!-- Magazine Grid -->
-            <div class="grid grid-cols-1">
-                <div v-for="item in pengumuman" :key="item.id" class="group relative overflow-hidden rounded-2xl shadow-xl bg-white 
-                           border border-gray-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
-                    <!-- Accent bar -->
-                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-indigo-500 to-purple-600"></div>
+            <!-- GRID -->
+            <div v-else class="grid grid-cols-1 gap-8">
 
-                    <!-- Background Fade -->
-                    <div
-                        class="absolute inset-0 opacity-0 group-hover:opacity-10 transition duration-300 bg-gradient-to-br from-indigo-200 to-purple-200">
+                <div v-for="item in pengumuman" :key="item.id" class="group relative overflow-hidden rounded-xl sm:rounded-3xl
+                           bg-white/70 dark:bg-white/5
+                           backdrop-blur-xl
+                           border border-white/20 dark:border-white/10
+                           shadow-lg hover:shadow-2xl
+                           transition-all duration-300 hover:-translate-y-2">
+
+                    <!-- Gradient Accent -->
+                    <div class="absolute top-0 left-0 w-full h-1.5
+                               bg-gradient-to-r from-indigo-500 to-purple-600">
                     </div>
 
-                    <div class="p-6 relative z-10">
-                        <h2 class="font-bold text-xl text-gray-800 mb-3 group-hover:text-indigo-700 transition">
+                    <!-- Hover Glow -->
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-20
+                               transition duration-300
+                               bg-gradient-to-br from-indigo-400 to-purple-500">
+                    </div>
+
+                    <div class="relative z-10 p-6 flex flex-col h-full">
+
+                        <!-- TITLE -->
+                        <h2 class="text-xl font-bold mb-3
+                                   text-gray-800 dark:text-white
+                                   group-hover:text-indigo-600 transition">
                             {{ item.judul }}
                         </h2>
 
-                        <p class="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-4">
+                        <!-- CONTENT -->
+                        <p class="text-gray-600 dark:text-gray-300
+                                   text-sm leading-relaxed line-clamp-4 flex-1">
                             {{ item.pengumuman }}
                         </p>
 
-                        <div class="text-xs text-gray-500 mt-4 pt-3 border-t border-gray-100">
-                            Penerima: <span class="font-medium">{{ item.penerima }}</span>
-                            <span v-if="item.kelas"> | Kelas: {{ item.kelas.kelas }}</span>
+                        <!-- META -->
+                        <div class="mt-6 pt-4 border-t border-gray-200/50 dark:border-white/10
+                                   text-xs text-gray-500 dark:text-gray-400">
+                            <span class="font-medium">
+                                🎯 Informasi untuk: {{ item.penerima }}
+                            </span>
+                            <span v-if="item.kelas">
+                                • Kelas: {{ item.kelas.kelas }}
+                            </span>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -129,10 +158,11 @@ const goToIndex = (id) => {
     </MenuLayout>
 </template>
 
+
 <style>
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity 0.2s;
+    transition: opacity 0.25s ease;
 }
 
 .fade-enter-from,

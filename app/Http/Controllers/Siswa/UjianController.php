@@ -20,7 +20,7 @@ class UjianController extends Controller
         $user = Auth::user();
 
         return Inertia::render('Siswa/Ujian/Token', [
-            'title' => 'Exam Room Entrance'
+            'title' => 'Exam Entrance'
         ]);
     }
 

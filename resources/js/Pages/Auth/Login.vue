@@ -204,8 +204,10 @@ const submitLogin = async () => {
             <div
                 class="w-full max-w-md text-start bg-white/60 backdrop-blur-md sm:p-6 sm:rounded-2xl sm:shadow-lg sm:border sm:border-gray-100 scale-soft">
 
-                <div class="no-select h-60 sm:hidden flex items-center justify-center">
-                    <img :src="props.mobileUrl" class="w-full h-full object-cover leading-none" alt="Logo Sekolah">
+                <div class="flex justify-center sm:mb-0 sm:mt-0 -mb-6 -mt-6">
+                    <div class="no-select h-60 sm:hidden flex items-center justify-center">
+                        <img :src="props.mobileUrl" class="w-full h-full object-cover leading-none" alt="Logo Sekolah">
+                    </div>
                 </div>
 
                 <!-- Header Mobile -->

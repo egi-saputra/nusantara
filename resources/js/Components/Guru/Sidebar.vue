@@ -15,7 +15,7 @@ import {
 // MENU ITEMS (pakai routeName seperti versi sebelumnya)
 const menuItems = [
     { name: 'Teacher Dashboard', routeName: 'guru.dashboard', icon: HomeIcon },
-    { name: 'Learning Materials', routeName: 'guru.soal.index', icon: ClipboardDocumentIcon },
+    // { name: 'Learning Materials', routeName: 'guru.soal.index', icon: ClipboardDocumentIcon },
     {
         name: 'Exam Management',
         icon: AdjustmentsHorizontalIcon,

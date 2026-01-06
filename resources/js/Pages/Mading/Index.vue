@@ -48,41 +48,45 @@ const goToPage = (page) => {
 </script>
 
 <template>
-    <div class="w-full py-6 sm:py-10 md:px-10 max-w-4xl mx-auto">
+    <div class="w-full py-6 px-4 sm:py-12 md:px-10 max-w-4xl mx-auto">
 
-        <!-- Header -->
-        <div class="mb-12 px-4 text-center">
-            <h1 class="text-3xl sm:text-6xl font-extrabold tracking-tight text-gray-900">
-                Mading <span class="text-indigo-600">Sekolah Nusantara</span>
+        <!-- HEADER -->
+        <div class="mb-14 text-center">
+            <h1 class="text-3xl sm:text-6xl font-extrabold tracking-tight
+                           text-gray-900 dark:text-white">
+                Mading
+                <span class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
+                               bg-clip-text text-transparent">
+                    Sekolah Nusantara
+                </span>
             </h1>
 
-            <p class="text-gray-500 mt-3 text-sm sm:text-lg font-light">
+            <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm sm:text-lg">
                 Pengumuman, informasi, dan berita terbaru sekolah
             </p>
 
-            <div
-                class="mt-5 w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-600 mx-auto rounded-full animated-gradient">
+            <div class="mt-6 w-28 h-1 mx-auto rounded-full
+                           bg-gradient-to-r from-indigo-500 to-purple-600">
             </div>
         </div>
 
-        <!-- Empty -->
-        <div v-if="pengumuman.length === 0" class="text-gray-400 italic text-center py-20 text-lg">
-            Belum ada pengumuman.
+        <!-- EMPTY STATE -->
+        <div v-if="pengumuman.length === 0" class="text-center py-24 text-gray-400 dark:text-gray-500 italic text-lg">
+            Belum ada pengumuman 📭
         </div>
 
         <!-- List Preview -->
         <div class="grid grid-cols-1 gap-4 px-4">
-            <Link :href="route('login')"
+            <!-- <Link :href="route('login')"
                 class="inline-flex items-center gap-2 font-bold text-gray-500 hover:text-indigo-600 transition">
                 <ArrowLeftIcon class="w-5 h-5" />
                 Back to Sign In
-            </Link>
+            </Link> -->
 
             <Link v-for="item in paginatedPengumuman" :key="item.id" :href="route('mading.show', item.id)" class="group relative overflow-hidden rounded-xl bg-white border border-gray-200
                        transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5">
                 <!-- Accent -->
-                <div
-                    class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-indigo-500 to-purple-600 animated-gradient">
+                <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-indigo-500 to-purple-600">
                 </div>
 
                 <div class="p-5 flex gap-3 items-start">
@@ -137,23 +141,13 @@ const goToPage = (page) => {
 </template>
 
 <style>
-.animated-gradient {
-    background: linear-gradient(270deg, #6366f1, #8b5cf6, #6366f1);
-    background-size: 600% 100%;
-    animation: gradientMove 5s linear infinite;
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.25s ease;
 }
 
-@keyframes gradientMove {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 0% 50%;
-    }
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
 }
 </style>

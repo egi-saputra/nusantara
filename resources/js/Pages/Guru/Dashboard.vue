@@ -6,17 +6,13 @@ import { route } from 'ziggy-js'
 import {
     UserIcon,
     UserGroupIcon,
-    RectangleStackIcon,
     ClipboardDocumentListIcon,
     AcademicCapIcon,
     CheckBadgeIcon,
     XMarkIcon,
     NewspaperIcon,
-    DocumentTextIcon,
-    MegaphoneIcon,
-    SpeakerWaveIcon
+    DocumentTextIcon
 } from '@heroicons/vue/24/solid'
-import { BookOpenIcon, } from '@heroicons/vue/24/outline'
 
 const page = usePage();
 const userName = page.props.auth.user.name || 'User';
@@ -44,10 +40,6 @@ const menuItems = [
     { title: 'Quiz List', icon: ClipboardDocumentListIcon, route: route('guru.soal.index') },
     { title: 'Assessment', icon: UserGroupIcon, route: route('guru.NilaiUjian.index') },
 ]
-
-// const goTo = (url) => {
-//     router.visit(url);
-// }
 
 const goTo = (url) => {
     router.visit(url, {
@@ -109,7 +101,7 @@ const goTo = (url) => {
 
         <!-- Welcome Section -->
         <div
-            class="bg-gradient-to-r mb-6 from-blue-500 to-indigo-600 text-white rounded-lg shadow hover:shadow-lg dark:bg-gradient-to-br dark:from-[#1e1b4b] dark:via-[#312e81] dark:to-[#4c1d95] border dark:border-[#1e1b4b] transition-all duration-300 sm:p-6 p-4 flex flex-col sm:flex-row items-center sm:text-left text-center gap-4">
+            class="bg-gradient-to-r mb-6 from-blue-500 to-indigo-600 text-white rounded-lg shadow hover:shadow-lg dark:bg-gradient-to-br dark:sm:from-[#1e1b4b] dark:sm:via-[#312e81] dark:sm:to-[#4c1d95] dark:from-[#063970] dark:via-[#0a4e8c] dark:to-[#1e1b4b] border dark:border-[#1e1b4b] transition-all duration-300 sm:p-6 p-4 flex flex-col sm:flex-row items-center sm:text-left text-center gap-4">
             <UserIcon class="w-12 h-12 text-white" />
             <div>
                 <h1 class="sm:text-3xl text-xl font-bold">Welcome, {{ userName }}! 👋</h1>
@@ -133,7 +125,7 @@ const goTo = (url) => {
             <!-- Proktor -->
             <div
                 class="bg-white dark:bg-gradient-to-br dark:from-[#1e1b4b] dark:via-[#312e81] dark:to-[#4c1d95] rounded-lg shadow p-5 flex items-center gap-4 hover:shadow-lg transition">
-                <UserGroupIcon class="w-10 h-10 text-purple-500" />
+                <UserGroupIcon class="w-10 h-10 dark:text-orange-500 text-purple-500" />
                 <div>
                     <p class="text-gray-500 dark:text-white">Proktor</p>
                     <h3 class="text-xl font-bold dark:text-white">{{ page.props.usersCount.proktor }}</h3>

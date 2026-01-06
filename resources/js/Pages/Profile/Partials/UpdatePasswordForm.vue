@@ -41,7 +41,7 @@ const updatePassword = () => {
         <header>
             <h2 class="text-lg font-medium dark:text-white text-gray-900">Update Password</h2>
 
-            <p class="mt-1 text-sm text-gray-600">
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
                 Ensure your account is using a long, random password to stay secure.
             </p>
         </header>

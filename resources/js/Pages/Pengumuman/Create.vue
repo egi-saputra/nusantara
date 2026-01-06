@@ -93,129 +93,186 @@ async function deleteAllAnnouncements() {
 
 <template>
     <MenuLayout>
-        <div class="bg-white p-6 rounded-lg shadow-md mx-auto">
-            <!-- Header with Icon -->
-            <div class="flex items-center gap-2 mb-5">
-                <PencilSquareIcon class="w-6 h-6 text-blue-600" />
-                <h1 class="text-2xl font-bold">Create Announcement <span class="sm:inline-block hidden">/ Message</span>
-                </h1>
-            </div>
+        <div class="max-w-5xl mx-auto space-y-14 px-4 py-8">
 
-            <!-- Announcement Form -->
-            <form @submit.prevent="submit" class="space-y-5">
-                <div>
-                    <label class="font-semibold text-gray-700">Title</label>
-                    <input v-model="form.judul" class="w-full border p-3 rounded-lg focus:ring focus:ring-blue-300"
-                        placeholder="Enter the title" />
-                    <div class="text-red-500 text-sm">{{ form.errors.judul }}</div>
-                </div>
+            <!-- CREATE FORM -->
+            <div class="rounded-3xl border border-white/20 dark:border-white/10
+                       bg-white/70 dark:bg-white/5
+                       backdrop-blur-xl shadow-xl p-6 sm:p-8">
 
-                <div>
-                    <label class="font-semibold text-gray-700">Content</label>
-                    <textarea v-model="form.pengumuman"
-                        class="w-full border p-3 rounded-lg focus:ring focus:ring-blue-300" rows="4"
-                        placeholder="Enter your message content"></textarea>
-                    <div class="text-red-500 text-sm">{{ form.errors.pengumuman }}</div>
-                </div>
-
-                <div>
-                    <label class="font-semibold text-gray-700">Recipient</label>
-                    <select v-model="form.penerima" class="w-full border p-3 rounded-lg">
-                        <option value="semua">All Users</option>
-                        <option value="admin">Admin</option>
-                        <option value="guru">Teacher</option>
-                        <option value="proktor">Proctor</option>
-                        <option value="siswa">Student</option>
-                    </select>
-                </div>
-
-                <div v-if="form.penerima === 'siswa'">
-                    <label class="font-semibold text-gray-700">Select Class</label>
-                    <select v-model="form.kelas_id" class="w-full border p-3 rounded-lg">
-                        <option value="">All Classes</option>
-                        <option v-for="kls in kelas" :key="kls.id" :value="kls.id">{{ kls.kelas }}</option>
-                    </select>
-                    <small class="text-gray-400">
-                        <span class="text-red-600">*</span> Leave blank if the message is for all classes
-                    </small>
-                    <div class="text-red-500 text-sm">{{ form.errors.kelas_id }}</div>
-                </div>
-
-                <!-- Buttons -->
-                <div class="flex justify-end gap-4 mt-6">
-                    <button type="button" @click="form.reset()"
-                        class="flex items-center gap-2 px-6 py-3 bg-gray-600 text-white font-bold rounded-lg hover:bg-gray-700 transition">
-                        <ArrowPathIcon class="w-5 h-5" />
-                        Reset
-                    </button>
-                    <button type="submit"
-                        class="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-bold rounded-lg whitespace-nowrap hover:bg-blue-700 transition">
-                        <PaperAirplaneIcon class="w-5 h-5" />
-                        <span>{{ isSubmitting ? 'Sending...' : 'Send Message' }}</span>
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Announcements List -->
-        <div class="bg-white p-6 mt-12 rounded-lg shadow-md mx-auto">
-            <div class="flex justify-between mb-4">
-                <h2 class="flex items-center gap-2 text-xl font-bold">
-                    <i class="bi bi-megaphone text-blue-600 transition-colors duration-300"></i>
-                    My Recent Messages
-                </h2>
-
-                <!-- Delete All -->
-                <button @click="deleteAllAnnouncements"
-                    class="sm:flex hidden items-center gap-2 px-4 py-2 bg-red-700 text-white rounded hover:bg-red-800 transition">
-                    <TrashIcon class="w-5 h-5" />
-                    Delete All Messages
-                </button>
-            </div>
-
-            <ul class="space-y-4 max-h-96 overflow-auto">
-                <li v-for="item in paginatedAnnouncements" :key="item.id"
-                    class="border p-4 rounded-xl bg-gray-50 flex justify-between items-start shadow-sm hover:shadow-md transition">
-                    <div>
-                        <p
-                            class="bg-blue-50 text-blue-600 -ml-2 font-semibold py-1 px-3 rounded-full text-sm inline-block mb-2">
-                            Sent to: {{ displayPenerima(item) }}
-                        </p>
-                        <h3 class="font-bold text-lg">{{ item.judul }}</h3>
-                        <p class="text-gray-600 mt-1">{{ item.pengumuman }}</p>
-                        <p class="text-gray-400 text-xs mt-1">{{ new Date(item.created_at).toLocaleString() }}</p>
+                <!-- HEADER -->
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="p-3 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow">
+                        <PencilSquareIcon class="w-6 h-6" />
                     </div>
-                    <button @click="deletePengumuman(item.id)" class="text-red-500 hover:text-red-700 transition">
-                        <TrashIcon class="w-5 h-5" />
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">
+                        Create Announcement
+                        <span class="hidden sm:inline text-gray-400 font-medium"> / Message</span>
+                    </h1>
+                </div>
+
+                <!-- FORM -->
+                <form @submit.prevent="submit" class="space-y-6">
+
+                    <!-- TITLE -->
+                    <div>
+                        <label class="font-semibold text-gray-700 dark:text-gray-300">
+                            Title
+                        </label>
+                        <input v-model="form.judul" class="w-full mt-1 rounded-xl px-4 py-3
+                                   bg-white/80 dark:bg-[#0F172A]
+                                   border border-gray-300 dark:border-white/10
+                                   text-gray-800 dark:text-gray-100
+                                   focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                        <div class="text-red-500 text-sm mt-1">{{ form.errors.judul }}</div>
+                    </div>
+
+                    <!-- CONTENT -->
+                    <div>
+                        <label class="font-semibold text-gray-700 dark:text-gray-300">
+                            Content
+                        </label>
+                        <textarea v-model="form.pengumuman" rows="4" class="w-full mt-1 rounded-xl px-4 py-3
+                                   bg-white/80 dark:bg-[#0F172A]
+                                   border border-gray-300 dark:border-white/10
+                                   text-gray-800 dark:text-gray-100
+                                   focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                        </textarea>
+                        <div class="text-red-500 text-sm mt-1">{{ form.errors.pengumuman }}</div>
+                    </div>
+
+                    <!-- RECIPIENT -->
+                    <div>
+                        <label class="font-semibold text-gray-700 dark:text-gray-300">
+                            Recipient
+                        </label>
+                        <select v-model="form.penerima" class="w-full mt-1 rounded-xl px-4 py-3
+                                   bg-white/80 dark:bg-[#0F172A]
+                                   border border-gray-300 dark:border-white/10
+                                   text-gray-800 dark:text-gray-100">
+                            <option value="semua">All Users</option>
+                            <option value="admin">Admin</option>
+                            <option value="guru">Teacher</option>
+                            <option value="proktor">Proctor</option>
+                            <option value="siswa">Student</option>
+                        </select>
+                    </div>
+
+                    <!-- CLASS -->
+                    <div v-if="form.penerima === 'siswa'">
+                        <label class="font-semibold text-gray-700 dark:text-gray-300">
+                            Select Class
+                        </label>
+                        <select v-model="form.kelas_id" class="w-full mt-1 rounded-xl px-4 py-3
+                                   bg-white/80 dark:bg-[#0F172A]
+                                   border border-gray-300 dark:border-white/10
+                                   text-gray-800 dark:text-gray-100">
+                            <option value="">All Classes</option>
+                            <option v-for="kls in kelas" :key="kls.id" :value="kls.id">
+                                {{ kls.kelas }}
+                            </option>
+                        </select>
+                        <p class="text-xs text-gray-400 mt-1">
+                            * Leave blank for all classes
+                        </p>
+                        <div class="text-red-500 text-sm">{{ form.errors.kelas_id }}</div>
+                    </div>
+
+                    <!-- ACTION -->
+                    <div class="flex justify-end gap-3 pt-4">
+                        <button type="button" @click="form.reset()" class="px-6 py-3 rounded-xl bg-gray-600 hover:bg-gray-700
+                                   text-white font-semibold flex items-center gap-2">
+                            <ArrowPathIcon class="w-5 h-5" />
+                            Reset
+                        </button>
+
+                        <button type="submit" class="px-6 py-3 rounded-xl
+                                   bg-gradient-to-r from-indigo-600 to-purple-600
+                                   hover:opacity-90 text-white font-semibold
+                                   flex items-center gap-2">
+                            <PaperAirplaneIcon class="w-5 h-5" />
+                            {{ isSubmitting ? 'Sending...' : 'Send Message' }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ANNOUNCEMENT LIST -->
+            <div class="rounded-3xl border border-white/20 dark:border-white/10
+                       bg-white/70 dark:bg-white/5
+                       backdrop-blur-xl shadow-xl p-6 sm:p-8">
+
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                        📢 My Recent Messages
+                    </h2>
+
+                    <button @click="deleteAllAnnouncements" class="hidden sm:flex items-center gap-2
+                               px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700
+                               text-white text-sm font-semibold">
+                        <TrashIcon class="w-4 h-4" />
+                        Delete All
                     </button>
-                </li>
+                </div>
 
-                <!-- Fallback if empty -->
-                <li v-if="paginatedAnnouncements.length === 0"
-                    class="border p-6 rounded-xl bg-gray-100 text-center flex flex-col items-center justify-center space-y-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 17v-6a2 2 0 012-2h2a2 2 0 012 2v6m2 4H7a2 2 0 01-2-2V7a2 2 0 012-2h10a2 2 0 012 2v12a2 2 0 01-2 2z" />
-                    </svg>
-                    <p class="text-gray-500 font-medium">You have not created any messages yet.</p>
-                    <p class="text-gray-400 text-sm">Create your first message now to notify everyone!</p>
-                </li>
-            </ul>
+                <ul class="space-y-4 max-h-[420px] overflow-y-auto pr-1">
 
-            <!-- Pagination -->
-            <div class="flex justify-center gap-2 mt-6">
-                <button @click="prevPage" :disabled="currentPage === 1"
-                    class="p-2 bg-gray-200 rounded hover:bg-gray-300 transition disabled:opacity-50">
-                    <ChevronLeftIcon class="w-5 h-5" />
-                </button>
-                <span class="px-3 py-2 bg-gray-100 rounded">{{ currentPage }} / {{ totalPages }}</span>
-                <button @click="nextPage" :disabled="currentPage === totalPages"
-                    class="p-2 bg-gray-200 rounded hover:bg-gray-300 transition disabled:opacity-50">
-                    <ChevronRightIcon class="w-5 h-5" />
-                </button>
+                    <li v-for="item in paginatedAnnouncements" :key="item.id" class="rounded-2xl p-5
+                               bg-white/80 dark:bg-[#0F172A]
+                               border border-gray-200 dark:border-white/10
+                               shadow hover:shadow-lg transition">
+
+                        <div class="flex justify-between gap-4">
+                            <div>
+                                <span class="inline-block mb-2 px-3 py-1 text-xs font-semibold
+                                           rounded-full bg-indigo-100 text-indigo-700">
+                                    Sent to: {{ displayPenerima(item) }}
+                                </span>
+
+                                <h3 class="font-bold text-lg text-gray-800 dark:text-white">
+                                    {{ item.judul }}
+                                </h3>
+
+                                <p class="text-gray-600 dark:text-gray-300 mt-1">
+                                    {{ item.pengumuman }}
+                                </p>
+
+                                <p class="text-xs text-gray-400 mt-2">
+                                    {{ new Date(item.created_at).toLocaleString() }}
+                                </p>
+                            </div>
+
+                            <button @click="deletePengumuman(item.id)" class="text-red-500 hover:text-red-700">
+                                <TrashIcon class="w-5 h-5" />
+                            </button>
+                        </div>
+                    </li>
+
+                    <!-- EMPTY -->
+                    <li v-if="paginatedAnnouncements.length === 0" class="rounded-xl bg-gray-100 dark:bg-white/5
+                               py-10 text-center text-gray-500">
+                        No announcements yet.
+                    </li>
+                </ul>
+
+                <!-- PAGINATION -->
+                <div class="flex justify-center gap-3 mt-6">
+                    <button @click="prevPage" :disabled="currentPage === 1" class="p-2 rounded-lg bg-gray-200 dark:bg-white/10
+                               hover:bg-gray-300 disabled:opacity-50">
+                        <ChevronLeftIcon class="w-5 h-5" />
+                    </button>
+
+                    <span class="px-4 py-2 rounded-lg bg-gray-100 dark:bg-white/10">
+                        {{ currentPage }} / {{ totalPages }}
+                    </span>
+
+                    <button @click="nextPage" :disabled="currentPage === totalPages" class="p-2 rounded-lg bg-gray-200 dark:bg-white/10
+                               hover:bg-gray-300 disabled:opacity-50">
+                        <ChevronRightIcon class="w-5 h-5" />
+                    </button>
+                </div>
+
             </div>
         </div>
-
     </MenuLayout>
 </template>

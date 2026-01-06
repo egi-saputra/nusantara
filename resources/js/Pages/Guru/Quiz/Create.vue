@@ -20,84 +20,146 @@ const form = useForm({
 </script>
 
 <template>
-
     <MenuLayout>
 
-        <div class="sm:py-8 sm:pb-0 pb-10 sm:px-4 min-h-screen">
-            <div
-                class="mx-auto border dark:bg-[#041C32] md:text-base text-sm border-gray-300 dark:border-gray-700 bg-white rounded-lg md:shadow-xl p-6 md:p-8">
-                <div class="mb-6">
+        <div class="min-h-screen sm:py-4 pb-14 sm:px-2">
+            <div class="
+                rounded-xl
+                bg-white/70 dark:bg-white/5
+                backdrop-blur-2xl
+                border border-white/20 dark:border-white/10
+                shadow-2xl
+                p-6 sm:p-10">
+
+                <!-- Header -->
+                <div class="mb-8">
                     <h1
-                        class="text-2xl sm:inline-block hidden font-extrabold text-gray-800 text-left dark:text-gray-100">
-                        <span class="text-3xl pt-1 font-bold">+</span> Create / Add Quiz
+                        class="text-2xl sm:text-3xl font-extrabold text-gray-800 dark:text-white flex items-center gap-3">
+                        <span class="inline-flex items-center justify-center w-10 h-10 rounded-xl
+                            bg-gradient-to-br from-blue-500 to-indigo-600
+                            text-white shadow-lg">
+                            +
+                        </span>
+                        Create / Add Quiz
                     </h1>
-                    <p class="text-gray-500 dark:text-gray-400 sm:text-base text-sm">This page is intended to create or
-                        add the quizzes.
+
+                    <p class="mt-2 text-gray-500 dark:text-gray-400 text-sm sm:text-base">
+                        Create and configure a new quiz or exam for your class.
                     </p>
                 </div>
 
-                <!-- <form @submit.prevent="form.post('/proktor/soal')" class="space-y-5"> -->
-                <form @submit.prevent="() => { console.log(form); form.post('/guru/soal'); }">
+                <!-- FORM -->
+                <form @submit.prevent="form.post('/guru/soal')" class="space-y-6">
 
                     <!-- Title -->
-                    <div class="mb-4">
-                        <label class="block text-gray-700 dark:text-gray-200 font-semibold">Title Quiz</label>
-                        <input v-model="form.title" type="text" placeholder="e.g., ( ASAS GANJIL 2025 )"
-                            class="w-full border dark:bg-gray-300 border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition capitalize-input" />
-                        <p v-if="form.errors.title" class="text-red-600 text-sm mt-1">{{ form.errors.title }}</p>
+                    <div>
+                        <label class="block mb-1 text-sm font-semibold text-gray-700 dark:text-gray-200">
+                            Quiz Title
+                        </label>
+
+                        <input v-model="form.title" type="text" placeholder="e.g. ASAS GANJIL 2025" class="w-full rounded-xl
+                            bg-white/80 dark:bg-white/10
+                            border border-gray-300 dark:border-gray-600
+                            px-4 py-3
+                            text-gray-800 dark:text-gray-400
+                            placeholder-gray-400 dark:placeholder-gray-500
+                            focus:outline-none focus:ring-2 focus:ring-blue-500
+                            transition capitalize-input" />
+
+                        <p v-if="form.errors.title" class="mt-1 text-sm text-red-500">
+                            {{ form.errors.title }}
+                        </p>
                     </div>
 
-                    <div class="flex w-full mb-4 flex-col sm:flex-row gap-4">
-                        <!-- MAPEL (SELECT) -->
-                        <div class="w-full">
-                            <label class="block dark:text-gray-200 text-gray-700 font-semibold">
-                                Subjects
+                    <!-- SUBJECT & CLASS -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+                        <!-- Subject -->
+                        <div>
+                            <label class="block mb-1 text-sm font-semibold text-gray-700 dark:text-gray-200">
+                                Subject
                             </label>
 
-                            <select v-model="form.mapel_id"
-                                class="w-full border border-gray-300 dark:bg-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
-                                <option value="">-- Choose subjects --</option>
+                            <select v-model="form.mapel_id" class="w-full rounded-xl
+                                bg-white/80 dark:bg-white/10
+                                border border-gray-300 dark:border-gray-600
+                                px-4 py-3
+                                text-gray-800 dark:text-gray-400
+                                focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+
+                                <option value="">-- Select Subject --</option>
                                 <option v-for="m in mapel" :key="m.id" :value="m.id">
                                     {{ m.mapel }}
                                 </option>
                             </select>
-                            <div v-if="form.errors.mapel_id" class="text-red-500 text-sm mt-1">
+
+                            <p v-if="form.errors.mapel_id" class="mt-1 text-sm text-red-500">
                                 {{ form.errors.mapel_id }}
-                            </div>
+                            </p>
                         </div>
 
-                        <!-- KELAS -->
-                        <div class="w-full">
-                            <label class="block dark:text-gray-200 text-gray-700 font-semibold">Class Unit (for
-                                class)</label>
-                            <input v-model="form.kelas" type="text" placeholder="e.g., ( XII BR - MP / XI BR / X MP )."
-                                class="w-full border border-gray-300 dark:bg-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition uppercase-input" />
-                            <p v-if="form.errors.kelas" class="text-red-600 text-sm mt-1">{{ form.errors.kelas }}</p>
+                        <!-- Class -->
+                        <div>
+                            <label class="block mb-1 text-sm font-semibold text-gray-700 dark:text-gray-200">
+                                Class Unit
+                            </label>
+
+                            <input v-model="form.kelas" type="text" placeholder="XII BR / XI MP" class="w-full rounded-xl
+                                bg-white/80 dark:bg-white/10
+                                border border-gray-300 dark:border-gray-600
+                                px-4 py-3
+                                text-gray-800 dark:text-gray-400
+                                placeholder-gray-400 dark:placeholder-gray-500
+                                focus:outline-none focus:ring-2 focus:ring-blue-500
+                                transition uppercase-input" />
+
+                            <p v-if="form.errors.kelas" class="mt-1 text-sm text-red-500">
+                                {{ form.errors.kelas }}
+                            </p>
                         </div>
                     </div>
 
-                    <!-- BUTTON -->
-                    <div class="flex flex-col sm:flex-row gap-4 mt-6">
-                        <button type="submit"
-                            class="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold rounded-lg shadow-lg hover:from-blue-600 hover:to-blue-800 transition"
-                            :disabled="form.processing">
-                            <svg v-if="form.processing" class="w-5 h-5 animate-spin text-white"
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <!-- ACTION BUTTONS -->
+                    <div class="flex flex-col sm:flex-row gap-4 pt-4">
+
+                        <!-- Submit -->
+                        <button type="submit" :disabled="form.processing" class="flex-1 flex items-center justify-center gap-2
+                            rounded-xl px-6 py-3
+                            bg-gradient-to-r from-blue-500 to-indigo-600
+                            hover:from-blue-600 hover:to-indigo-700
+                            text-white font-semibold
+                            shadow-lg shadow-blue-500/30
+                            transition">
+
+                            <svg v-if="form.processing" class="w-5 h-5 animate-spin" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
                                     stroke-width="4" />
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z">
-                                </path>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
                             </svg>
+
                             <CheckIcon v-else class="w-5 h-5" />
-                            <span>{{ form.processing ? 'Creating your quiz....' : 'Create Quiz' }}</span>
+
+                            <span>
+                                {{ form.processing ? 'Creating Quiz...' : 'Create Quiz' }}
+                            </span>
                         </button>
 
-                        <Link href="/guru/soal/"
-                            class="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-700 text-white font-semibold rounded-lg shadow-lg hover:from-gray-600 hover:to-gray-800 transition">
+                        <!-- Back -->
+                        <Link href="/guru/soal" class="flex-1 flex items-center justify-center gap-2
+                            rounded-xl px-6 py-3
+                            bg-gray-800 dark:bg-white/10
+                            border border-gray-300 dark:border-gray-600
+                            text-gray-100 dark:text-white
+                            font-semibold
+                            hover:bg-gray-900 dark:hover:bg-white/20
+                            transition">
+
                             <ArrowLeftIcon class="w-5 h-5" />
                             Back to Quiz
                         </Link>
                     </div>
+
                 </form>
             </div>
         </div>

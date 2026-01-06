@@ -1,5 +1,5 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue'
+import MenuLayout from '@/Layouts/MenuLayout.vue'
 import { Head, Link } from '@inertiajs/vue3'
 import { onMounted, onBeforeUnmount } from 'vue'
 import { ArrowLeftIcon, PlayCircleIcon } from '@heroicons/vue/24/solid'
@@ -13,164 +13,173 @@ defineProps({
  * NON-TURBO / ANTI-CHEAT SCRIPT
  * (dipindahkan dari Blade tanpa perubahan logika)
  */
-const beforeUnloadHandler = (e) => {
-    e.preventDefault()
-    e.returnValue = 'Jangan menutup atau merefresh halaman saat ujian!'
-    return e.returnValue
-}
+// const beforeUnloadHandler = (e) => {
+//     e.preventDefault()
+//     e.returnValue = 'Jangan menutup atau merefresh halaman saat ujian!'
+//     return e.returnValue
+// }
 
-const keydownHandler = (e) => {
-    if (
-        (e.ctrlKey || e.metaKey) &&
-        ['c', 'v', 'x', 'r', 't', 'n', 'w'].includes(e.key.toLowerCase())
-    ) {
-        e.preventDefault()
-        alert('Shortcut dinonaktifkan selama ujian!')
-    }
+// const keydownHandler = (e) => {
+//     if (
+//         (e.ctrlKey || e.metaKey) &&
+//         ['c', 'v', 'x', 'r', 't', 'n', 'w'].includes(e.key.toLowerCase())
+//     ) {
+//         e.preventDefault()
+//         alert('Shortcut dinonaktifkan selama ujian!')
+//     }
 
-    if (e.key === 'F5') {
-        e.preventDefault()
-        alert('Reload diblokir!')
-    }
+//     if (e.key === 'F5') {
+//         e.preventDefault()
+//         alert('Reload diblokir!')
+//     }
 
-    if (e.key === 'Escape') {
-        e.preventDefault()
-    }
-}
+//     if (e.key === 'Escape') {
+//         e.preventDefault()
+//     }
+// }
 
-const contextMenuHandler = (e) => {
-    e.preventDefault()
-}
+// const contextMenuHandler = (e) => {
+//     e.preventDefault()
+// }
 
-onMounted(() => {
-    window.addEventListener('beforeunload', beforeUnloadHandler)
-    document.addEventListener('keydown', keydownHandler)
-    document.addEventListener('contextmenu', contextMenuHandler)
-})
+// onMounted(() => {
+//     window.addEventListener('beforeunload', beforeUnloadHandler)
+//     document.addEventListener('keydown', keydownHandler)
+//     document.addEventListener('contextmenu', contextMenuHandler)
+// })
 
-onBeforeUnmount(() => {
-    window.removeEventListener('beforeunload', beforeUnloadHandler)
-    document.removeEventListener('keydown', keydownHandler)
-    document.removeEventListener('contextmenu', contextMenuHandler)
-})
+// onBeforeUnmount(() => {
+//     window.removeEventListener('beforeunload', beforeUnloadHandler)
+//     document.removeEventListener('keydown', keydownHandler)
+//     document.removeEventListener('contextmenu', contextMenuHandler)
+// })
 </script>
 
 <template>
-    <AppLayout>
+    <!-- <MenuLayout> -->
+
+    <div class="dark:bg-[#020617]">
 
         <Head title="Informasi Ujian" />
 
         <!-- Header -->
-        <template #header>
-            <h2 class="text-xl md:text-2xl font-bold text-gray-800">
+        <template>
+            <h2 class="text-xl md:text-3xl font-extrabold tracking-tight
+                       bg-gradient-to-r from-indigo-500 to-purple-600
+                       bg-clip-text text-transparent">
                 Informasi Ujian
             </h2>
         </template>
 
-        <div class="md:max-w-4xl mx-auto md:mt-10 md:px-4">
-            <div class="bg-white shadow-sm md:shadow-2xl rounded-lg md:rounded-3xl
-                       p-5 md:p-8 border border-gray-300">
+        <!-- CONTAINER -->
+        <div class="sm:max-w-4xl mx-auto sm:px-4 sm:py-8">
+
+            <!-- GLASS CARD -->
+            <div class="relative overflow-hidden sm:rounded-3xl
+                       bg-white/70 dark:bg-white/5
+                       backdrop-blur-xl
+                       border border-white/30 dark:border-white/10
+                       shadow-[0_20px_60px_-20px_rgba(0,0,0,0.35)]
+                       py-6 p-4 md:p-10">
+
+                <!-- Glow -->
+                <div class="absolute inset-0 pointer-events-none
+                            bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-transparent"></div>
 
                 <!-- Title -->
-                <h3 class="text-xl md:text-3xl font-extrabold text-gray-700
-                           mb-6 text-center tracking-tight">
-                    Informasi Quiz / Soal Ujian
+                <h3 class="relative z-10 text-2xl md:text-4xl font-extrabold
+                           text-gray-800 dark:text-white text-center mb-10">
+                    Quiz / Exam Overview
                 </h3>
 
                 <!-- TOKEN -->
-                <div class="bg-gradient-to-r from-blue-50 to-blue-100
-                           border border-blue-200 rounded md:rounded-2xl p-5
-                           mb-8 text-center shadow-sm">
-                    <p class="text-xs text-blue-600 font-semibold uppercase tracking-widest">
-                        Token Ujian
+                <div class="relative z-10 mb-10 p-6 md:p-8 rounded-2xl
+                           bg-gradient-to-br from-indigo-500 to-purple-600
+                           text-center shadow-xl">
+                    <p class="text-xs uppercase tracking-[0.3em] text-white/80">
+                        Exam Token
                     </p>
-                    <p class="text-3xl md:text-4xl font-extrabold text-blue-700
-                               mt-2 tracking-widest select-all">
+                    <p class="mt-3 text-4xl md:text-5xl font-black tracking-widest text-white select-all">
                         {{ soal.token }}
                     </p>
                 </div>
 
                 <!-- INFO GRID -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5 mb-6">
+                <div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-5 mb-10">
 
-                    <div class="info-card">
-                        <p class="info-label">Quiz Title</p>
-                        <p class="info-value">
-                            {{ soal.title ?? 'Tidak ada' }}
-                        </p>
-                    </div>
+                    <div v-for="([label, value], i) in [
+                        ['Quiz Title', soal.title ?? 'Tidak ada'],
+                        ['Subject', soal.mapel?.mapel ?? '-'],
+                        ['Class Unit', soal.kelas ?? '-'],
+                        ['Total Questions', jumlahSoal + ' Items'],
+                        ['Duration', soal.waktu + ' Minutes']
+                    ]" :key="i" class="p-4 rounded-2xl
+               bg-white/70 dark:bg-white/5
+               backdrop-blur-lg
+               border border-white/30 dark:border-white/10
+               shadow-md hover:shadow-xl
+               transition-all duration-300">
 
-                    <div class="info-card">
-                        <p class="info-label">Mata Pelajaran</p>
-                        <p class="info-value">
-                            {{ soal.mapel?.mapel ?? 'Tidak ada' }}
+                        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                            {{ label }}
                         </p>
-                    </div>
 
-                    <div class="info-card">
-                        <p class="info-label">Unit Kelas</p>
-                        <p class="info-value">
-                            {{ soal.kelas ?? '-' }}
+                        <p class="mt-1 font-semibold text-gray-800 dark:text-white">
+                            {{ value }}
                         </p>
-                    </div>
 
-                    <div class="info-card">
-                        <p class="info-label">Jumlah Soal</p>
-                        <p class="info-value">
-                            {{ jumlahSoal }} Soal
-                        </p>
-                    </div>
-
-                    <div class="info-card">
-                        <p class="info-label">Durasi Ujian</p>
-                        <p class="info-value">
-                            {{ soal.waktu }} menit
-                        </p>
                     </div>
 
                 </div>
 
                 <!-- WARNING -->
-                <div class="bg-red-50 border border-red-200 rounded-lg md:rounded-2xl
-                           p-5 mb-8 shadow-sm">
-                    <h4 class="font-bold text-red-700 mb-3 flex items-center gap-2">
-                        ⚠️ Perhatian
+                <div class="relative z-10 p-6 rounded-2xl
+                           bg-red-500/10 dark:bg-red-500/20
+                           border border-red-500/30
+                           shadow-lg mb-10">
+                    <h4 class="flex items-center gap-2 font-bold text-red-600 dark:text-red-400 mb-4">
+                        ⚠️ Perhatian Penting
                     </h4>
 
-                    <ul class="list-disc list-inside text-red-600 text-sm
-                               space-y-1 leading-relaxed">
+                    <ul class="list-disc list-inside text-sm text-red-600 dark:text-red-300 space-y-2">
                         <li>Kerjakan ujian sesuai waktu yang ditentukan.</li>
-                        <li>Waktu dimulai setelah klik tombol <b>Kerjakan</b>.</li>
-                        <li>Ujian akan tertutup otomatis saat waktu habis.</li>
-                        <li>Dilarang membuka tab baru atau menutup halaman.</li>
-                        <li>Dilarang refresh, back, copy–paste, screenshot.</li>
-                        <li>Dilarang menggunakan shortcut atau developer tools.</li>
+                        <li>Waktu dimulai setelah klik <b>Kerjakan</b>.</li>
+                        <li>Ujian otomatis berakhir saat waktu habis.</li>
+                        <li>Dilarang membuka tab baru atau refresh.</li>
+                        <li>Dilarang copy–paste, screenshot, shortcut, DevTools.</li>
                     </ul>
 
-                    <p class="mt-3 text-red-700 text-sm font-medium">
-                        Pelanggaran dapat menyebabkan ujian batal atau token diperbarui otomatis.
+                    <p class="mt-4 text-sm font-medium text-red-700 dark:text-red-300">
+                        Pelanggaran dapat menyebabkan ujian dibatalkan otomatis.
                     </p>
                 </div>
 
                 <!-- ACTION -->
-                <div class="flex flex-col sm:flex-row gap-3
-                           justify-between items-stretch sm:items-center">
+                <div class="relative z-10 flex flex-col sm:flex-row gap-4 justify-between">
 
-                    <Link :href="route('siswa.ujian.token')"
-                        class="flex items-center justify-center gap-2 px-5 py-3 md:rounded-xl rounded-lg bg-gray-700 hover:bg-gray-800 text-white font-semibold transition shadow-sm hover:shadow">
+                    <Link :href="route('siswa.ujian.token')" class="flex items-center justify-center gap-2
+                               px-6 py-3 rounded-xl
+                               bg-gray-800 hover:bg-gray-900
+                               text-white font-semibold
+                               transition shadow-lg">
                         <ArrowLeftIcon class="w-5 h-5" />
-                        <span>Kembali</span>
+                        Kembali
                     </Link>
 
-                    <Link :href="route('siswa.ujian.kerjakan', soal.id)"
-                        class="flex items-center justify-center gap-2 px-6 py-3 md:rounded-xl rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-extrabold transition shadow-lg transform hover:-translate-y-0.5">
+                    <Link :href="route('siswa.ujian.kerjakan', soal.id)" class="flex items-center justify-center gap-2
+                               px-8 py-3 rounded-xl
+                               bg-gradient-to-r from-indigo-500 to-purple-600
+                               hover:from-indigo-600 hover:to-purple-700
+                               text-white font-extrabold
+                               shadow-xl transition transform hover:-translate-y-0.5">
                         <PlayCircleIcon class="w-6 h-6" />
-                        <span>Kerjakan Ujian</span>
+                        Kerjakan Ujian
                     </Link>
 
                 </div>
 
             </div>
         </div>
-    </AppLayout>
+    </div>
+    <!-- </MenuLayout> -->
 </template>

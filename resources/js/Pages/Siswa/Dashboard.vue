@@ -1,233 +1,232 @@
 <script setup>
-import UserLayout from '@/Layouts/UserLayout.vue';
-import { ref, computed } from 'vue'
+import UserLayout from '@/Layouts/UserLayout.vue'
+import { ref, computed, onMounted } from 'vue'
 import { Head, usePage, router, Link } from '@inertiajs/vue3'
 import { route } from 'ziggy-js'
+
 import {
     UserIcon,
     UserGroupIcon,
-    RectangleStackIcon,
     ClipboardDocumentListIcon,
     AcademicCapIcon,
     CheckBadgeIcon,
     XMarkIcon,
     NewspaperIcon,
-    DocumentTextIcon,
-    MegaphoneIcon,
-    SpeakerWaveIcon
+    DocumentTextIcon
 } from '@heroicons/vue/24/solid'
-import { BookOpenIcon, } from '@heroicons/vue/24/outline'
 
+/* ================= PAGE & USER ================= */
 const page = usePage()
 const userName = page.props.auth.user.name || 'User'
 
+/* ================= TOAST ================= */
 const toast = ref({
     show: false,
     message: '',
     type: 'info'
-});
+})
 
 const showToast = (message, type = 'info') => {
-    toast.value.message = message;
-    toast.value.type = type;
-    toast.value.show = true;
+    toast.value.message = message
+    toast.value.type = type
+    toast.value.show = true
 
     setTimeout(() => {
-        toast.value.show = false;
-    }, 2000);
-};
+        toast.value.show = false
+    }, 2000)
+}
 
+/* ================= MENU ================= */
 const menuItems = [
-    // { title: 'Peserta', icon: ClipboardDocumentListIcon, route: route('siswa.peserta.index') },
     { title: 'Ruang Materi', icon: NewspaperIcon, route: route('siswa.dashboard') },
     { title: 'Ruang Tugas', icon: DocumentTextIcon, route: route('siswa.dashboard') },
     { title: 'Ruang Ujian', icon: ClipboardDocumentListIcon, route: route('siswa.ujian.token') },
     { title: 'Ruang Siswa', icon: UserGroupIcon, route: route('siswa.dashboard') },
 ]
 
-// Ambil list siswa
-const siswa = computed(() => page.props.siswa || {});
+/* ================= SISWA ================= */
+const siswa = computed(() => page.props.siswa || {})
 
+/* ================= NAV ================= */
 const goTo = (url) => {
     router.visit(url, {
         preserveScroll: true,
         preserveState: true,
-    });
-};
+    })
+}
 
+/* ================= COPY ================= */
 const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text)
-        .then(() => {
-            showToast('Berhasil mengcopy ke clipboard', 'success');
-        })
-        .catch((err) => {
-            console.error('Gagal menyalin', err);
-            showToast('Gagal menyalin ke clipboard!', 'error');
-        });
+        .then(() => showToast('Berhasil mengcopy ke clipboard', 'success'))
+        .catch(() => showToast('Gagal menyalin ke clipboard!', 'error'))
+}
+
+/* ================= SLIDER (AMAN) ================= */
+const sliderRef = ref(null)
+const activeSlide = ref(0)
+
+onMounted(() => {
+    if (!sliderRef.value) return
+
+    sliderRef.value.addEventListener('scroll', () => {
+        activeSlide.value = Math.round(
+            sliderRef.value.scrollLeft / sliderRef.value.clientWidth
+        )
+    })
+})
+
+/* ================= EXPORT ================= */
+const exportExcel = () => {
+    showToast('Export Excel dimulai...', 'success')
+
+    router.visit(route('siswa.export.excel'), {
+        preserveScroll: true
+    })
 }
 </script>
+
 
 <template>
 
     <Head title="Dashboard" />
 
     <UserLayout>
-        <!-- MOBILE TOAST (default) -->
-        <div v-if="toast.show" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 w-full max-w-3xl 
-           bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg 
-           flex items-center justify-between z-50 
-           transition-all duration-300 ease-out opacity-0 scale-95 md:hidden"
-            :class="toast.show ? 'opacity-100 scale-100' : ''">
-
-            <span class="truncate">{{ toast.message }}</span>
-
-            <button @click="toast.show = false" class="ml-4 flex-shrink-0">
-                <XMarkIcon class="w-5 h-5 text-white" />
+        <!-- ================= MOBILE TOAST ================= -->
+        <div v-if="toast.show" class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md
+                   bg-black/70 backdrop-blur-xl text-white
+                   px-5 py-3 rounded-2xl shadow-2xl
+                   flex items-center justify-between z-50
+                   md:hidden">
+            <span class="truncate text-sm font-medium">{{ toast.message }}</span>
+            <button @click="toast.show = false">
+                <XMarkIcon class="w-5 h-5" />
             </button>
         </div>
 
+        <div class="sm:max-w-7xl mx-auto overflow-x-hidden sm:py-6 space-y-6 min-h-screen">
 
-        <!-- DESKTOP TOAST (pojok kanan atas) -->
-        <div v-if="toast.show" class="hidden md:flex fixed top-5 right-5 w-full max-w-sm 
-           px-5 py-3 rounded-lg shadow-lg z-50
-           transition-all duration-300 ease-out opacity-0 scale-95
-           items-center gap-3 text-white" :class="[
-            toast.show ? 'opacity-100 scale-100' : '',
-            toast.type === 'success' ? 'bg-green-600' : 'bg-gray-800'
-        ]">
+            <!-- ================= MOBILE JUMBOTRON SLIDER ================= -->
+            <div ref="sliderRef" class="flex md:flex-col gap-6
+                       overflow-x-auto no-scrollbar
+                       snap-x snap-mandatory md:snap-none
+                       scroll-smooth
+                       -mx-6 px-6 md:mx-0 md:px-0">
 
-            <!-- Icon success -->
-            <template v-if="toast.type === 'success'">
-                <svg class="w-6 h-6 text-white flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2"
-                    viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-            </template>
+                <!-- ===== SLIDE 1 : WELCOME ===== -->
+                <div class="min-w-full snap-center
+                            relative overflow-hidden rounded-xl sm:rounded-3xl p-6 sm:p-8
+                            bg-gradient-to-br items-center from-indigo-600 via-blue-600 to-purple-600 dark:bg-gradient-to-br dark:sm:from-[#1e1b4b] dark:sm:via-[#312e81] dark:sm:to-[#4c1d95] dark:from-[#063970] dark:via-[#0a4e8c] dark:to-[#1e1b4b] flex gap-4 sm:flex-row flex-col
+                            text-white dark:shadow-xl">
 
-            <span class="truncate">{{ toast.message }}</span>
+                    <UserIcon class="w-12 h-12 text-center text-white" />
+                    <div class="relative z-10">
+                        <h1 class="text-2xl sm:text-3xl font-bold">
+                            Selamat datang, {{ userName }} 👋
+                        </h1>
+                        <p class="text-white/90 text-sm sm:text-base mt-1">
+                            Semoga harimu tetap produktif dan menyenangkan!
+                        </p>
+                    </div>
 
-            <button @click="toast.show = false" class="ml-auto flex-shrink-0">
-                <XMarkIcon class="w-5 h-5 text-white" />
-            </button>
+                    <div class="absolute sm:hidden -top-20 -right-20 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
+                </div>
 
-            <!-- PROGRESS BAR -->
-            <!-- <div class="absolute bottom-0 left-0 h-0.5 bg-white" :style="{ width: progress + '%' }"></div> -->
-        </div>
+                <!-- ===== SLIDE 2 : CARD SISWA ===== -->
+                <h1 class="sm:inline-flex hidden font-bold -mb-2 text-2xl font-raleway mt-4 pl-3 text-gray-800 gap-3">
+                    <UserIcon
+                        class="w-10 h-10 p-1 dark:bg-gradient-to-br dark:from-[#1e1b4b] dark:via-[#312e81] dark:to-[#4c1d95] dark:border-none dark:text-white border-2 border-gray-600 rounded-xl text-center" />
+                    <span class="mt-1 dark:text-gray-300">Informasi Pribadi</span>
+                </h1>
+                <div class="min-w-full snap-center
+                rounded-xl sm:rounded-3xl bg-white/70 dark:backdrop-blur-xl
+                border border-gray-200 dark:border-gray-500 dark:shadow-xl dark:bg-[#0F172A] p-6">
 
-        <div>
-            <div class="md:flex flex-col hidden">
-                <h1 class="text-xl sm:text-2xl font-bold mb-3">Selamat datang, {{ userName }} <span
-                        class="text-2xl md:text-3xl">👋</span></h1>
-                <p class="text-gray-600 text-sm sm:text-base">Semoga harimu tetap produktif dan menyenangkan!</p>
-            </div>
-        </div>
+                    <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2 mb-4">
+                        <UserIcon class="w-6 h-6 sm:hidden text-white" />
+                        <span class="dark:text-gray-200">{{ siswa.nama_lengkap }}</span>
+                    </h3>
 
-        <div class="max-w-7xl mx-auto space-y-6">
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-4 text-sm text-gray-600">
+                        <div class="flex items-center sm:border-l-2 dark:border-gray-400 sm:pl-4 gap-2">
+                            <AcademicCapIcon class="w-4 h-4  text-blue-500" />
+                            <span class="dark:text-gray-400">{{ siswa.kelas?.kelas || 'Belum ada' }}</span>
+                        </div>
 
-            <div
-                class="bg-gradient-to-r mb-6 from-blue-500 to-indigo-600 text-white rounded-lg shadow hover:shadow-lg transition-all duration-300 p-4 sm:hidden flex flex-col sm:flex-row items-center text-center gap-4">
-                <UserIcon class="w-12 h-12 text-white" />
-                <div>
-                    <h1 class="text-xl font-bold">Selamat datang, {{ userName }}! 👋</h1>
-                    <p class="text-white/90 text-xs">Semoga harimu tetap produktif dan menyenangkan!</p>
+                        <div class="hidden sm:flex sm:border-l-2 dark:border-gray-400 sm:pl-4 items-center gap-2">
+                            <DocumentTextIcon class="w-4 h-4 text-red-500" />
+                            <span class="dark:text-gray-400">{{ siswa.kejuruan?.kejuruan || 'Belum ada' }}</span>
+                        </div>
+
+                        <div
+                            class="flex items-center sm:border-l-2 dark:border-gray-400 sm:pl-4 gap-2 font-mono font-bold text-indigo-700">
+                            <span class="dark:text-gray-400">ID: {{ siswa.id_siswa }}</span>
+                            <button @click="copyToClipboard(siswa.id_siswa)" class="p-1">
+                                <ClipboardDocumentListIcon class="w-4 h-4 dark:text-gray-300" />
+                            </button>
+                        </div>
+
+                        <div class="sm:border-l-2 sm:pl-4 dark:border-gray-400">
+                            <span class="dark:text-gray-400">NIS: {{ siswa.nis }}</span>
+                        </div>
+                        <div class="sm:border-x-2 sm:pl-4 dark:border-gray-400">
+                            <span class="dark:text-gray-400">NISN: {{ siswa.nisn }}</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 flex gap-2">
+                        <span :class="[
+                            'px-4 py-1 rounded-full text-xs font-semibold flex items-center gap-1',
+                            siswa.status === 'Activated'
+                                ? 'bg-green-100 text-green-700'
+                                : 'bg-red-100 text-red-700'
+                        ]">
+                            <CheckBadgeIcon v-if="siswa.status === 'Activated'" class="w-3 h-3" />
+                            Status: {{ siswa.status === 'Activated' ? 'Aktif' : 'Tidak Aktif' }}
+                        </span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Mobile Menu Buttons -->
+            <!-- ===== INDICATOR DOT (MOBILE ONLY) ===== -->
+            <div class="flex justify-center gap-2 mt-3 md:hidden">
+                <span v-for="i in 2" :key="i" class="w-2.5 h-2.5 rounded-full transition-all duration-300" :class="activeSlide === i - 1
+                    ? 'bg-indigo-600 scale-125 dark:bg-[#0a4e8c]'
+                    : 'bg-gray-300'" />
+            </div>
+
+            <!-- ================= MOBILE MENU ================= -->
             <div class="grid md:hidden grid-cols-2 sm:grid-cols-3 gap-4">
-                <Link v-for="item in menuItems" :key="item.title" :href="item.route" preserve-scroll preserve-state
-                    class="flex flex-col items-center justify-center gap-2 p-4 bg-white rounded-xl shadow hover:shadow-lg transition transform w-full">
-                    <component :is="item.icon" class="w-10 h-10 text-blue-500" />
-                    <span class="text-sm font-medium text-gray-700 text-center">
+                <Link v-for="item in menuItems" :key="item.title" :href="item.route" preserve-scroll
+                    class="rounded-2xl p-4
+                           bg-white/70 backdrop-blur-lg
+                           border border-white/20
+                           shadow hover:shadow-xl
+                           flex flex-col items-center gap-2
+                           transition hover:-translate-y-1 dark:bg-gradient-to-br dark:from-[#063970] dark:via-[#0a4e8c] dark:to-[#1e1b4b]">
+
+                    <component :is="item.icon" class="w-9 h-9 dark:text-gray-300 text-indigo-600" />
+                    <span class="text-sm font-semibold dark:text-gray-300 text-gray-700 text-center">
                         {{ item.title }}
                     </span>
                 </Link>
             </div>
 
-            <!-- Card Siswa -->
-            <div class="mx-auto space-y-4">
-                <h2 class="sm:text-2xl text-xl font-bold sm:inline-block hidden text-gray-700 mb-2">Data Pribadi</h2>
-
-                <div
-                    class="bg-white md:shadow rounded-lg shadow border-gray-300 md:rounded-lg p-5 flex flex-col md:flex-row items-start md:items-center gap-4 hover:shadow-lg transition-all duration-300">
-
-                    <!-- Info Siswa -->
-                    <div class="flex-1 flex flex-col gap-3 w-full">
-
-                        <h3 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                            <UserIcon class="w-5 h-5 text-blue-500" /> {{ siswa.nama_lengkap }}
-                        </h3>
-                        <div class="border-b md:hidden -mt-2 mb-2 rounded-full border-gray-400 w-1/2"></div>
-
-                        <div
-                            class="grid grid-cols-2 text-center justify-center md:border md:border-dashed md:py-4 md:p-4 rounded sm:grid-cols-5 gap-2 text-sm text-gray-600">
-                            <div class="flex items-center md:border-r-2 md:border-l-2 md:pl-2 gap-1">
-                                <span class="w-4 h-4 text-gray-400">
-                                    <CheckBadgeIcon class="w-4 h-4 text-orange-500" />
-                                </span>
-                                Kelas: {{ siswa.kelas?.kelas || 'Belum ada' }}
-                            </div>
-                            <div class="md:flex hidden md:border-r-2 items-center gap-1">
-                                <span class="w-4 h-4 text-gray-400">
-                                    <DocumentTextIcon class="w-4 h-4 text-red-600" />
-                                </span>
-                                Kejuruan: {{ siswa.kejuruan?.kejuruan || 'Belum ada' }}
-                            </div>
-                            <div class="flex items-center md:border-r-2 gap-2">
-                                <span class="w-4 h-4 text-gray-400">
-                                    <AcademicCapIcon class="w-4 h-4 text-blue-600" />
-                                </span>
-                                ID:
-                                <span class="text-[#063970] font-mono font-bold">{{ siswa.id_siswa }}</span>
-
-                                <!-- Copy Button -->
-                                <button @click="copyToClipboard(siswa.id_siswa)"
-                                    class="ml-2 p-1 rounded hover:bg-gray-200 transition" title="Copy ID">
-                                    <ClipboardDocumentListIcon class="w-4 h-4 text-gray-500 hover:text-blue-600" />
-                                </button>
-                            </div>
-                            <div class="flex items-center text-center md:border-r-2 md:px-2 gap-1">
-                                <span class="w-4 h-4 text-gray-400">
-                                    <ClipboardDocumentListIcon class="w-4 h-4 text-[#063970]" />
-                                </span>
-                                NIS: {{ siswa.nis }}
-                            </div>
-                            <div class="flex items-center md:border-r-2 gap-1">
-                                <span class="w-4 h-4 text-gray-400">
-                                    <ClipboardDocumentListIcon class="w-4 h-4 text-indigo-600" />
-                                </span>
-                                NISN: {{ siswa.nisn }}
-                            </div>
-                        </div>
-
-                        <!-- Badges -->
-                        <div class="flex justify-between flex-wrap gap-2 mt-2">
-                            <span :class="[
-                                'text-xs font-medium px-3 py-1 rounded-full flex items-center gap-1',
-                                siswa.status === 'Activated' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                            ]">
-                                <component :is="siswa.status === 'Activated' ? CheckBadgeIcon : XMarkIcon"
-                                    class="w-3 h-3" />
-                                Status
-                                <span class="md:inline-block hidden">Akun</span>: {{ siswa.status === 'Activated' ?
-                                    'Aktif' : 'Tidak Aktif' }}
-                            </span>
-                            <span
-                                class="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full sm:hidden flex items-center gap-1">
-                                <AcademicCapIcon class="w-3 h-3" /> Kejuruan: {{ siswa.kejuruan?.kejuruan || 'Belum ada'
-                                }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- <div>
-                <h2 class="text-2xl font-bold sm:inline-block hidden text-gray-700 pt-4 mb-2">Informasi Lainnya</h2>
-                <div
-                    class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100">
-                </div>
-            </div> -->
         </div>
     </UserLayout>
 </template>
+
+<style>
+/* hide scrollbar but keep scroll */
+.no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE & Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari */
+}
+</style>

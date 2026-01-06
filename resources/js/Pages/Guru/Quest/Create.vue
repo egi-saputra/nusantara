@@ -121,179 +121,180 @@ function downloadTemplate() { Inertia.visit('/guru/bank-soal/template'); }
 
 <template>
     <MenuLayout>
-        <!-- Manual Form + Import -->
-        <form @submit.prevent="submitManual"
-            class="bg-white dark:bg-[#0F172A] border dark:border-gray-800 border-gray-300 backdrop-blur mx-auto shadow rounded-lg p-6 space-y-5">
-            <h1 class="text-2xl font-extrabold mb-6 dark:text-white text-gray-800"><span class="text-3xl">+</span> Add
-                Quiz Question
-            </h1>
+        <div class="max-w-5xl mx-auto sm:px-4 sm:py-6">
 
-            <!-- Import Excel + Download Template -->
-            <div
-                class="border border-dashed dark:bg-[#0B1F3A] border-gray-300 p-4 rounded-lg bg-gray-50 text-center space-y-2">
-                <label class="flex flex-col items-center justify-center cursor-pointer">
-                    <DocumentArrowUpIcon class="w-10 h-10 text-blue-500 mb-2" />
-                    <span class="text-gray-600 dark:text-gray-300 font-semibold mb-1">Upload Your Question File</span>
-                    <span class="text-gray-400 text-sm">(.xlsx / .xls)</span>
-                    <input type="file" accept=".xlsx,.xls" @change="importExcel" class="hidden" />
-                </label>
-                <p v-if="form.excel" class="mt-2 text-green-600 font-medium">{{ form.excel.name }}</p>
+            <!-- MAIN CARD -->
+            <form @submit.prevent="submitManual" class="relative overflow-hidden
+                       bg-white/80 dark:bg-white/5
+                       backdrop-blur-xl
+                       border border-gray-200/60 dark:border-white/10
+                       sm:rounded-3xl rounded-xl sm:shadow-2xl p-6 md:p-8 space-y-8">
 
-                <div class="flex justify-center gap-2 mt-2">
-                    <button type="button" @click="submitExcel" :class="[
-                        'px-4 py-2 text-white rounded-lg transition font-medium flex items-center justify-center gap-2',
-                        form.processing ? 'bg-gray-400 cursor-not-allowed' : 'dark:bg-green-900 dark:hover:bg-green-800 bg-green-600 hover:bg-green-700'
-                    ]" :disabled="!form.excel || form.processing">
+                <!-- HEADER -->
+                <div class="flex items-center gap-4">
+                    <div class="p-3 rounded-xl bg-blue-600/10 text-blue-600">
+                        <PlusIcon class="w-6 h-6" />
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">
+                            Add Quiz Question
+                        </h1>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            Create manually or import from Excel template
+                        </p>
+                    </div>
+                </div>
 
-                        <!-- Spinner while processing -->
-                        <svg v-if="form.processing" class="w-5 h-5 animate-spin text-white"
-                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                            </circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z">
-                            </path>
-                        </svg>
+                <!-- IMPORT EXCEL -->
+                <section class="relative rounded-2xl border border-dashed border-blue-400/40
+                           bg-blue-50/40 dark:bg-[#0B1F3A]
+                           p-6 text-center space-y-4">
 
-                        <!-- Button text -->
-                        <span>{{ form.processing ? 'Importing...' : 'Import Excel' }}</span>
+                    <DocumentArrowUpIcon class="w-12 h-12 mx-auto text-blue-500" />
+
+                    <div>
+                        <p class="font-semibold text-gray-700 dark:text-gray-200">
+                            Import Questions from Excel
+                        </p>
+                        <p class="text-sm text-gray-500">
+                            Supported format: .xlsx / .xls
+                        </p>
+                    </div>
+
+                    <label class="inline-flex items-center gap-2 px-5 py-2.5
+                               bg-blue-600 text-white rounded-xl cursor-pointer
+                               hover:bg-blue-700 transition font-semibold">
+                        <input type="file" accept=".xlsx,.xls" class="hidden" @change="importExcel" />
+                        <DocumentArrowUpIcon class="w-5 h-5" />
+                        Choose File
+                    </label>
+
+                    <p v-if="form.excel" class="text-green-600 font-medium">
+                        {{ form.excel.name }}
+                    </p>
+
+                    <div class="flex justify-center gap-3 pt-2">
+                        <button type="button" @click="submitExcel" class="btn-success"
+                            :disabled="!form.excel || form.processing">
+
+                            <svg v-if="form.processing" class="w-5 h-5 animate-spin" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
+                            </svg>
+
+                            {{ form.processing ? 'Importing...' : 'Import Excel' }}
+                        </button>
+
+                        <button type="button" @click="downloadTemplate" class="btn-secondary">
+                            Download <span class="sm:inline-block hidden">Template</span>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- DIVIDER -->
+                <div class="flex items-center gap-4">
+                    <div class="flex-1 h-px bg-gray-300 dark:bg-white/10"></div>
+                    <span class="text-sm font-semibold text-gray-400">OR</span>
+                    <div class="flex-1 h-px bg-gray-300 dark:bg-white/10"></div>
+                </div>
+
+                <!-- MANUAL FORM -->
+                <section class="space-y-6">
+
+                    <!-- TYPE -->
+                    <div>
+                        <label class="form-label">Question Type</label>
+                        <select v-model="form.tipe_soal" class="form-input dark:text-gray-500"
+                            :disabled="isManualDisabled">
+                            <option value="PG">Multiple Choice</option>
+                            <option value="Essay">Essay</option>
+                        </select>
+                    </div>
+
+                    <!-- QUESTION -->
+                    <div>
+                        <label class="form-label">Question</label>
+                        <textarea v-model="form.soal" rows="4" placeholder="Write your question here..."
+                            class="form-input" :disabled="isManualDisabled"></textarea>
+                    </div>
+
+                    <!-- ATTACHMENT -->
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="form-label">Attachment Type</label>
+                            <select v-model="form.jenis_lampiran" class="form-input dark:text-gray-500"
+                                :disabled="isManualDisabled">
+                                <option value="Tanpa Lampiran">No Attachment</option>
+                                <option value="Gambar">Image</option>
+                                <option value="Video">Video</option>
+                            </select>
+                        </div>
+
+                        <div v-if="form.jenis_lampiran === 'Gambar'">
+                            <label class="form-label">Upload Image</label>
+                            <input type="file" @change="handleFile" class="form-input dark:text-gray-500" />
+                        </div>
+
+                        <div v-else-if="form.jenis_lampiran === 'Video'">
+                            <label class="form-label">Video URL</label>
+                            <input type="text" v-model="form.link_lampiran" placeholder="https://youtube.com/..."
+                                class="form-input dark:text-gray-500" />
+                        </div>
+                    </div>
+
+                    <!-- OPTIONS -->
+                    <div v-if="form.tipe_soal === 'PG'" class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-semibold text-gray-700 dark:text-gray-200">
+                                Answer Options
+                            </h3>
+                            <button v-if="opsiState.length < 5" type="button" @click="addOpsi"
+                                class="text-indigo-600 font-semibold flex items-center gap-1">
+                                <PlusIcon class="w-4 h-4" /> Add
+                            </button>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div v-for="key in opsiState" :key="key">
+                                <label class="text-sm font-medium dark:text-gray-300">
+                                    Option {{ key.toUpperCase() }}
+                                </label>
+                                <input v-model="form['opsi_' + key]" class="form-input dark:text-gray-500"
+                                    placeholder="Enter Optional Answer" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CORRECT ANSWER -->
+                    <div>
+                        <label class="form-label">Correct Answer</label>
+
+                        <select v-if="form.tipe_soal === 'PG'" v-model="form.jawaban_benar" class="form-input">
+                            <option v-for="key in opsiState" :key="key" :value="'opsi_' + key">
+                                {{ key.toUpperCase() }} —
+                                {{ form['opsi_' + key] || '(empty)' }}
+                            </option>
+                        </select>
+
+                        <textarea v-else v-model="form.jawaban_benar" placeholder="Correct answer..."
+                            class="form-input"></textarea>
+                    </div>
+
+                </section>
+
+                <!-- ACTION -->
+                <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                    <button type="submit" class="btn-primary" :disabled="form.processing">
+                        <CheckIcon class="w-5 h-5" />
+                        {{ form.processing ? 'Creating...' : 'Create Question' }}
                     </button>
 
-                    <button type="button" @click="downloadTemplate"
-                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:bg-blue-900 dark:hover:bg-blue-800 transition font-medium">
-                        Download <span class="sm:inline-block hidden">Template</span>
-                    </button>
+                    <Link :href="`/guru/soal/${props.soal_id}`" class="btn-secondary">
+                        <ArrowLeftIcon class="w-5 h-5" />
+                        Back to List
+                    </Link>
                 </div>
-            </div>
 
-            <!-- Question Type -->
-            <div>
-                <label class="font-semibold mb-1 dark:text-gray-200 block text-gray-700"><span
-                        class="text-red-600">*</span> Question
-                    Type</label>
-                <select v-model="form.tipe_soal"
-                    class="w-full border dark:bg-gray-300 border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
-                    :disabled="isManualDisabled">
-                    <option value="PG">Multiple Choice</option>
-                    <option value="Essay">Typescript (Essay)</option>
-                </select>
-            </div>
-
-            <!-- Question Text -->
-            <div>
-                <label class="font-semibold mb-1 block dark:text-gray-200 text-gray-700"><span
-                        class="text-red-600">*</span>
-                    Question Details</label>
-                <textarea v-model="form.soal" rows="4"
-                    class="w-full border dark:bg-gray-300 border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
-                    placeholder="Enter the question!" :disabled="isManualDisabled">
-                </textarea>
-            </div>
-
-            <!-- Attachment Type -->
-            <div>
-                <label class="font-semibold mb-1 block dark:text-gray-200 text-gray-700">Attachment Type</label>
-                <select v-model="form.jenis_lampiran" class="w-full dark:bg-gray-300 border p-3 rounded-lg"
-                    :disabled="isManualDisabled">
-                    <option value="Tanpa Lampiran">No Attachment</option>
-                    <option value="Gambar">Image</option>
-                    <option value="Video">Video</option>
-                </select>
-            </div>
-
-            <!-- File or Link Attachment -->
-            <div v-if="form.jenis_lampiran === 'Gambar'" class="mt-2">
-                <label class="font-semibold mb-1 block dark:text-gray-200 text-gray-700">Upload Image</label>
-                <input type="file" @change="handleFile" class="border dark:bg-gray-300 p-2 rounded-lg w-full" />
-                <p v-if="form.lampiran_file" class="text-green-600 mt-1">{{ form.lampiran_file.name }}</p>
-            </div>
-            <div v-else-if="form.jenis_lampiran === 'Video'" class="mt-2">
-                <label class="font-semibold mb-1 block dark:text-gray-200 text-gray-700">Video Link</label>
-                <input type="text" v-model="form.link_lampiran" class="border dark:bg-gray-300 p-2 rounded-lg w-full"
-                    placeholder="Enter video URL" />
-            </div>
-
-            <!-- Multiple Choice Options -->
-            <div v-if="form.tipe_soal === 'PG'" class="grid grid-cols-1 gap-4">
-                <div v-for="key in opsiState" :key="key">
-                    <label class="font-semibold dark:text-gray-200">Option {{ key.toUpperCase() }}</label>
-                    <input v-model="form['opsi_' + key]" class="w-full dark:bg-gray-300 border p-2 rounded-lg"
-                        placeholder="Enter optional answer" />
-                </div>
-                <button v-if="opsiState.length < 5" type="button" @click="addOpsi"
-                    class="flex items-center gap-1 text-blue-600 dark:text-gray-400 font-semibold">
-                    <PlusIcon class="w-4 h-4" /> Add
-                </button>
-            </div>
-
-            <!-- Correct Answer -->
-            <!-- <div v-if="form.tipe_soal === 'PG'">
-                <label class="font-semibold mb-1 block text-gray-700">Correct Answer</label>
-
-                <select v-model="form.jawaban_benar"
-                    class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
-                    :disabled="isManualDisabled">
-                    <option v-for="key in opsiState" :key="key" :value="'opsi_' + key">
-                        {{ key.toUpperCase() }}. {{ form['opsi_' + key] || '(empty)' }}
-                    </option>
-                </select>
-            </div> -->
-
-            <div>
-                <label class="font-semibold mb-1 block dark:text-gray-200 text-gray-700">Correct Answer</label>
-
-                <!-- Jika tipe soal adalah PG -->
-                <select v-if="form.tipe_soal === 'PG'" v-model="form.jawaban_benar"
-                    class="w-full border p-3 rounded-lg dark:bg-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
-                    :disabled="isManualDisabled">
-                    <option v-for="key in opsiState" :key="key" :value="'opsi_' + key">
-                        {{ key.toUpperCase() }}.
-                        {{ form['opsi_' + key] && form['opsi_' + key].trim() !== ''
-                            ? form['opsi_' + key]
-                            : '(empty)' }}
-                    </option>
-                </select>
-
-                <!-- Jika tipe soal ESSAY -->
-                <textarea v-else-if="form.tipe_soal === 'Essay'" v-model="form.jawaban_benar"
-                    placeholder="Enter the correct answer..."
-                    class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition"></textarea>
-            </div>
-
-            <!-- Score / Weight -->
-            <!-- <div>
-                <label class="font-semibold mb-1 block text-gray-700">Score Weight</label>
-                <input v-model="form.nilai" type="number" min="0"
-                    class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
-                    :disabled="isManualDisabled" />
-            </div> -->
-
-            <!-- Submit Manual -->
-            <div class="flex flex-col md:flex-row gap-4 mt-4">
-                <button type="submit"
-                    class="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold rounded-lg shadow-lg hover:from-blue-600 hover:to-blue-800 transition disabled:opacity-70 disabled:cursor-not-allowed"
-                    :disabled="form.processing">
-                    <!-- Spinner saat processing -->
-                    <svg v-if="form.processing" class="animate-spin h-5 w-5 text-white"
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                        </circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                    </svg>
-
-                    <!-- Check Icon jika tidak loading -->
-                    <CheckIcon v-else class="w-5 h-5" />
-
-                    <!-- Text berubah -->
-                    <span>{{ form.processing ? "Creating..." : "Create Question" }}</span>
-                </button>
-
-                <Link :href="`/guru/soal/${props.soal_id}`"
-                    class="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gray-600 text-white font-semibold dark:bg-gray-700 dark:hover:bg-gray-800 rounded-lg shadow hover:bg-gray-700 transition">
-                    <ArrowLeftIcon class="w-5 h-5" />
-                    Back to Quiz List
-                </Link>
-            </div>
-
-        </form>
+            </form>
+        </div>
     </MenuLayout>
 </template>

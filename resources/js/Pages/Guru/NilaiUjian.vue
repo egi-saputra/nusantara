@@ -1,7 +1,7 @@
 <script setup>
 import MenuLayout from '@/Layouts/MenuLayout.vue';
 import { PlayIcon, CheckBadgeIcon, UserIcon } from '@heroicons/vue/24/solid'
-import { ClipboardDocumentCheckIcon, ArrowPathIcon, BookOpenIcon, AcademicCapIcon, CheckCircleIcon } from '@heroicons/vue/24/outline'
+import { ClipboardDocumentCheckIcon, ArrowPathIcon, ArrowDownTrayIcon } from '@heroicons/vue/24/outline'
 import { ref, onMounted, computed } from "vue";
 import { ToastAlert } from '@/Composables/ToastAlert.js';
 import ExcelJS from 'exceljs';
@@ -162,211 +162,175 @@ const exportExcel = async () => {
     <MenuLayout>
         <div class="sm:space-y-6 space-y-4">
 
-            <h1 class="text-xl md:text-2xl dark:text-gray-100 font-bold text-gray-800 flex items-center gap-2">
-                <ClipboardDocumentCheckIcon class="w-6 h-6 text-blue-600" />
+            <h1 class="flex items-center gap-3 text-2xl font-bold text-gray-800 dark:text-white">
+                <ClipboardDocumentCheckIcon class="w-7 h-7 text-blue-600" />
                 Assessment Summary
             </h1>
 
-            <!-- FILTER -->
-            <div class="sm:p-4 space-y-4 mb-6">
+            <!-- FILTER BAR -->
+            <div
+                class="rounded-2xl p-4 bg-white/70 dark:bg-white/5 backdrop-blur-xl border border-gray-200/60 dark:border-white/10 shadow-lg space-y-4">
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-
-                    <select v-model="filter.soal_id"
-                        class="border p-2 rounded sm:rounded-lg w-full dark:bg-[#0F172A] dark:text-gray-200 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-gray-200 dark:focus:border-gray-200">
-                        <option value="">-- Select Quiz Title --</option>
+                    <select v-model="filter.soal_id" class="form-input dark:text-gray-300">
+                        <option value="">Select Quiz</option>
                         <option v-for="s in uniqueSoal" :key="s.id" :value="s.id">
                             {{ s.title }}
                         </option>
                     </select>
 
-                    <select v-model="filter.mapel_id"
-                        class="border p-2 rounded sm:rounded-lg w-full bg-gray-50 focus:ring-blue-500 dark:bg-[#0F172A] dark:text-gray-200 focus:border-blue-500 dark:focus:ring-gray-200 dark:focus:border-gray-200">
-                        <option value="">-- Select Subject --</option>
-                        <option v-for="m in listMapel" :value="m.id">{{ m.mapel }}</option>
+                    <select v-model="filter.mapel_id" class="form-input dark:text-gray-300">
+                        <option value="">Select Subject</option>
+                        <option v-for="m in listMapel" :key="m.id" :value="m.id">
+                            {{ m.mapel }}
+                        </option>
                     </select>
 
-                    <select v-model="filter.kelas_id"
-                        class="border p-2 rounded sm:rounded-lg w-full bg-gray-50 focus:ring-blue-500 dark:focus:ring-gray-200 dark:focus:border-gray-200 dark:bg-[#0F172A] dark:text-gray-200 focus:border-blue-500">
-                        <option value="">-- Select Class --</option>
-                        <option v-for="k in listKelas" :value="k.id">{{ k.kelas }}</option>
+                    <select v-model="filter.kelas_id" class="form-input dark:text-gray-300">
+                        <option value="">Select Class</option>
+                        <option v-for="k in listKelas" :key="k.id" :value="k.id">
+                            {{ k.kelas }}
+                        </option>
                     </select>
                 </div>
 
-                <div class="flex sm:justify-end">
-
-                    <button @click="generate"
-                        class="bg-blue-600 hover:bg-blue-700 dark:hover:bg-[#15123f] dark:bg-[#063970] text-white px-4 py-2 rounded sm:rounded-lg w-full sm:w-auto flex items-center justify-center gap-2">
-
-                        <template v-if="loading">
-                            <ArrowPathIcon class="w-5 h-5 animate-spin text-white" />
-                            Generating...
-                        </template>
-                        <template v-else>
-                            <PlayIcon class="w-5 h-5 text-white" />
-                            Generate
-                        </template>
+                <div class="flex justify-end">
+                    <button @click="generate" class="btn-primary w-full sm:w-auto">
+                        <ArrowPathIcon v-if="loading" class="w-5 h-5 animate-spin" />
+                        <PlayIcon v-else class="w-5 h-5" />
+                        {{ loading ? 'Generating...' : 'Generate' }}
                     </button>
                 </div>
-
             </div>
 
             <!-- LOADING -->
-            <div v-if="loading" class="text-center py-10 text-gray-500">
+            <div v-if="loading" class="text-center py-10 dark:text-gray-300 text-gray-500">
                 Loading data...
             </div>
 
             <!-- NO DATA -->
             <div v-else-if="rekap.length === 0 && loaded"
-                class="text-center py-10 text-gray-500 text-lg font-semibold bg-white rounded-2xl shadow-sm">
+                class="text-center py-10 text-gray-500 dark:text-gray-300 text-lg font-semibold bg-white rounded-2xl shadow-sm">
                 🚫 No assessment data available.
             </div>
 
             <!-- === MOBILE CARD VIEW === -->
-            <div v-else-if="rekap.length > 0" class="space-y-4 mt-6 md:hidden">
+            <div v-if="rekap.length > 0" class="md:hidden space-y-4 mt-6">
+                <div v-for="item in rekap.filter(r => r.status === 'Selesai')" :key="`${item.user_id}-${item.soal_id}`"
+                    class="rounded-2xl p-4 bg-white/80 dark:bg-white/5 backdrop-blur-xl border border-gray-200/50 dark:border-white/10 shadow-lg space-y-3">
 
-                <h1 class="text-xl md:text-2xl font-bold text-gray-800 flex items-center gap-2">
-                    <ArrowPathIcon class="w-5 h-5 text-gray-800" />
-                    Result Items
-                </h1>
-
-                <!-- Completed Only -->
-                <template v-if="rekap.filter(r => r.status === 'Selesai').length > 0">
-
-                    <div v-for="item in rekap.filter(r => r.status === 'Selesai')"
-                        :key="`${item.user_id}-${item.soal_id}`"
-                        class="bg-white rounded-lg shadow p-4 space-y-3 border">
-
-                        <!-- NAME -->
-                        <div class="flex items-center">
-                            <UserIcon class="h-5 w-5 mr-2 text-gray-700" />
-                            <span class="font-semibold text-gray-800">
-                                {{ item.user?.siswa?.nama_lengkap ?? "-" }}
-                            </span>
+                    <div
+                        class="flex flex-row w-full justify-between items-center gap-2 font-semibold text-gray-800 dark:text-white">
+                        <div class="flex gap-2">
+                            <UserIcon class="w-5 h-5 text-blue-600" />
+                            {{ item.user?.siswa?.nama_lengkap ?? '-' }}
                         </div>
 
-                        <!-- SUBJECT -->
-                        <div
-                            class="flex items-center gap-2 bg-green-50 text-green-700 py-1 px-2 rounded text-sm font-medium">
-                            <BookOpenIcon class="h-4 w-4" />
-                            Subject: {{ item.soal?.mapel?.mapel ?? "-" }}
-                        </div>
-
-                        <!-- CLASS -->
-                        <div
-                            class="flex items-center gap-2 bg-orange-50 text-amber-600 py-1 px-2 rounded text-sm font-medium">
-                            <AcademicCapIcon class="h-4 w-4" />
-                            Class: {{ item.user?.siswa?.kelas?.kelas ?? "-" }}
-                        </div>
-
-                        <!-- TOTAL -->
-                        <div class="grid grid-cols-3 gap-2 text-sm text-gray-700 font-medium">
-
-                            <!-- TOTAL QUESTIONS -->
-                            <div>
-                                Questions:
-                                <span class="font-bold">{{ item.total_soal }}</span>
-                            </div>
-
-                            <!-- CORRECT -->
-                            <div>
-                                Correct:
-                                <span class="font-bold text-green-600">{{ item.total_benar }}</span>
-                            </div>
-
-                            <!-- WRONG -->
-                            <div>
-                                Wrong:
-                                <span class="font-bold text-red-600">
-                                    {{ item.total_soal - item.total_benar }}
-                                </span>
-                            </div>
-
-                        </div>
-
-                        <!-- SCORE + STATUS -->
-                        <div
-                            class="flex justify-between items-center bg-blue-50 border border-blue-200 text-blue-700 px-4 py-2 rounded shadow-sm">
-
-                            <div class="flex items-center gap-2">
-                                <CheckBadgeIcon class="h-5 w-5 text-blue-600" />
-
-                                <span class="font-semibold">Score:</span>
-                                <span class="font-bold font-mono text-blue-800 text-lg">
-                                    {{ item.total_nilai }}
-                                </span>
-                            </div>
-
-                            <div class="flex items-center gap-1 text-green-600 font-medium">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12l2 2 4-4m5 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                {{ item.status }}
-                            </div>
-                        </div>
-
+                        <span class="badge badge-orange">
+                            {{ item.user?.siswa?.kelas?.kelas ?? '-' }}
+                        </span>
                     </div>
-                </template>
 
-                <!-- FALLBACK -->
-                <div v-else class="text-center py-10 text-gray-500 text-base font-semibold bg-white rounded-xl shadow">
-                    🚫 No completed assessments yet.
+                    <div class="flex flex-wrap gap-2 dark:text-gray-300 text-sm">
+                        <span class="badge badge-green">
+                            {{ item.soal?.mapel?.mapel ?? '-' }}
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-3 dark:text-gray-300 text-center text-sm font-medium">
+                        <div>
+                            <p>Question</p>
+                            <p class="font-bold">{{ item.total_soal }}</p>
+                        </div>
+                        <div class="text-green-600">
+                            <p>Correct</p>
+                            <p class="font-bold">{{ item.total_benar }}</p>
+                        </div>
+                        <div class="text-red-600">
+                            <p>Wrong</p>
+                            <p class="font-bold">{{ item.total_soal - item.total_benar }}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center
+                    bg-blue-50 dark:bg-blue-900/30
+                    border border-blue-200/60 dark:border-blue-500/20
+                    rounded-xl px-4 py-2">
+                        <span class="font-semibold text-blue-700 dark:text-blue-300">
+                            Score
+                        </span>
+                        <span class="text-xl font-bold text-blue-800 dark:text-blue-200">
+                            {{ item.total_nilai }}
+                        </span>
+                    </div>
                 </div>
-
             </div>
 
             <!-- === DESKTOP TABLE VIEW === -->
-            <div v-if="rekap.length > 0" class="overflow-x-auto rounded-xl px-6 shadow-sm hidden md:block">
+            <div v-if="rekap.length > 0" class="hidden md:block mt-6">
 
-                <div class="flex justify-between pr-2">
-                    <h1 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
-                        <ArrowPathIcon class="w-5 h-5 text-gray-800" />
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-white">
                         Result Items
-                    </h1>
+                    </h2>
 
-                    <h1 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
-                        <CheckCircleIcon class="w-7 h-7 text-green-600" />
-                        {{ rekap[0]?.soal?.title ?? "-" }}
-                    </h1>
+                    <span class="badge badge-blue">
+                        {{ rekap[0]?.soal?.title ?? '-' }}
+                    </span>
                 </div>
 
-                <table class="min-w-full bg-white">
-                    <thead class="bg-blue-700 border border-collapse text-white">
-                        <tr class="border border-collapse">
-                            <th class="p-3 text-center">Full Name</th>
-                            <th class="p-3 text-center">Subject</th>
-                            <th class="p-3 text-center">Class / Group</th>
-                            <th class="p-3 text-center">Correct Answers</th>
-                            <th class="p-3 text-center">Total Score</th>
-                            <th class="p-3 text-center">Exam Status</th>
-                        </tr>
-                    </thead>
+                <div
+                    class="rounded-2xl overflow-hidden bg-white/80 dark:bg-white/5 backdrop-blur-xl border border-gray-200/60 dark:border-white/10 shadow-lg">
 
-                    <tbody>
-                        <tr v-for="item in rekap" :key="`${item.user_id}-${item.soal_id}`"
-                            class="border-t hover:bg-gray-50">
+                    <table class="min-w-full">
+                        <thead class="bg-blue-600 text-white text-sm">
+                            <tr>
+                                <th class="p-4 text-left">Student</th>
+                                <th class="p-4 text-center">Subject</th>
+                                <th class="p-4 text-center">Class</th>
+                                <th class="p-4 text-center">Correct</th>
+                                <th class="p-4 text-center">Score</th>
+                                <th class="p-4 text-center">Status</th>
+                            </tr>
+                        </thead>
 
-                            <td class="p-3">{{ item.user?.siswa?.nama_lengkap ?? "-" }}</td>
-                            <td class="p-3">{{ item.soal?.mapel?.mapel ?? "-" }}</td>
-                            <td class="p-3 text-center">{{ item.user?.siswa?.kelas?.kelas ?? "-" }}</td>
-                            <td class="p-3 text-center text-green-600 font-semibold">{{ item.total_benar }}</td>
-                            <td class="p-3 text-center text-blue-600 font-bold">{{ item.total_nilai }}</td>
-                            <td class="p-3 text-center">
-                                <span
-                                    :class="item.status === 'Selesai' ? 'text-green-600 font-bold font-mono' : 'text-yellow-600 font-bold font-mono'">
-                                    {{ item.status }}
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                        <tbody>
+                            <tr v-for="item in rekap" :key="`${item.user_id}-${item.soal_id}`"
+                                class="border-t dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition">
 
-                <div class="flex justify-end py-4">
+                                <td class="p-4 font-medium">
+                                    {{ item.user?.siswa?.nama_lengkap ?? '-' }}
+                                </td>
+                                <td class="p-4 text-center">
+                                    {{ item.soal?.mapel?.mapel ?? '-' }}
+                                </td>
+                                <td class="p-4 text-center">
+                                    {{ item.user?.siswa?.kelas?.kelas ?? '-' }}
+                                </td>
+                                <td class="p-4 text-center text-green-600 font-bold">
+                                    {{ item.total_benar }}
+                                </td>
+                                <td class="p-4 text-center text-blue-600 font-bold">
+                                    {{ item.total_nilai }}
+                                </td>
+                                <td class="p-4 text-center">
+                                    <span :class="item.status === 'Selesai'
+                                        ? 'badge badge-green'
+                                        : 'badge badge-yellow'">
+                                        {{ item.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="fixed bottom-6 right-6 z-50">
                     <button @click="exportExcel"
-                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded flex items-center gap-2">
-                        Export to Excel
+                        class="flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold shadow-xl hover:shadow-2xl hover:from-green-600 hover:to-emerald-700 transition">
+
+                        <ArrowDownTrayIcon class="w-5 h-5" />
+                        Export Excel
                     </button>
                 </div>
             </div>

@@ -1,5 +1,4 @@
 <script setup>
-// import AppLayout from '@/Layouts/AppLayout.vue'
 import { PaperAirplaneIcon } from '@heroicons/vue/24/outline'
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { router, usePage } from '@inertiajs/vue3'
@@ -47,6 +46,10 @@ const lampiranType = computed(() => {
 const lampiranName = computed(() => {
     if (!props.quest.link_lampiran) return ''
     return props.quest.link_lampiran.split('/').pop()
+})
+
+const isEssay = computed(() => {
+    return props.quest?.tipe_soal === 'Essay'
 })
 
 /* ================= PREVIEW ================= */
@@ -231,46 +234,32 @@ onBeforeUnmount(async () => {
 
 
 <template>
-    <!-- <AppLayout> -->
-    <div class="w-full md:py-10 p-6 md:max-w-[69rem] mx-auto md:px-0">
+    <div class="w-full min-h-screen md:py-10 p-6 dark:bg-[#020617] md:px-0">
 
-        <!-- ================= TIMER FIXED ================= -->
-        <!-- <div class="fixed top-10 right-4 z-50 bg-white shadow rounded-lg px-4 py-2 flex items-center gap-2 border">
-            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span class="font-bold text-red-600 text-sm">
-                {{ Math.floor(timer / 60) }}:{{ String(timer % 60).padStart(2, '0') }}
-            </span>
-        </div> -->
-
-        <div class="flex md:flex-row flex-col gap-4">
+        <div class="flex md:flex-row mx-auto md:max-w-[69rem] md:mt-12 flex-col gap-4">
 
             <!-- ================= PANEL SOAL ================= -->
             <div
-                class="flex-1 bg-white md:shadow-xl rounded-lg md:rounded-2xl md:p-6 pt-4 pb-6 px-4 md:px-6 md:pt-6 md:pb-6 border">
+                class="flex-1 bg-white/70 dark:bg-[#0F172A]/90 backdrop-blur-xl md:shadow-xl border border-white/20 dark:border-white/10 rounded-lg md:rounded-2xl md:p-6 pt-4 pb-6 px-4 md:px-6 md:pt-6 md:pb-6">
 
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-semibold text-gray-700">
+                    <h3 class="font-semibold dark:text-gray-200 text-gray-700">
                         Soal {{ no }} dari {{ totalSoal }}
                     </h3>
 
-                    <!-- <span class="text-xs text-gray-400">
-                        CBT Mode
-                    </span> -->
-
                     <!-- ================= TIMER FIXED ================= -->
                     <div
-                        class="z-20 md:-mt-20 -mt-2 -mr-2 md:mr-0 bg-white md:rounded-xl px-4 py-2 flex items-center gap-2 md:border">
-                        <svg class="w-5 h-5 text-red-500 md:text-[#063970]" fill="none" stroke="currentColor"
-                            stroke-width="2" viewBox="0 0 24 24">
+                        class="z-20 md:-mt-20 -mt-2 -mr-2 md:mr-0 dark:bg-[#0F172A] bg-white md:rounded-xl dark:md:border-white/10 px-4 py-2 flex items-center gap-2 md:border">
+                        <svg class="w-5 h-5 text-red-500 dark:md:text-gray-300 md:text-[#063970]" fill="none"
+                            stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span class="font-bold md:inline-block hidden -ml-1 mt-0.5 text-[#063970] text-sm">
+                        <span
+                            class="font-bold md:inline-block hidden -ml-1 mt-0.5 text-[#063970] dark:text-indigo-300 text-sm">
                             Timer :
                         </span>
-                        <span class="font-bold text-red-600 mt-0.5 text-sm">
+                        <span class="font-bold text-red-600 dark:text-red-500 mt-0.5 text-sm">
                             {{ Math.floor(timer / 60) }}:{{ String(timer % 60).padStart(2, '0') }}
                         </span>
                     </div>
@@ -300,39 +289,39 @@ onBeforeUnmount(async () => {
                         <button @click="closePreview"
                             class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">&times;</button>
 
-                        <video controls class="w-full rounded-lg">
+                        <video controls class="w-full rounded-lg dark:text-gray-400">
                             <source :src="previewUrl" type="video/mp4" />
                             Your browser does not support the video tag.
                         </video>
                     </div>
                 </div>
 
-                <div v-html="quest.soal" class="mb-6 text-gray-800 leading-relaxed"></div>
+                <div v-html="quest.soal" class="mb-6 text-gray-800 dark:text-gray-100 leading-relaxed">
+                </div>
 
                 <!-- JAWABAN -->
                 <!-- PILIHAN GANDA -->
                 <div v-if="!isEssay" class="space-y-3">
                     <template v-for="opsi in ['A', 'B', 'C', 'D', 'E']" :key="opsi">
-                        <label v-if="quest['opsi_' + opsi.toLowerCase()]" class="flex gap-3 items-start cursor-pointer p-3 rounded-xl border
-                                   hover:bg-blue-50 transition" :class="jawaban === opsi
-                                    ? 'border-blue-600 bg-blue-50'
-                                    : 'border-gray-200'">
+                        <label v-if="quest['opsi_' + opsi.toLowerCase()]"
+                            class="flex gap-3 items-start cursor-pointer p-3 rounded-xl border bg-white/60 dark:bg-slate-800/50 backdrop-blur hover:bg-blue-50 dark:hover:bg-indigo-500/10 transition"
+                            :class="jawaban === opsi ? 'border-blue-600 bg-blue-50' : 'border-gray-200'">
                             <input type="radio" :value="opsi" v-model="jawaban" class="mt-1 accent-blue-600" />
-                            <span v-html="quest['opsi_' + opsi.toLowerCase()]"></span>
+                            <span v-html="quest['opsi_' + opsi.toLowerCase()]" class="dark:text-gray-300"></span>
                         </label>
                     </template>
                 </div>
 
                 <!-- ESSAY -->
                 <div v-else class="mt-4">
-                    <label class="block font-semibold text-gray-700 mb-2">
+                    <label class="block font-semibold dark:text-gray-400 text-gray-700 mb-2">
                         Your Answer
                     </label>
 
                     <textarea v-model="jawaban" rows="6" placeholder="Type your answer here..."
-                        class="w-full rounded-xl border border-gray-300 p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"></textarea>
+                        class="w-full rounded-xl bg-white/70 dark:bg-[#0F172A]/90 backdrop-blur border border-gray-300 dark:border-white/10 text-gray-800 dark:text-gray-300 p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-indigo-400 transition"></textarea>
 
-                    <p class="text-xs text-gray-500 mt-2">
+                    <p class="text-xs dark:text-gray-400 text-gray-500 mt-2">
                         Your answer will be saved automatically.
                     </p>
                 </div>
@@ -340,8 +329,8 @@ onBeforeUnmount(async () => {
                 <!-- NAVIGASI -->
                 <div class="flex flex-col sm:flex-row gap-3 justify-between mt-8">
 
-                    <button v-if="no > 1" @click="goTo(no - 1)" class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border
-                               hover:bg-gray-100 transition">
+                    <button v-if="no > 1" @click="goTo(no - 1)"
+                        class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border hover:bg-gray-100 transition">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                         </svg>
@@ -376,24 +365,25 @@ onBeforeUnmount(async () => {
             </div>
 
             <!-- ================= DAFTAR NOMOR (DESKTOP) ================= -->
-            <div class="hidden md:block w-72 bg-white shadow-xl rounded-2xl p-4 border   relative">
+            <div
+                class="hidden md:block w-72 bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl shadow-xl rounded-2xl p-4 border border-white/20 dark:border-white/10 relative">
 
                 <!-- HEADER + ICON INFO -->
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-semibold text-gray-700">
+                    <h3 class="font-semibold dark:text-gray-300 text-gray-700">
                         Daftar Soal
                     </h3>
 
                     <!-- ICON INFO -->
                     <div class="relative legend-wrapper">
                         <button @click.stop="toggleLegend"
-                            class="w-6 h-6 rounded-xl border border-gray-300 font-extrabold flex items-center justify-center text-gray-500  transition">
+                            class="w-6 h-6 rounded-xl border border-gray-300 font-extrabold flex items-center justify-center dark:text-gray-300 text-gray-500  transition">
                             !
                         </button>
 
                         <!-- POPUP LEGEND -->
                         <div v-if="showLegend"
-                            class="absolute right-8 -mt-6 w-48 bg-white border shadow-xl rounded-xl p-3 text-xs z-50">
+                            class="absolute right-8 -mt-6 w-48 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl dark:text-gray-200 border border-white/20 dark:border-white/10 shadow-xl rounded-xl p-3 text-xs z-50">
                             <div class="space-y-2">
                                 <div class="flex items-center gap-2">
                                     <span class="w-3 h-3 rounded bg-green-600"></span>
@@ -428,23 +418,25 @@ onBeforeUnmount(async () => {
         </div>
 
         <!-- ================= DAFTAR NOMOR (MOBILE) ================= -->
-        <div class="md:hidden mt-6 bg-white rounded-lg md:border-t border md:shadow-xl p-4">
+        <div
+            class="md:hidden mt-6 bg-white/70 dark:bg-[#0F172A]/90 backdrop-blur-xl rounded-lg md:border-t border-white/20 dark:border-white/10 md:shadow-xl p-4">
             <!-- HEADER + ICON INFO -->
             <div class="flex items-center justify-between mb-4">
-                <h3 class="font-semibold text-gray-700">
+                <h3 class="font-semibold dark:text-gray-300 text-gray-700">
                     Daftar Soal
                 </h3>
 
                 <!-- ICON INFO -->
                 <div class="relative legend-wrapper">
-                    <button @click.stop="toggleLegend" class="w-6 h-6 rounded-full border border-gray-500 flex items-center justify-center
-                       text-gray-500 hover:bg-gray-50 hover:text-gray-800 transition">
+                    <button @click.stop="toggleLegend"
+                        class="w-6 h-6 rounded-full border border-gray-500 dark:border-gray-300 flex items-center justify-center
+                       text-gray-500 hover:bg-gray-50 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-800 dark:hover:border-gray-800 transition">
                         !
                     </button>
 
                     <!-- POPUP LEGEND -->
                     <div v-if="showLegend"
-                        class="absolute right-0 mt-2 w-48 bg-white border shadow-xl rounded-xl p-3 text-xs z-50">
+                        class="absolute right-0 mt-2 w-48 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl dark:text-gray-200 border border-white/20 dark:border-white/10 shadow-xl rounded-xl p-3 text-xs z-50">
                         <div class="space-y-2">
                             <div class="flex items-center gap-2">
                                 <span class="w-3 h-3 rounded bg-green-600"></span>
@@ -482,17 +474,17 @@ onBeforeUnmount(async () => {
 
             <div class="flex justify-between items-center mt-4 text-sm">
 
-                <button @click="currentPage--" :disabled="currentPage === 1" class="px-3 py-2 rounded border
-               disabled:opacity-40 disabled:cursor-not-allowed">
+                <button @click="currentPage--" :disabled="currentPage === 1"
+                    class="px-3 py-2 rounded border dark:text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed">
                     ← Prev
                 </button>
 
-                <span class="text-gray-500">
+                <span class="text-gray-500 dark:text-gray-400">
                     {{ currentPage }} / {{ totalPages }}
                 </span>
 
-                <button @click="currentPage++" :disabled="currentPage === totalPages" class="px-3 py-2 rounded border
-               disabled:opacity-40 disabled:cursor-not-allowed">
+                <button @click="currentPage++" :disabled="currentPage === totalPages"
+                    class="px-3 py-2 rounded border dark:text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed">
                     Next →
                 </button>
 
@@ -501,5 +493,4 @@ onBeforeUnmount(async () => {
         </div>
 
     </div>
-    <!-- </AppLayout> -->
 </template>
