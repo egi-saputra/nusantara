@@ -63,15 +63,6 @@ class UjianController extends Controller
             return redirect()->back()->with('error', 'Token ujian sudah digunakan, silahkan gunakan token yang baru!');
         }
 
-        // Buat record ujian siswa
-        // UjianSiswa::create([
-        //     'user_id' => $userId,
-        //     'soal_id' => $soalId,
-        //     'waktu_mulai' => now(),
-        //     'status' => 'Belum Dikerjakan',
-        //     'token' => Str::upper(Str::random(6)),
-        // ]);
-
         return redirect()->route('siswa.ujian.preview', $soalId);
     }
 
@@ -210,12 +201,12 @@ class UjianController extends Controller
         }
 
         // 🔴 PENTING: JANGAN JSON
-        // return back();
+        return back();
         // ✅ Kembalikan JSON agar Inertia tahu request berhasil
-        return response()->json([
-            'success' => true,
-            'jawaban' => $request->jawaban
-        ]);
+        // return response()->json([
+        //     'success' => true,
+        //     'jawaban' => $request->jawaban
+        // ]);
     }
 
     public function submitUjian(Request $request, $soal_id)
@@ -276,23 +267,6 @@ class UjianController extends Controller
 
         return response()->json(['success' => true]);
     }
-    // public function refreshToken(Request $request, $soal_id)
-    // {
-    //     $userId = Auth::id();
-    //     $ujian = UjianSiswa::where([
-    //         'user_id' => $userId,
-    //         'soal_id' => $soal_id
-    //     ])->first();
-
-    //     // Hanya buat token baru jika ujian belum mulai atau status Belum Dikerjakan
-    //     if ($ujian && $ujian->status === 'Belum Dikerjakan') {
-    //         $ujian->update([
-    //             'token' => str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT)
-    //         ]);
-    //     }
-
-    //     return response()->json(['success' => true]);
-    // }
 
     public function finish()
     {

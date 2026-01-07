@@ -1,58 +1,12 @@
 <script setup>
 import MenuLayout from '@/Layouts/MenuLayout.vue'
 import { Head, Link } from '@inertiajs/vue3'
-import { onMounted, onBeforeUnmount } from 'vue'
 import { ArrowLeftIcon, PlayCircleIcon } from '@heroicons/vue/24/solid'
 
 defineProps({
     soal: Object,
     jumlahSoal: Number,
 })
-
-/**
- * NON-TURBO / ANTI-CHEAT SCRIPT
- * (dipindahkan dari Blade tanpa perubahan logika)
- */
-// const beforeUnloadHandler = (e) => {
-//     e.preventDefault()
-//     e.returnValue = 'Jangan menutup atau merefresh halaman saat ujian!'
-//     return e.returnValue
-// }
-
-// const keydownHandler = (e) => {
-//     if (
-//         (e.ctrlKey || e.metaKey) &&
-//         ['c', 'v', 'x', 'r', 't', 'n', 'w'].includes(e.key.toLowerCase())
-//     ) {
-//         e.preventDefault()
-//         alert('Shortcut dinonaktifkan selama ujian!')
-//     }
-
-//     if (e.key === 'F5') {
-//         e.preventDefault()
-//         alert('Reload diblokir!')
-//     }
-
-//     if (e.key === 'Escape') {
-//         e.preventDefault()
-//     }
-// }
-
-// const contextMenuHandler = (e) => {
-//     e.preventDefault()
-// }
-
-// onMounted(() => {
-//     window.addEventListener('beforeunload', beforeUnloadHandler)
-//     document.addEventListener('keydown', keydownHandler)
-//     document.addEventListener('contextmenu', contextMenuHandler)
-// })
-
-// onBeforeUnmount(() => {
-//     window.removeEventListener('beforeunload', beforeUnloadHandler)
-//     document.removeEventListener('keydown', keydownHandler)
-//     document.removeEventListener('contextmenu', contextMenuHandler)
-// })
 </script>
 
 <template>

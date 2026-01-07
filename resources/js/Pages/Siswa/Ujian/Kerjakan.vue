@@ -78,6 +78,11 @@ const jawaban = ref(null)
 const jawabanAwal = ref(props.riwayat.jawaban)
 const timer = ref(props.sisaDetik)
 let interval = null
+const answeredLocal = ref([...props.answered])
+
+watch(() => props.answered, (val) => {
+    answeredLocal.value = [...val]
+})
 
 /* ================= PAGINATION ================= */
 const totalPages = computed(() => Math.ceil(props.nomorList.length / perPage))
@@ -97,7 +102,36 @@ const closeLegend = e => {
 }
 
 /* ================= UTIL ================= */
-const isAnswered = (questId) => props.answered.includes(questId)
+const isAnswered = (questId) => answeredLocal.value.includes(questId)
+
+/* ================= FULLSCREEN MODE ================= */
+const isFullscreen = ref(false)
+
+const requestFullscreen = () => {
+    const el = document.documentElement
+
+    if (el.requestFullscreen) el.requestFullscreen()
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen()
+    else if (el.msRequestFullscreen) el.msRequestFullscreen()
+}
+
+const exitFullscreen = () => {
+    if (document.exitFullscreen) document.exitFullscreen()
+}
+
+const onFullscreenChange = () => {
+    const fs =
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.msFullscreenElement
+
+    isFullscreen.value = !!fs
+
+    if (!fs) {
+        alert('Keluar dari mode layar penuh tidak diperbolehkan!')
+        blockExit()
+    }
+}
 
 /* ================= SYNC SOAL ================= */
 watch(() => props.quest.id, () => {
@@ -116,19 +150,76 @@ const updateTimer = () => {
 }
 
 /* ================= AUTOSAVE ================= */
+const isNavigating = ref(false)
+
+watch(jawaban, () => {
+    if (isNavigating.value) return
+
+    clearTimeout(saveTimeout)
+    saveTimeout = setTimeout(() => {
+        autosave()
+    }, 500)
+})
+
+/* ================= AUTOSAVE ================= */
 const autosave = () => {
-    if (jawaban.value === null || jawaban.value === jawabanAwal.value) return Promise.resolve()
+    if (jawaban.value === null) return Promise.resolve()
+
+    if (isEssay.value && jawaban.value.trim() === '') return Promise.resolve()
+
+    if (jawaban.value === jawabanAwal.value) return Promise.resolve()
+
     return router.post(
         route('siswa.ujian.autosave'),
-        { soal_id: props.soal.id, quest_id: props.quest.id, jawaban: jawaban.value, token: token.value },
-        { preserveState: true, preserveScroll: true, onSuccess: () => jawabanAwal.value = jawaban.value }
+        {
+            soal_id: props.soal.id,
+            quest_id: props.quest.id,
+            jawaban: jawaban.value,
+            token: token.value
+        },
+        {
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: () => {
+                jawabanAwal.value = jawaban.value
+
+                if (!answeredLocal.value.includes(props.quest.id)) {
+                    answeredLocal.value.push(props.quest.id)
+                }
+            }
+        }
     )
 }
 
+/* ================= Proteksi (ANTI LOST ANSWER) / Debounce ================= */
+let saveTimeout = null
+
+watch(jawaban, () => {
+    clearTimeout(saveTimeout)
+    saveTimeout = setTimeout(() => {
+        autosave()
+    }, 300) // 0.3 detik setelah berhenti mengetik / memilih
+})
+
 /* ================= NAVIGASI ================= */
-const goTo = async (n) => {
-    await autosave()
-    router.get(route('siswa.ujian.kerjakan', props.soal.id), { no: n }, { preserveState: true })
+const goTo = (n) => {
+    isNavigating.value = true
+
+    // autosave terakhir (fire & forget)
+    autosave()
+
+    router.get(
+        route('siswa.ujian.kerjakan', props.soal.id),
+        { no: n },
+        {
+            preserveState: true,
+            preserveScroll: true,
+            replace: true,
+            onFinish: () => {
+                isNavigating.value = false
+            }
+        }
+    )
 }
 
 /* ================= CHECK SEMUA JAWABAN ================= */
@@ -149,16 +240,10 @@ const submitUjian = async () => {
             )
         }
 
-        await router.post(
-            route('siswa.ujian.submit', props.soal.id),
-            { token: token.value },
-            {
-                replace: true,
-                onSuccess: () => {
-                    router.get(route('siswa.ujian.finish'))
-                }
-            }
-        )
+        await axios.post(route('siswa.ujian.submit', props.soal.id), {
+            token: token.value
+        })
+        router.get(route('siswa.ujian.finish'))
     } finally {
         isSubmitting.value = false
     }
@@ -177,21 +262,67 @@ const refreshToken = async () => {
 }
 
 /* ================= BLOCK EXIT ================= */
-const blockExit = async () => {
+const blockExit = () => {
     clearInterval(interval)
-    await refreshToken()
-    // router.get(route('siswa.ujian.token'), {}, { replace: true })
+    refreshToken()
     window.location.href = route('siswa.ujian.token')
 }
 
+/* ================= BLOCK Keydown ================= */
+const blockKeydown = e => {
+    if ((e.ctrlKey || e.metaKey) && ['c', 'v', 'x', 'r', 't', 'n', 'w'].includes(e.key.toLowerCase())) e.preventDefault()
+    if (['F5', 'Escape'].includes(e.key)) e.preventDefault()
+    if (e.key === 'Escape') {
+        e.preventDefault()
+        alert('ESC tidak diperbolehkan!')
+    }
+}
+
+const blockContext = e => e.preventDefault()
+const blockClipboard = e => e.preventDefault()
+
+/* ================= BLOCK SCREENSHOT ================= */
+const blockScreenshot = (e) => {
+    // Windows: PrintScreen
+    if (e.key === 'PrintScreen') {
+        e.preventDefault()
+        alert('Screenshot tidak diperbolehkan!')
+        blockExit()
+    }
+
+    // MacOS: Cmd + Shift + 3 / 4 / 5
+    if ((e.metaKey || e.ctrlKey) && e.shiftKey && ['3', '4', '5'].includes(e.key)) {
+        e.preventDefault()
+        alert('Screenshot tidak diperbolehkan!')
+        blockExit()
+    }
+}
+
 /* ================= LIFECYCLE ================= */
+const onVisibilityChange = () => {
+    if (document.hidden)
+        blockExit()
+}
+
 onMounted(() => {
     interval = setInterval(updateTimer, 1000)
+    setTimeout(() => {
+        if (!document.fullscreenElement) {
+            showFullscreenGate.value = true
+        }
+    }, 300)
 
     // tab visibility → silent refresh token
-    document.addEventListener('visibilitychange', async () => {
-        if (document.hidden) await blockExit()
-    })
+    document.addEventListener('visibilitychange', onVisibilityChange)
+    document.addEventListener('keydown', blockKeydown)
+    document.addEventListener('keydown', blockScreenshot)
+    document.addEventListener('contextmenu', blockContext)
+    document.addEventListener('cut', blockClipboard)
+    document.addEventListener('copy', blockClipboard)
+    document.addEventListener('paste', blockClipboard)
+    document.addEventListener('fullscreenchange', onFullscreenChange)
+    document.addEventListener('webkitfullscreenchange', onFullscreenChange)
+    document.addEventListener('msfullscreenchange', onFullscreenChange)
 
     // before unload → refresh token
     window.addEventListener('beforeunload', refreshToken)
@@ -205,38 +336,52 @@ onMounted(() => {
         history.pushState(null, '', location.href)
         alert('Tidak dapat kembali! Ujian sedang berlangsung.')
     }
-
-    // nonaktifkan context menu / copy-paste / shortcut
-    document.addEventListener('contextmenu', e => e.preventDefault())
-    document.addEventListener('cut', e => e.preventDefault())
-    document.addEventListener('copy', e => e.preventDefault())
-    document.addEventListener('paste', e => e.preventDefault())
-    document.addEventListener('keydown', e => {
-        if ((e.ctrlKey || e.metaKey) && ['c', 'v', 'x', 'r', 't', 'n', 'w'].includes(e.key.toLowerCase())) e.preventDefault()
-        if (e.key === 'F5') e.preventDefault()
-        if (e.key === 'Escape') e.preventDefault()
-    })
 })
 
-// onBeforeUnmount(() => {
-//     clearInterval(interval)
-//     window.removeEventListener('click', closeLegend)
-// })
-
-onBeforeUnmount(async () => {
+onBeforeUnmount(() => {
     clearInterval(interval)
-    window.removeEventListener('click', closeLegend)
 
-    // Refresh token secara silent
-    await refreshToken()
+    document.removeEventListener('visibilitychange', onVisibilityChange)
+    window.removeEventListener('beforeunload', refreshToken)
+    window.removeEventListener('click', closeLegend)
+    document.removeEventListener('keydown', blockKeydown)
+    document.removeEventListener('keydown', blockScreenshot)
+    document.removeEventListener('contextmenu', blockContext)
+    document.removeEventListener('cut', blockClipboard)
+    document.removeEventListener('copy', blockClipboard)
+    document.removeEventListener('paste', blockClipboard)
+    document.removeEventListener('fullscreenchange', onFullscreenChange)
+    document.removeEventListener('webkitfullscreenchange', onFullscreenChange)
+    document.removeEventListener('msfullscreenchange', onFullscreenChange)
+
+    refreshToken() // fire & forget
 })
+
+const showFullscreenGate = ref(true)
 </script>
 
 
 <template>
     <div class="w-full min-h-screen md:py-10 p-6 dark:bg-[#020617] md:px-0">
 
-        <div class="flex md:flex-row mx-auto md:max-w-[69rem] md:mt-12 flex-col gap-4">
+        <!-- ================= FULLSCREEN GATE ================= -->
+        <div v-if="showFullscreenGate"
+            class="fixed inset-0 z-[9999] bg-slate-900 flex items-center justify-center text-white">
+            <div class="text-center space-y-6 max-w-md px-6">
+                <h2 class="text-2xl font-bold">Masuk Mode Ujian</h2>
+                <p class="text-sm text-gray-300">
+                    Ujian harus dikerjakan dalam <b>mode layar penuh (Full screen)</b>.
+                    Keluar dari mode full screen akan mengakhiri ujian dan anda akan dikeluarkan secara paksa.
+                </p>
+
+                <button @click="() => { requestFullscreen(); showFullscreenGate = false }"
+                    class="px-6 py-3 rounded bg-blue-600 hover:bg-blue-700 font-semibold">
+                    Mulai Ujian
+                </button>
+            </div>
+        </div>
+
+        <div class="flex md:flex-row mx-auto w-full md:mt-12 flex-col gap-4">
 
             <!-- ================= PANEL SOAL ================= -->
             <div
@@ -296,7 +441,7 @@ onBeforeUnmount(async () => {
                     </div>
                 </div>
 
-                <div v-html="quest.soal" class="mb-6 text-gray-800 dark:text-gray-100 leading-relaxed">
+                <div v-html="quest.soal" :key="quest.id" class="mb-6 text-gray-800 dark:text-gray-100 leading-relaxed">
                 </div>
 
                 <!-- JAWABAN -->
@@ -330,7 +475,7 @@ onBeforeUnmount(async () => {
                 <div class="flex flex-col sm:flex-row gap-3 justify-between mt-8">
 
                     <button v-if="no > 1" @click="goTo(no - 1)"
-                        class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border hover:bg-gray-100 transition">
+                        class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border hover:bg-gray-100 dark:text-white dark:hover:bg-gray-800 transition">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                         </svg>
@@ -475,7 +620,7 @@ onBeforeUnmount(async () => {
             <div class="flex justify-between items-center mt-4 text-sm">
 
                 <button @click="currentPage--" :disabled="currentPage === 1"
-                    class="px-3 py-2 rounded border dark:text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed">
+                    class="px-3 py-2 rounded border dark:hover:bg-gray-800 dark:text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed">
                     ← Prev
                 </button>
 
@@ -484,7 +629,7 @@ onBeforeUnmount(async () => {
                 </span>
 
                 <button @click="currentPage++" :disabled="currentPage === totalPages"
-                    class="px-3 py-2 rounded border dark:text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed">
+                    class="px-3 py-2 rounded border dark:hover:bg-gray-800 dark:text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed">
                     Next →
                 </button>
 

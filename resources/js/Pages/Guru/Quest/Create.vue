@@ -203,7 +203,7 @@ function downloadTemplate() { Inertia.visit('/guru/bank-soal/template'); }
                     <!-- TYPE -->
                     <div>
                         <label class="form-label">Question Type</label>
-                        <select v-model="form.tipe_soal" class="form-input dark:text-gray-500"
+                        <select v-model="form.tipe_soal" class="form-input dark:text-gray-400"
                             :disabled="isManualDisabled">
                             <option value="PG">Multiple Choice</option>
                             <option value="Essay">Essay</option>
@@ -214,14 +214,14 @@ function downloadTemplate() { Inertia.visit('/guru/bank-soal/template'); }
                     <div>
                         <label class="form-label">Question</label>
                         <textarea v-model="form.soal" rows="4" placeholder="Write your question here..."
-                            class="form-input" :disabled="isManualDisabled"></textarea>
+                            class="form-input dark:text-gray-400" :disabled="isManualDisabled"></textarea>
                     </div>
 
                     <!-- ATTACHMENT -->
                     <div class="grid md:grid-cols-2 gap-4">
                         <div>
                             <label class="form-label">Attachment Type</label>
-                            <select v-model="form.jenis_lampiran" class="form-input dark:text-gray-500"
+                            <select v-model="form.jenis_lampiran" class="form-input dark:text-gray-400"
                                 :disabled="isManualDisabled">
                                 <option value="Tanpa Lampiran">No Attachment</option>
                                 <option value="Gambar">Image</option>
@@ -237,7 +237,7 @@ function downloadTemplate() { Inertia.visit('/guru/bank-soal/template'); }
                         <div v-else-if="form.jenis_lampiran === 'Video'">
                             <label class="form-label">Video URL</label>
                             <input type="text" v-model="form.link_lampiran" placeholder="https://youtube.com/..."
-                                class="form-input dark:text-gray-500" />
+                                class="form-input dark:text-gray-400" />
                         </div>
                     </div>
 
@@ -258,7 +258,7 @@ function downloadTemplate() { Inertia.visit('/guru/bank-soal/template'); }
                                 <label class="text-sm font-medium dark:text-gray-300">
                                     Option {{ key.toUpperCase() }}
                                 </label>
-                                <input v-model="form['opsi_' + key]" class="form-input dark:text-gray-500"
+                                <input v-model="form['opsi_' + key]" class="form-input dark:text-gray-400"
                                     placeholder="Enter Optional Answer" />
                             </div>
                         </div>
@@ -276,7 +276,7 @@ function downloadTemplate() { Inertia.visit('/guru/bank-soal/template'); }
                         </select>
 
                         <textarea v-else v-model="form.jawaban_benar" placeholder="Correct answer..."
-                            class="form-input"></textarea>
+                            class="form-input dark:text-gray-400"></textarea>
                     </div>
 
                 </section>
