@@ -10,6 +10,7 @@ use App\Models\BankSoal;
 use App\Models\Mapel;
 use App\Models\Kelas;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
 
 class SoalController extends Controller
 {
@@ -128,13 +129,20 @@ class SoalController extends Controller
                         ->with('success', 'Data Quiz berhasil diperbarui!');
     }
 
-    // Hapus data
     public function destroy(Soal $soal)
     {
+        // Hapus file fisik dari semua bank_soal terkait
+        foreach ($soal->bank_soal as $bankSoal) {
+            if ($bankSoal->link_lampiran && Storage::exists(str_replace('storage/', 'public/', $bankSoal->link_lampiran))) {
+                Storage::delete(str_replace('storage/', 'public/', $bankSoal->link_lampiran));
+            }
+        }
+
+        // Hapus soal, otomatis bank_soal juga ikut karena FK + cascade
         $soal->delete();
 
         return response()->json([
-            'success' => 'Soal berhasil dihapus!',
+            'success' => 'Quiz has been successfully deleted!',
         ]);
     }
 
@@ -142,6 +150,14 @@ class SoalController extends Controller
     public function show(Soal $soal)
     {
         $soal->load('bank_soal', 'mapel');
+
+        // Set default jawaban jika null
+        $soal->bank_soal->transform(function($item) {
+            if ($item->jawaban_benar === null || $item->jawaban_benar === '') {
+                $item->jawaban_benar = 'No correct answer defined.';
+            }
+            return $item;
+        });
 
         return Inertia::render('Proktor/Soal/Show', [
             'soal' => $soal,

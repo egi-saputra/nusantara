@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Response;
 use App\Imports\BankSoalImport;
 use App\Exports\BankSoalExport;
+use Illuminate\Support\Facades\Storage;
 
 class QuestController extends Controller
 {
@@ -36,8 +37,7 @@ class QuestController extends Controller
             'tipe_soal' => 'required|in:PG,Essay',
             'jawaban_benar' => 'nullable|string',
             'nilai' => 'required|numeric',
-            'jenis_lampiran' => 'nullable|string',
-            'link_lampiran' => 'nullable|string',
+            'jenis_lampiran' => 'nullable|string|in:Tanpa Lampiran,Gambar',
             'lampiran_file' => 'nullable|file|image|max:5120', // max 5MB
             'opsi_a' => 'nullable|string',
             'opsi_b' => 'nullable|string',
@@ -53,8 +53,6 @@ class QuestController extends Controller
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->storeAs('public/bank_soal', $filename);
             $linkLampiran = 'storage/bank_soal/' . $filename;
-        } elseif ($request->jenis_lampiran === 'Video') {
-            $linkLampiran = $request->link_lampiran;
         }
 
         $bankSoal = BankSoal::create([
@@ -80,15 +78,20 @@ class QuestController extends Controller
 
     public function update(Request $request, BankSoal $bankSoal) 
     {
-        // Validasi dasar
+        // Cek apakah ada file lama
+        $existingFile = $request->existing_file ?? null;
+
+        // Validasi
         $request->validate([
             'soal' => 'required|string',
             'tipe_soal' => 'required|in:PG,Essay',
             'jawaban_benar' => 'nullable|string',
-            'nilai' => 'nullable', // tidak wajib dan tidak divalidasi
-            'jenis_lampiran' => 'required|string|in:Tanpa Lampiran,Gambar,Video',
-            'link_lampiran' => $request->jenis_lampiran === 'Video' ? 'required|string' : 'nullable|string',
-            'lampiran_file' => $request->jenis_lampiran === 'Gambar' ? 'required|file|image|max:5120' : 'nullable',
+            'nilai' => 'nullable',
+            'jenis_lampiran' => 'required|string|in:Tanpa Lampiran,Gambar',
+            // jika jenis lampiran Gambar dan tidak ada file lama, lampiran_file wajib
+            'lampiran_file' => $request->jenis_lampiran === 'Gambar' && !$existingFile
+                ? 'required|file|image|max:5120'
+                : '',
             'opsi_a' => 'nullable|string',
             'opsi_b' => 'nullable|string',
             'opsi_c' => 'nullable|string',
@@ -96,17 +99,21 @@ class QuestController extends Controller
             'opsi_e' => 'nullable|string',
         ]);
 
-        $linkLampiran = $bankSoal->link_lampiran;
+        $linkLampiran = $bankSoal->link_lampiran; // default pakai file lama
 
         if ($request->jenis_lampiran === 'Gambar' && $request->hasFile('lampiran_file')) {
+            // Hapus file lama jika ada
+            if ($bankSoal->link_lampiran && \Storage::exists(str_replace('storage/', 'public/', $bankSoal->link_lampiran))) {
+                \Storage::delete(str_replace('storage/', 'public/', $bankSoal->link_lampiran));
+            }
+
+            // Simpan file baru
             $file = $request->file('lampiran_file');
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->storeAs('public/bank_soal', $filename);
             $linkLampiran = 'storage/bank_soal/' . $filename;
-        } elseif ($request->jenis_lampiran === 'Video') {
-            $linkLampiran = $request->link_lampiran;
         } elseif ($request->jenis_lampiran === 'Tanpa Lampiran') {
-            $linkLampiran = null;
+            $linkLampiran = null; // hapus lampiran jika sebelumnya ada
         }
 
         $bankSoal->update([
@@ -161,6 +168,11 @@ class QuestController extends Controller
 
     public function destroy(BankSoal $bankSoal)
     {
+        // Hapus file fisik jika ada
+        if ($bankSoal->link_lampiran && Storage::exists(str_replace('storage/', 'public/', $bankSoal->link_lampiran))) {
+            Storage::delete(str_replace('storage/', 'public/', $bankSoal->link_lampiran));
+        }
+
         $bankSoal->delete();
 
         return response()->json([
@@ -172,6 +184,15 @@ class QuestController extends Controller
     public function destroyAll($soal_id)
     {
         $soal = Soal::findOrFail($soal_id);
+
+        // Hapus file fisik tiap soal jika ada
+        foreach ($soal->bank_soal as $bankSoal) {
+            if ($bankSoal->link_lampiran && Storage::exists(str_replace('storage/', 'public/', $bankSoal->link_lampiran))) {
+                Storage::delete(str_replace('storage/', 'public/', $bankSoal->link_lampiran));
+            }
+        }
+
+        // Hapus record database
         $soal->bank_soal()->delete();
 
         return response()->json([

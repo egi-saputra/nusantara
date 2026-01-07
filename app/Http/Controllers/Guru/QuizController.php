@@ -10,6 +10,7 @@ use App\Models\BankSoal;
 use App\Models\Mapel;
 use App\Models\Kelas;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
 
 class QuizController extends Controller
 {
@@ -78,10 +79,18 @@ class QuizController extends Controller
     // Hapus data
     public function destroy(Soal $soal)
     {
+        // Hapus file fisik dari semua bank_soal terkait
+        foreach ($soal->bank_soal as $bankSoal) {
+            if ($bankSoal->link_lampiran && Storage::exists(str_replace('storage/', 'public/', $bankSoal->link_lampiran))) {
+                Storage::delete(str_replace('storage/', 'public/', $bankSoal->link_lampiran));
+            }
+        }
+
+        // Hapus soal, otomatis bank_soal juga ikut karena FK + cascade
         $soal->delete();
 
         return response()->json([
-            'success' => 'Question has been successfully deleted!',
+            'success' => 'Quiz has been successfully deleted!',
         ]);
     }
 

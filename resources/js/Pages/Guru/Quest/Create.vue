@@ -6,10 +6,9 @@ import { CheckIcon, ArrowLeftIcon, DocumentArrowUpIcon, PlusIcon } from '@heroic
 import { ToastAlert } from '@/Composables/ToastAlert.js';
 import { Inertia } from '@inertiajs/inertia';
 import axios from 'axios';
-// import Swal from 'sweetalert2';
 
 const props = defineProps({ soal_id: [Number, String] });
-const { success, error, confirm } = ToastAlert();
+const { success, error } = ToastAlert();
 const page = usePage();
 
 onMounted(() => {
@@ -26,7 +25,6 @@ const form = useForm({
     soal: '',
     tipe_soal: 'PG',
     jenis_lampiran: 'Tanpa Lampiran',
-    link_lampiran: '',
     lampiran_file: null,
     opsi_a: '',
     opsi_b: '',
@@ -48,6 +46,13 @@ function addOpsi() {
     }
 }
 
+function removeOpsi() {
+    if (opsiState.value.length > 1) {
+        const lastKey = opsiState.value.pop(); // hapus key terakhir
+        form['opsi_' + lastKey] = '';         // kosongkan value di form
+    }
+}
+
 // Lampiran file
 function handleFile(event) {
     form.lampiran_file = event.target.files[0] || null;
@@ -55,30 +60,18 @@ function handleFile(event) {
 
 // Submit soal manual
 function submitManual() {
-
-    // Aktifkan spinner
     form.processing = true;
 
     if (form.jenis_lampiran === 'Gambar' && !form.lampiran_file) {
         form.processing = false;
         return error('Silakan upload file gambar terlebih dahulu!');
     }
-    if (form.jenis_lampiran === 'Video' && !form.link_lampiran) {
-        form.processing = false;
-        return error('Silakan masukkan link video!');
-    }
 
     const data = new FormData();
 
     Object.keys(form).forEach(key => {
-        if (key === 'lampiran_file') {
-            if (form.jenis_lampiran === 'Gambar' && form.lampiran_file) {
-                data.append('lampiran_file', form.lampiran_file);
-            }
-        } else if (key === 'link_lampiran') {
-            if (form.jenis_lampiran === 'Video' && form.link_lampiran) {
-                data.append('link_lampiran', form.link_lampiran);
-            }
+        if (key === 'lampiran_file' && form.jenis_lampiran === 'Gambar' && form.lampiran_file) {
+            data.append('lampiran_file', form.lampiran_file);
         } else {
             data.append(key, form[key]);
         }
@@ -87,14 +80,13 @@ function submitManual() {
     axios.post('/guru/bank-soal', data)
         .then(res => {
             success(res.data.success || 'Soal berhasil ditambahkan.');
-
             Inertia.visit(res.data.redirect || `/guru/soal/${props.soal_id}`);
         })
         .catch(err => {
             error(err.response?.data?.message || 'Terjadi kesalahan saat submit.');
         })
         .finally(() => {
-            form.processing = false; // matikan spinner
+            form.processing = false;
         });
 }
 
@@ -108,10 +100,15 @@ function submitExcel() {
     data.append('soal_id', props.soal_id);
     axios.post('/guru/bank-soal/import', data)
         .then(res => {
-            Swal.fire({ icon: 'success', title: 'Berhasil!', text: res.data.success, confirmButtonText: 'OKE', confirmButtonColor: '#3b82f6' })
-                .then((result) => { if (result.isConfirmed && res.data.redirect) Inertia.visit(res.data.redirect); });
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: res.data.success,
+                confirmButtonText: 'OKE',
+                confirmButtonColor: '#3b82f6'
+            }).then((result) => { if (result.isConfirmed && res.data.redirect) Inertia.visit(res.data.redirect); });
         })
-        .catch(err => Swal.fire('Error', 'Terjadi kesalahan saat import', 'error'))
+        .catch(() => Swal.fire('Error', 'Terjadi kesalahan saat import', 'error'))
         .finally(() => { form.processing = false; });
 }
 
@@ -119,11 +116,11 @@ const isManualDisabled = computed(() => !!form.excel);
 function downloadTemplate() { Inertia.visit('/guru/bank-soal/template'); }
 </script>
 
+
 <template>
     <MenuLayout>
         <div class="max-w-5xl mx-auto sm:px-4 sm:py-6">
 
-            <!-- MAIN CARD -->
             <form @submit.prevent="submitManual" class="relative overflow-hidden
                        bg-white/80 dark:bg-white/5
                        backdrop-blur-xl
@@ -225,7 +222,6 @@ function downloadTemplate() { Inertia.visit('/guru/bank-soal/template'); }
                                 :disabled="isManualDisabled">
                                 <option value="Tanpa Lampiran">No Attachment</option>
                                 <option value="Gambar">Image</option>
-                                <option value="Video">Video</option>
                             </select>
                         </div>
 
@@ -233,24 +229,27 @@ function downloadTemplate() { Inertia.visit('/guru/bank-soal/template'); }
                             <label class="form-label">Upload Image</label>
                             <input type="file" @change="handleFile" class="form-input dark:text-gray-500" />
                         </div>
-
-                        <div v-else-if="form.jenis_lampiran === 'Video'">
-                            <label class="form-label">Video URL</label>
-                            <input type="text" v-model="form.link_lampiran" placeholder="https://youtube.com/..."
-                                class="form-input dark:text-gray-400" />
-                        </div>
                     </div>
 
                     <!-- OPTIONS -->
-                    <div v-if="form.tipe_soal === 'PG'" class="space-y-4">
-                        <div class="flex justify-between items-center">
+                    <div v-if="form.tipe_soal === 'PG'" class="space-y-4 pt-4">
+                        <div class="flex sm:flex-row flex-col gap-3 justify-start sm:justify-between">
                             <h3 class="font-semibold text-gray-700 dark:text-gray-200">
                                 Answer Options
                             </h3>
-                            <button v-if="opsiState.length < 5" type="button" @click="addOpsi"
-                                class="text-indigo-600 font-semibold flex items-center gap-1">
-                                <PlusIcon class="w-4 h-4" /> Add
-                            </button>
+                            <div class="flex gap-2">
+                                <!-- Tombol Remove / Cancel -->
+                                <button v-if="opsiState.length > 1" type="button" @click="removeOpsi"
+                                    class="text-red-600 btn-primary !py-1 !px-3 font-semibold flex items-center gap-1">
+                                    Remove
+                                </button>
+
+                                <!-- Tombol Add -->
+                                <button v-if="opsiState.length < 5" type="button" @click="addOpsi"
+                                    class="text-indigo-600 font-semibold btn-primary !py-1 !px-3 flex items-center gap-1">
+                                    <PlusIcon class="w-4 h-4" /> Add
+                                </button>
+                            </div>
                         </div>
 
                         <div class="grid md:grid-cols-2 gap-4">
@@ -270,8 +269,7 @@ function downloadTemplate() { Inertia.visit('/guru/bank-soal/template'); }
 
                         <select v-if="form.tipe_soal === 'PG'" v-model="form.jawaban_benar" class="form-input">
                             <option v-for="key in opsiState" :key="key" :value="'opsi_' + key">
-                                {{ key.toUpperCase() }} —
-                                {{ form['opsi_' + key] || '(empty)' }}
+                                {{ key.toUpperCase() }} — {{ form['opsi_' + key] || '(empty)' }}
                             </option>
                         </select>
 

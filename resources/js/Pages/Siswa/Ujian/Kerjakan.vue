@@ -22,53 +22,16 @@ const directLampiranLink = computed(() => {
     const url = props.quest?.link_lampiran
     if (!url) return null
 
-    // Jika lampiran tipe Gambar yang disimpan di storage
     if (props.quest.jenis_lampiran === 'Gambar') {
-        // Storage path, pastikan sudah storage:link
         return `/storage/bank_soal/${url.split('/').pop()}`
     }
 
-    // Jika Video, gunakan link langsung
-    if (props.quest.jenis_lampiran === 'Video') {
-        return url
-    }
-
-    return url
-})
-
-const lampiranType = computed(() => {
-    if (!directLampiranLink.value) return null
-    if (props.quest.jenis_lampiran === 'Gambar') return 'gambar'
-    if (props.quest.jenis_lampiran === 'Video') return 'video'
-    return 'link'
-})
-
-const lampiranName = computed(() => {
-    if (!props.quest.link_lampiran) return ''
-    return props.quest.link_lampiran.split('/').pop()
+    return null
 })
 
 const isEssay = computed(() => {
     return props.quest?.tipe_soal === 'Essay'
 })
-
-/* ================= PREVIEW ================= */
-const showPreview = ref(false)
-const previewUrl = ref('')
-const previewType = ref('')
-
-const openPreview = () => {
-    if (!directLampiranLink.value) return
-    previewUrl.value = directLampiranLink.value
-    previewType.value = lampiranType.value
-    showPreview.value = true
-}
-
-const closePreview = () => {
-    showPreview.value = false
-    previewUrl.value = ''
-    previewType.value = ''
-}
 
 /* ================= STATE ================= */
 const perPage = 10
@@ -103,6 +66,7 @@ const closeLegend = e => {
 
 /* ================= UTIL ================= */
 const isAnswered = (questId) => answeredLocal.value.includes(questId)
+const ujianSelesai = ref(false)
 
 /* ================= FULLSCREEN MODE ================= */
 const isFullscreen = ref(false)
@@ -127,7 +91,8 @@ const onFullscreenChange = () => {
 
     isFullscreen.value = !!fs
 
-    if (!fs) {
+    // hanya blokir jika ujian belum selesai
+    if (!fs && !ujianSelesai.value) {
         alert('Keluar dari mode layar penuh tidak diperbolehkan!')
         blockExit()
     }
@@ -143,14 +108,16 @@ watch(() => props.quest.id, () => {
 const updateTimer = () => {
     if (timer.value <= 0) {
         clearInterval(interval)
+        exitFullscreen()
         submitUjian()
         return
     }
     timer.value--
 }
 
-/* ================= AUTOSAVE ================= */
+/* ================= Watcher Autosave ================= */
 const isNavigating = ref(false)
+let saveTimeout = null
 
 watch(jawaban, () => {
     if (isNavigating.value) return
@@ -191,16 +158,6 @@ const autosave = () => {
     )
 }
 
-/* ================= Proteksi (ANTI LOST ANSWER) / Debounce ================= */
-let saveTimeout = null
-
-watch(jawaban, () => {
-    clearTimeout(saveTimeout)
-    saveTimeout = setTimeout(() => {
-        autosave()
-    }, 300) // 0.3 detik setelah berhenti mengetik / memilih
-})
-
 /* ================= NAVIGASI ================= */
 const goTo = (n) => {
     isNavigating.value = true
@@ -222,9 +179,6 @@ const goTo = (n) => {
     )
 }
 
-/* ================= CHECK SEMUA JAWABAN ================= */
-const allAnswered = computed(() => props.answered.length === props.totalSoal)
-
 /* ================= SUBMIT ================= */
 const isSubmitting = ref(false)
 const submitUjian = async () => {
@@ -243,6 +197,11 @@ const submitUjian = async () => {
         await axios.post(route('siswa.ujian.submit', props.soal.id), {
             token: token.value
         })
+
+        // Keluar fullscreen sebelum redirect
+        ujianSelesai.value = true
+        exitFullscreen()
+
         router.get(route('siswa.ujian.finish'))
     } finally {
         isSubmitting.value = false
@@ -306,11 +265,6 @@ const onVisibilityChange = () => {
 
 onMounted(() => {
     interval = setInterval(updateTimer, 1000)
-    setTimeout(() => {
-        if (!document.fullscreenElement) {
-            showFullscreenGate.value = true
-        }
-    }, 300)
 
     // tab visibility → silent refresh token
     document.addEventListener('visibilitychange', onVisibilityChange)
@@ -362,12 +316,12 @@ const showFullscreenGate = ref(true)
 
 
 <template>
-    <div class="w-full min-h-screen md:py-10 p-6 dark:bg-[#020617] md:px-0">
+    <div class="min-h-screen w-full md:py-10 p-4 dark:bg-[#020617] md:px-6">
 
         <!-- ================= FULLSCREEN GATE ================= -->
         <div v-if="showFullscreenGate"
             class="fixed inset-0 z-[9999] bg-slate-900 flex items-center justify-center text-white">
-            <div class="text-center space-y-6 max-w-md px-6">
+            <div class="text-center space-y-6 w-full px-6">
                 <h2 class="text-2xl font-bold">Masuk Mode Ujian</h2>
                 <p class="text-sm text-gray-300">
                     Ujian harus dikerjakan dalam <b>mode layar penuh (Full screen)</b>.
@@ -381,7 +335,7 @@ const showFullscreenGate = ref(true)
             </div>
         </div>
 
-        <div class="flex md:flex-row mx-auto w-full md:mt-12 flex-col gap-4">
+        <div class="flex sm:flex-row w-full sm:mx-auto sm:max-w-6xl mt-4 sm:mt-12 flex-col gap-4">
 
             <!-- ================= PANEL SOAL ================= -->
             <div
@@ -411,34 +365,12 @@ const showFullscreenGate = ref(true)
 
                 </div>
 
-                <!-- SOAL -->
-                <!-- LAMPIRAN -->
-                <div v-if="directLampiranLink" class="mb-4">
-                    <!-- <p class="text-sm text-gray-500 mb-1">Nama file: {{ lampiranName }}</p> -->
+                <!-- LAMPIRAN SOAL -->
+                <div v-if="directLampiranLink" class="mb-4 mt-3 w-full">
 
-                    <!-- Jika gambar, tampilkan langsung dengan max-width -->
-                    <img v-if="lampiranType === 'gambar'" :src="directLampiranLink"
-                        class="w-full max-w-sm max-h-24 -ml-32 p-0 rounded-lg object-contain" />
-
-                    <!-- Jika video, tampilkan tombol untuk modal -->
-                    <button v-else-if="lampiranType === 'video'" @click="openPreview"
-                        class="text-blue-600 font-semibold underline cursor-pointer">
-                        Lihat Video
-                    </button>
-                </div>
-
-                <!-- Modal Preview untuk Video -->
-                <div v-if="showPreview && previewType === 'video'"
-                    class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div class="bg-white rounded-xl max-w-xl w-full p-4 relative">
-                        <button @click="closePreview"
-                            class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">&times;</button>
-
-                        <video controls class="w-full rounded-lg dark:text-gray-400">
-                            <source :src="previewUrl" type="video/mp4" />
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
+                    <!-- GAMBAR -->
+                    <img :src="directLampiranLink"
+                        class="w-full max-w-sm max-h-24 sm:max-h-32 object-contain object-left" />
                 </div>
 
                 <div v-html="quest.soal" :key="quest.id" class="mb-6 text-gray-800 dark:text-gray-100 leading-relaxed">

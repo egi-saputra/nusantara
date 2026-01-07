@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Response;
 use App\Imports\BankSoalImport;
 use App\Exports\BankSoalExport;
+use Illuminate\Support\Facades\Storage;
 
 class BankSoalController extends Controller
 {
@@ -28,45 +29,7 @@ class BankSoalController extends Controller
         ]);
     }
 
-    // public function store(Request $request)
-    // {
-    //     $request->validate([
-    //         'soal_id' => 'required|exists:soal,id',
-    //         'soal' => 'required|string',
-    //         'tipe_soal' => 'required|in:PG,Essay',
-    //         'jawaban_benar' => 'nullable|string',
-    //         'nilai' => 'required|numeric',
-    //         'jenis_lampiran' => 'nullable|string',
-    //         'link_lampiran' => 'nullable|string',
-    //         'opsi_a' => 'nullable|string',
-    //         'opsi_b' => 'nullable|string',
-    //         'opsi_c' => 'nullable|string',
-    //         'opsi_d' => 'nullable|string',
-    //         'opsi_e' => 'nullable|string',
-    //     ]);
-
-    //     $bankSoal = BankSoal::create([
-    //         'soal_id' => $request->soal_id,
-    //         'soal' => $request->soal,
-    //         'tipe_soal' => $request->tipe_soal,
-    //         'jenis_lampiran' => $request->jenis_lampiran,
-    //         'link_lampiran' => $request->link_lampiran ?? null,
-    //         'jawaban_benar' => $request->jawaban_benar,
-    //         'opsi_a' => $request->opsi_a,
-    //         'opsi_b' => $request->opsi_b,
-    //         'opsi_c' => $request->opsi_c,
-    //         'opsi_d' => $request->opsi_d,
-    //         'opsi_e' => $request->opsi_e,
-    //         'nilai' => $request->nilai,
-    //     ]);
-
-    //     return response()->json([
-    //         'success' => 'Bank Soal berhasil ditambahkan!',
-    //         'bankSoal' => $bankSoal,
-    //     ]);
-    // }
-
-    public function store(Request $request)
+     public function store(Request $request)
     {
         $request->validate([
             'soal_id' => 'required|exists:soal,id',
@@ -74,8 +37,7 @@ class BankSoalController extends Controller
             'tipe_soal' => 'required|in:PG,Essay',
             'jawaban_benar' => 'nullable|string',
             'nilai' => 'required|numeric',
-            'jenis_lampiran' => 'nullable|string',
-            'link_lampiran' => 'nullable|string',
+            'jenis_lampiran' => 'nullable|string|in:Tanpa Lampiran,Gambar',
             'lampiran_file' => 'nullable|file|image|max:5120', // max 5MB
             'opsi_a' => 'nullable|string',
             'opsi_b' => 'nullable|string',
@@ -91,8 +53,6 @@ class BankSoalController extends Controller
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->storeAs('public/bank_soal', $filename);
             $linkLampiran = 'storage/bank_soal/' . $filename;
-        } elseif ($request->jenis_lampiran === 'Video') {
-            $linkLampiran = $request->link_lampiran;
         }
 
         $bankSoal = BankSoal::create([
@@ -111,21 +71,27 @@ class BankSoalController extends Controller
         ]);
 
         return response()->json([
-            'success' => 'Bank Soal berhasil ditambahkan!',
+            'success' => 'Your question has been successfully added!',
             'bankSoal' => $bankSoal,
         ]);
     }
 
-    public function update(Request $request, BankSoal $bankSoal)
+    public function update(Request $request, BankSoal $bankSoal) 
     {
+        // Cek apakah ada file lama
+        $existingFile = $request->existing_file ?? null;
+
+        // Validasi
         $request->validate([
             'soal' => 'required|string',
             'tipe_soal' => 'required|in:PG,Essay',
             'jawaban_benar' => 'nullable|string',
-            'nilai' => 'required|numeric',
-            'jenis_lampiran' => 'nullable|string',
-            'link_lampiran' => 'nullable|string',
-            'lampiran_file' => 'nullable|file|image|max:5120',
+            'nilai' => 'nullable',
+            'jenis_lampiran' => 'required|string|in:Tanpa Lampiran,Gambar',
+            // jika jenis lampiran Gambar dan tidak ada file lama, lampiran_file wajib
+            'lampiran_file' => $request->jenis_lampiran === 'Gambar' && !$existingFile
+                ? 'required|file|image|max:5120'
+                : '',
             'opsi_a' => 'nullable|string',
             'opsi_b' => 'nullable|string',
             'opsi_c' => 'nullable|string',
@@ -133,15 +99,21 @@ class BankSoalController extends Controller
             'opsi_e' => 'nullable|string',
         ]);
 
-        $linkLampiran = $bankSoal->link_lampiran;
+        $linkLampiran = $bankSoal->link_lampiran; // default pakai file lama
 
         if ($request->jenis_lampiran === 'Gambar' && $request->hasFile('lampiran_file')) {
+            // Hapus file lama jika ada
+            if ($bankSoal->link_lampiran && \Storage::exists(str_replace('storage/', 'public/', $bankSoal->link_lampiran))) {
+                \Storage::delete(str_replace('storage/', 'public/', $bankSoal->link_lampiran));
+            }
+
+            // Simpan file baru
             $file = $request->file('lampiran_file');
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->storeAs('public/bank_soal', $filename);
             $linkLampiran = 'storage/bank_soal/' . $filename;
-        } elseif ($request->jenis_lampiran === 'Video') {
-            $linkLampiran = $request->link_lampiran;
+        } elseif ($request->jenis_lampiran === 'Tanpa Lampiran') {
+            $linkLampiran = null; // hapus lampiran jika sebelumnya ada
         }
 
         $bankSoal->update([
@@ -159,7 +131,7 @@ class BankSoalController extends Controller
         ]);
 
         return response()->json([
-            'success' => 'Butir Soal berhasil diperbarui!',
+            'success' => 'Question has been successfully updated!',
             'bankSoal' => $bankSoal,
         ]);
     }
@@ -171,42 +143,6 @@ class BankSoalController extends Controller
             'soal' => $bankSoal,
         ]);
     }
-
-    // public function update(Request $request, BankSoal $bankSoal)
-    // {
-    //     $request->validate([
-    //         'soal' => 'required|string',
-    //         'tipe_soal' => 'required|in:PG,Essay',
-    //         'jawaban_benar' => 'nullable|string',
-    //         'nilai' => 'required|numeric',
-    //         'jenis_lampiran' => 'nullable|string',
-    //         'link_lampiran' => 'nullable|string',
-    //         'opsi_a' => 'nullable|string',
-    //         'opsi_b' => 'nullable|string',
-    //         'opsi_c' => 'nullable|string',
-    //         'opsi_d' => 'nullable|string',
-    //         'opsi_e' => 'nullable|string',
-    //     ]);
-
-    //     $bankSoal->update([
-    //         'soal' => $request->soal,
-    //         'tipe_soal' => $request->tipe_soal,
-    //         'jenis_lampiran' => $request->jenis_lampiran,
-    //         'link_lampiran' => $request->link_lampiran ?? $bankSoal->link_lampiran,
-    //         'jawaban_benar' => $request->jawaban_benar,
-    //         'opsi_a' => $request->opsi_a,
-    //         'opsi_b' => $request->opsi_b,
-    //         'opsi_c' => $request->opsi_c,
-    //         'opsi_d' => $request->opsi_d,
-    //         'opsi_e' => $request->opsi_e,
-    //         'nilai' => $request->nilai,
-    //     ]);
-
-    //     return response()->json([
-    //         'success' => 'Butir Soal berhasil diperbarui!',
-    //         'bankSoal' => $bankSoal,
-    //     ]);
-    // }
 
     public function import(Request $request)
     {
@@ -232,10 +168,15 @@ class BankSoalController extends Controller
 
     public function destroy(BankSoal $bankSoal)
     {
+        // Hapus file fisik jika ada
+        if ($bankSoal->link_lampiran && Storage::exists(str_replace('storage/', 'public/', $bankSoal->link_lampiran))) {
+            Storage::delete(str_replace('storage/', 'public/', $bankSoal->link_lampiran));
+        }
+
         $bankSoal->delete();
 
         return response()->json([
-            'success' => 'Bank Soal berhasil dihapus!',
+            'success' => 'This question has been successfully deleted!',
             'id' => $bankSoal->id,
         ]);
     }
@@ -243,10 +184,19 @@ class BankSoalController extends Controller
     public function destroyAll($soal_id)
     {
         $soal = Soal::findOrFail($soal_id);
+
+        // Hapus file fisik tiap soal jika ada
+        foreach ($soal->bank_soal as $bankSoal) {
+            if ($bankSoal->link_lampiran && Storage::exists(str_replace('storage/', 'public/', $bankSoal->link_lampiran))) {
+                Storage::delete(str_replace('storage/', 'public/', $bankSoal->link_lampiran));
+            }
+        }
+
+        // Hapus record database
         $soal->bank_soal()->delete();
 
         return response()->json([
-            'success' => 'Semua soal berhasil dihapus!',
+            'success' => 'All questions have been successfully deleted!',
             'soal_id' => $soal_id,
         ]);
     }

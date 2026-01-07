@@ -83,6 +83,7 @@ class UjianController extends Controller
         $userId = Auth::id();
         $soal = Soal::findOrFail($soal_id);
 
+        // Ambil atau buat data ujian siswa
         $ujianSiswa = UjianSiswa::firstOrCreate(
             ['user_id' => $userId, 'soal_id' => $soal_id],
             [
@@ -101,9 +102,11 @@ class UjianController extends Controller
                 ->with('error', 'Anda sudah menyelesaikan ujian ini.');
         }
 
+        // Ambil semua quest untuk soal ini
         $questIds = BankSoal::where('soal_id', $soal_id)->pluck('id')->toArray();
         $nomorList = $questIds;
 
+        // Buat riwayat jawaban jika belum ada
         foreach ($questIds as $qid) {
             RiwayatUjian::firstOrCreate(
                 [
@@ -120,6 +123,7 @@ class UjianController extends Controller
             );
         }
 
+        // Urutan soal (acak jika tipe soal acak)
         $sessionKey = "urutan_soal_{$soal_id}_{$userId}";
         if (!session()->has($sessionKey)) {
             $urutan = $questIds;
@@ -129,7 +133,6 @@ class UjianController extends Controller
 
         $urutan = session($sessionKey);
         $total = count($urutan);
-
         $no = max(1, min((int)($request->no ?? 1), $total));
 
         $questId = $urutan[$no - 1];
@@ -141,10 +144,12 @@ class UjianController extends Controller
             'quest_id' => $questId,
         ])->first();
 
+        // Hitung sisa waktu
         $waktuMulai = \Carbon\Carbon::parse($ujianSiswa->waktu_mulai);
         $waktuSelesai = $waktuMulai->copy()->addMinutes($soal->waktu ?? 0);
         $sisaDetik = max(0, now()->diffInSeconds($waktuSelesai, false));
 
+        // Daftar soal yang sudah dijawab
         $answered = RiwayatUjian::where('user_id', $userId)
             ->where('soal_id', $soal_id)
             ->whereNotNull('jawaban')

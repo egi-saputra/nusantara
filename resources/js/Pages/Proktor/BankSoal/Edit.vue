@@ -13,7 +13,7 @@ const props = defineProps({
 const form = ref({
     soal: props.bankSoal.soal,
     tipe_soal: props.bankSoal.tipe_soal,
-    jawaban_benar: props.bankSoal.jawaban_benar,
+    jawaban_benar: props.bankSoal.jawaban_benar ?? "",
     nilai: props.bankSoal.nilai,
     jenis_lampiran: props.bankSoal.jenis_lampiran,
     link_lampiran: props.bankSoal.link_lampiran,
@@ -25,6 +25,9 @@ const form = ref({
     opsi_e: props.bankSoal.opsi_e,
     processing: false,
 });
+
+// simpan info file lama agar bisa ditampilkan
+const existingFile = ref(props.bankSoal.link_lampiran || '');
 
 // State opsi jawaban dinamis
 const opsiState = ref([]);
@@ -40,8 +43,12 @@ function addOpsi() {
     }
 }
 
+// handle file upload
 function handleFile(event) {
-    form.value.lampiran_file = event.target.files[0] || null;
+    const file = event.target.files[0];
+    if (file) {
+        form.value.lampiran_file = file;
+    }
 }
 
 function submit() {
@@ -55,6 +62,9 @@ function submit() {
             data.append(key, form.value[key]);
         }
     });
+
+    // sertakan existing file agar backend tahu kalau perlu hapus file lama jika ada file baru
+    if (existingFile.value) data.append('existing_file', existingFile.value);
 
     axios.post(`/proktor/bank-soal/${props.bankSoal.id}?_method=PUT`, data)
         .then(res => {
@@ -112,7 +122,7 @@ function submit() {
 
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Bobot Nilai</label>
-                        <input type="number" v-model="form.nilai" min="1"
+                        <input type="number" v-model="form.nilai" min="0"
                             class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                             placeholder="Nilai soal" />
                     </div>

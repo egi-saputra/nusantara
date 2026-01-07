@@ -3,7 +3,6 @@ import MenuLayout from '@/Layouts/MenuLayout.vue';
 import { ref, watch } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import { CheckIcon, ArrowLeftIcon, PlusIcon } from '@heroicons/vue/24/solid';
-import { InformationCircleIcon, PencilSquareIcon, AdjustmentsHorizontalIcon, PaperClipIcon, CheckCircleIcon, VideoCameraIcon, PhotoIcon } from '@heroicons/vue/24/outline'
 import Swal from 'sweetalert2';
 import { ToastAlert } from '@/Composables/ToastAlert.js';
 import { Inertia } from '@inertiajs/inertia';
@@ -16,14 +15,14 @@ const props = defineProps({
     bankSoal: Object,
 });
 
+// form state
 const form = ref({
     soal: props.bankSoal.soal,
     tipe_soal: props.bankSoal.tipe_soal,
     jawaban_benar: props.bankSoal.jawaban_benar || '',
     nilai: props.bankSoal.nilai,
     jenis_lampiran: props.bankSoal.jenis_lampiran,
-    link_lampiran: props.bankSoal.link_lampiran,
-    lampiran_file: '',
+    lampiran_file: null, // file baru
     opsi_a: props.bankSoal.opsi_a,
     opsi_b: props.bankSoal.opsi_b,
     opsi_c: props.bankSoal.opsi_c,
@@ -31,6 +30,9 @@ const form = ref({
     opsi_e: props.bankSoal.opsi_e,
     processing: false,
 });
+
+// simpan info file lama agar bisa ditampilkan
+const existingFile = ref(props.bankSoal.link_lampiran || '');
 
 // State opsi jawaban dinamis
 const opsiState = ref([]);
@@ -46,33 +48,16 @@ function addOpsi() {
     }
 }
 
+// handle file upload
 function handleFile(event) {
-    form.value.lampiran_file = event.target.files[0] || null;
+    const file = event.target.files[0];
+    if (file) {
+        form.value.lampiran_file = file;
+    }
 }
 
-// Reactive validation messages
-const lampiranError = ref('');
-watch(() => form.value.jenis_lampiran, (val) => {
-    lampiranError.value = '';
-    if (val === 'Gambar' && !form.value.lampiran_file) {
-        lampiranError.value = 'Please upload an image file for the attachment.';
-    } else if (val === 'Video' && !form.value.link_lampiran) {
-        lampiranError.value = 'Please provide a video link for the attachment.';
-    }
-});
-
+// submit form
 function submit() {
-    // Validasi lampiran
-    if (form.value.jenis_lampiran === 'Gambar' && !form.value.lampiran_file) {
-        Swal.fire('Error', 'Please upload an image file for the attachment.', 'error');
-        return;
-    }
-
-    if (form.value.jenis_lampiran === 'Video' && !form.value.link_lampiran) {
-        Swal.fire('Error', 'Please provide a video link for the attachment.', 'error');
-        return;
-    }
-
     form.value.processing = true;
 
     const data = new FormData();
@@ -83,6 +68,9 @@ function submit() {
             data.append(key, form.value[key]);
         }
     });
+
+    // sertakan existing file agar backend tahu kalau perlu hapus file lama jika ada file baru
+    if (existingFile.value) data.append('existing_file', existingFile.value);
 
     axios.post(`/guru/bank-soal/${props.bankSoal.id}?_method=PUT`, data)
         .then(res => {
@@ -109,6 +97,7 @@ function submit() {
         .finally(() => { form.value.processing = false; });
 }
 </script>
+
 
 <template>
     <MenuLayout>
@@ -153,28 +142,23 @@ function submit() {
                             <select v-model="form.jenis_lampiran" class="form-input  dark:text-gray-400">
                                 <option value="Tanpa Lampiran">No Attachment</option>
                                 <option value="Gambar">Image</option>
-                                <option value="Video">Video</option>
                             </select>
                         </div>
                     </section>
 
                     <!-- SECTION : Attachment -->
-                    <section v-if="form.jenis_lampiran !== 'Tanpa Lampiran'"
+                    <section v-if="form.jenis_lampiran === 'Gambar'"
                         class="rounded-2xl border border-dashed border-gray-300 dark:border-white/20 p-5">
+                        <label class="form-label">Upload Image</label>
+                        <input type="file" @change="handleFile" class="form-input dark:text-gray-400" />
 
-                        <div v-if="form.jenis_lampiran === 'Gambar'">
-                            <label class="form-label">Upload Image</label>
-                            <input type="file" @change="handleFile" class="form-input dark:text-gray-400" />
-                            <p v-if="form.lampiran_file" class="text-green-500 text-sm mt-2">
-                                {{ form.lampiran_file.name }}
-                            </p>
-                        </div>
-
-                        <div v-else>
-                            <label class="form-label">Video URL</label>
-                            <input type="text" v-model="form.link_lampiran" placeholder="https://youtube.com/..."
-                                class="form-input dark:text-gray-400" />
-                        </div>
+                        <!-- tampilkan nama file baru atau file lama -->
+                        <p v-if="form.lampiran_file" class="text-green-500 text-sm mt-2">
+                            {{ form.lampiran_file.name }}
+                        </p>
+                        <p v-else-if="existingFile" class="text-gray-500 text-sm mt-2">
+                            Current file: {{ existingFile.split('/').pop() }}
+                        </p>
                     </section>
 
                     <!-- SECTION : Question -->

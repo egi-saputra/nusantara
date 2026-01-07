@@ -23,7 +23,7 @@ return new class extends Migration
 
             $table->enum('tipe_soal', ['PG', 'Essay'])->default('PG');
 
-            $table->enum('jenis_lampiran', ['Tanpa Lampiran', 'Gambar', 'Video'])
+            $table->enum('jenis_lampiran', ['Tanpa Lampiran', 'Gambar'])
                   ->default('Tanpa Lampiran');
 
             $table->string('link_lampiran')->nullable();

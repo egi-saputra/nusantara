@@ -13,6 +13,13 @@ const props = defineProps({
 
 const { success, error, confirm } = useAlert();
 
+const getJawaban = (item) => {
+    if (item.jawaban_benar === null || item.jawaban_benar === '') {
+        return 'No correct answer defined.';
+    }
+    return item.jawaban_benar;
+};
+
 function confirmDeleteItem(id) {
     confirm({ text: 'Yakin hapus soal ini?' })
         .then(result => {
@@ -100,7 +107,7 @@ function confirmDeleteAll() {
             </div>
         </div>
 
-        <!-- Bank Soal -->
+        <!-- List Soal -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div v-if="!soal.bank_soal || soal.bank_soal.length === 0"
                 class="col-span-full text-center text-gray-400 p-6 bg-gray-50 rounded-lg shadow">
@@ -128,9 +135,13 @@ function confirmDeleteAll() {
                     <span v-else class="text-gray-400">Tanpa Lampiran</span>
                 </p>
 
-                <p class="text-green-600 font-bold mb-3">Jawaban: {{ item.jawaban_benar }}</p>
+                <!-- Jawaban Benar -->
+                <p class="text-green-600 font-bold mb-3">
+                    Jawaban: {{ getJawaban(item) }}
+                </p>
 
-                <div class="space-y-1 mb-4 text-gray-700">
+                <!-- Opsi Jawaban (hanya untuk PG) -->
+                <div class="space-y-1 mb-4 text-gray-700" v-if="item.tipe_soal === 'PG'">
                     <p v-if="item.opsi_a">A. {{ item.opsi_a }}</p>
                     <p v-if="item.opsi_b">B. {{ item.opsi_b }}</p>
                     <p v-if="item.opsi_c">C. {{ item.opsi_c }}</p>

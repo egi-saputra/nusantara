@@ -8,7 +8,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 const props = defineProps({ soal_id: [Number, String] });
-const { success, error, confirm } = useAlert();
+const { success, error } = useAlert();
 const page = usePage();
 
 onMounted(() => {
@@ -25,7 +25,6 @@ const form = useForm({
     soal: '',
     tipe_soal: 'PG',
     jenis_lampiran: 'Tanpa Lampiran',
-    link_lampiran: '',
     lampiran_file: null,
     opsi_a: '',
     opsi_b: '',
@@ -37,41 +36,39 @@ const form = useForm({
     excel: null,
 });
 
-// State untuk menampilkan opsi jawaban
-const opsiState = ref(['a']); // Awal hanya opsi_a
+// State untuk opsi jawaban
+const opsiState = ref(['a']);
 
 function addOpsi() {
     if (opsiState.value.length < 5) {
-        const nextOpsi = String.fromCharCode(97 + opsiState.value.length); // 'b', 'c', ...
+        const nextOpsi = String.fromCharCode(97 + opsiState.value.length);
         opsiState.value.push(nextOpsi);
     }
 }
 
-// Lampiran file
+function removeOpsi() {
+    if (opsiState.value.length > 1) {
+        const lastKey = opsiState.value.pop(); // hapus key terakhir
+        form['opsi_' + lastKey] = '';         // kosongkan value di form
+    }
+}
+
+// Upload file gambar
 function handleFile(event) {
     form.lampiran_file = event.target.files[0] || null;
 }
 
 // Submit soal manual
 function submitManual() {
-    // Validasi frontend
     if (form.jenis_lampiran === 'Gambar' && !form.lampiran_file) {
         return Swal.fire('Error', 'Silakan upload file gambar terlebih dahulu!', 'error');
     }
-    if (form.jenis_lampiran === 'Video' && !form.link_lampiran) {
-        return Swal.fire('Error', 'Silakan masukkan link video!', 'error');
-    }
 
     const data = new FormData();
-
     Object.keys(form).forEach(key => {
         if (key === 'lampiran_file') {
             if (form.jenis_lampiran === 'Gambar' && form.lampiran_file) {
                 data.append('lampiran_file', form.lampiran_file);
-            }
-        } else if (key === 'link_lampiran') {
-            if (form.jenis_lampiran === 'Video' && form.link_lampiran) {
-                data.append('link_lampiran', form.link_lampiran);
             }
         } else {
             data.append(key, form[key]);
@@ -117,12 +114,13 @@ function downloadTemplate() { Inertia.visit('/proktor/bank-soal/template'); }
 </script>
 
 <template>
-    <div class="p-6 py-12 bg-gray-100  mx-auto">
+    <div class="p-6 py-12 bg-gray-100 mx-auto">
 
-        <!-- Form Manual + Import -->
         <form @submit.prevent="submitManual"
             class="bg-white border border-gray-300 backdrop-blur mx-auto max-w-3xl shadow rounded-2xl p-6 space-y-5">
-            <h1 class="text-2xl font-extrabold mb-6 text-gray-800"><span class="text-3xl">+</span> Tambahkan Soal Quiz
+
+            <h1 class="text-2xl font-extrabold mb-6 text-gray-800">
+                <span class="text-3xl">+</span> Tambahkan Soal Quiz
             </h1>
 
             <!-- Import Excel + Download Template -->
@@ -140,16 +138,12 @@ function downloadTemplate() { Inertia.visit('/proktor/bank-soal/template'); }
                         'px-4 py-2 text-white rounded-lg transition font-medium flex items-center justify-center gap-2',
                         form.processing ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'
                     ]" :disabled="!form.excel || form.processing">
-
-                        <!-- Spinner saat proses -->
                         <svg v-if="form.processing" class="w-5 h-5 animate-spin text-white"
                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
                             </circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
                         </svg>
-
-                        <!-- Teks tombol -->
                         <span>{{ form.processing ? 'Importing...' : 'Import Excel' }}</span>
                     </button>
 
@@ -188,32 +182,46 @@ function downloadTemplate() { Inertia.visit('/proktor/bank-soal/template'); }
                 <select v-model="form.jenis_lampiran" class="w-full border p-3 rounded-lg" :disabled="isManualDisabled">
                     <option value="Tanpa Lampiran">Tanpa Lampiran</option>
                     <option value="Gambar">Gambar</option>
-                    <option value="Video">Video</option>
                 </select>
             </div>
 
-            <!-- Lampiran File atau Link -->
+            <!-- Lampiran File -->
             <div v-if="form.jenis_lampiran === 'Gambar'" class="mt-2">
                 <label class="font-semibold mb-1 block text-gray-700">Upload Gambar</label>
                 <input type="file" @change="handleFile" class="border p-2 rounded-lg w-full" />
                 <p v-if="form.lampiran_file" class="text-green-600 mt-1">{{ form.lampiran_file.name }}</p>
             </div>
-            <div v-else-if="form.jenis_lampiran === 'Video'" class="mt-2">
-                <label class="font-semibold mb-1 block text-gray-700">Link Video</label>
-                <input type="text" v-model="form.link_lampiran" class="border p-2 rounded-lg w-full"
-                    placeholder="Masukkan URL video" />
-            </div>
 
-            <!-- Opsi Pilihan Ganda -->
-            <div v-if="form.tipe_soal === 'PG'" class="grid grid-cols-1 gap-4">
-                <div v-for="key in opsiState" :key="key">
-                    <label class="font-semibold">Jawaban Opsi {{ key.toUpperCase() }}</label>
-                    <input v-model="form['opsi_' + key]" class="w-full border p-2 rounded-lg" />
+            <!-- OPTIONS -->
+            <div v-if="form.tipe_soal === 'PG'" class="space-y-4 pt-4">
+                <div class="flex sm:flex-row flex-col gap-3 justify-start sm:justify-between">
+                    <h3 class="font-semibold text-gray-700 dark:text-gray-200">
+                        Answer Options
+                    </h3>
+                    <div class="flex gap-2">
+                        <!-- Tombol Remove / Cancel -->
+                        <button v-if="opsiState.length > 1" type="button" @click="removeOpsi"
+                            class="text-red-600 btn-primary !py-1 !px-3 font-semibold flex items-center gap-1">
+                            Remove
+                        </button>
+
+                        <!-- Tombol Add -->
+                        <button v-if="opsiState.length < 5" type="button" @click="addOpsi"
+                            class="text-indigo-600 font-semibold btn-primary !py-1 !px-3 flex items-center gap-1">
+                            <PlusIcon class="w-4 h-4" /> Add
+                        </button>
+                    </div>
                 </div>
-                <button v-if="opsiState.length < 5" type="button" @click="addOpsi"
-                    class="flex items-center gap-1 text-blue-600 font-semibold">
-                    <PlusIcon class="w-4 h-4" /> Tambah
-                </button>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div v-for="key in opsiState" :key="key">
+                        <label class="text-sm font-medium dark:text-gray-300">
+                            Option {{ key.toUpperCase() }}
+                        </label>
+                        <input v-model="form['opsi_' + key]" class="form-input dark:text-gray-400"
+                            placeholder="Enter Optional Answer" />
+                    </div>
+                </div>
             </div>
 
             <!-- Jawaban Benar -->
