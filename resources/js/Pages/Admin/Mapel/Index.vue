@@ -68,7 +68,7 @@ const hapus = (id) => {
                     <p class="text-sm text-gray-500 dark:text-gray-400">Manage school subjects data</p>
                 </div>
                 <Link :href="route('admin.mapel.create')"
-                    class="px-4 py-2 rounded-lg bg-blue-700 hover:bg-blue-800 text-white shadow-md transition flex items-center justify-center">
+                    class="px-4 py-2 hidden rounded-lg bg-blue-700 hover:bg-blue-800 text-white shadow-md transition sm:flex items-center justify-center">
                     + <span class="sm:inline-block hidden ml-1">Add Subject</span>
                 </Link>
             </div>
@@ -133,6 +133,12 @@ const hapus = (id) => {
                 <div v-if="mapel.length === 0" class="text-center py-6 text-gray-500 dark:text-gray-400">
                     No subjects available
                 </div>
+
+                <!-- FLOATING CREATE BUTTON -->
+                <Link :href="route('admin.mapel.create')"
+                    class="fixed bottom-6 right-5 z-50 flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-2xl active:scale-95 transition">
+                    + Add
+                </Link>
             </div>
 
             <!-- EDIT MODAL -->

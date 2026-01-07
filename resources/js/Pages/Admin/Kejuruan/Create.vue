@@ -23,7 +23,7 @@ const submit = () => {
     <Head title="Add Vocational Program" />
 
     <MenuLayout>
-        <div class="max-w-3xl mx-auto p-6">
+        <div class="max-w-3xl mx-auto sm:p-6">
 
             <!-- Glassmorphism container -->
             <div class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-xl p-6 transition">
@@ -35,7 +35,7 @@ const submit = () => {
                     <div>
                         <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Program
                             Name</label>
-                        <input v-model="form.kejuruan" type="text"
+                        <input v-model="form.kejuruan" type="text" placeholder="Enter vocational program"
                             class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-700/50 px-4 py-2 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" />
                         <div v-if="form.errors.kejuruan" class="text-red-600 dark:text-red-400 text-sm mt-1">
                             {{ form.errors.kejuruan }}

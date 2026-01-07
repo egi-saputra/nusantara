@@ -102,13 +102,21 @@ async function deleteAllAnnouncements() {
 
                 <!-- HEADER -->
                 <div class="flex items-center gap-3 mb-8">
-                    <div class="p-3 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow">
-                        <PencilSquareIcon class="w-6 h-6" />
+                    <div class="sm:p-3 p-2 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow">
+                        <PencilSquareIcon class="h-6" />
                     </div>
-                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">
-                        Create Announcement
-                        <span class="hidden sm:inline text-gray-400 font-medium"> / Message</span>
-                    </h1>
+                    <div class="flex flex-col">
+                        <h1 class="text-xl sm:text-3xl font-bold text-gray-800 dark:text-white">
+                            Create Announcement
+                            <span class="hidden sm:inline text-gray-400 font-medium"> / Message</span>
+                        </h1>
+                        <span class="text-sm sm:block hidden dark:text-gray-400">
+                            Sending messages and sharing information is now easier than ever.
+                        </span>
+                        <span class="sm:hidden block text-xs dark:text-gray-400">
+                            Simplifying the way you share information.
+                        </span>
+                    </div>
                 </div>
 
                 <!-- FORM -->
@@ -119,7 +127,7 @@ async function deleteAllAnnouncements() {
                         <label class="font-semibold text-gray-700 dark:text-gray-300">
                             Title
                         </label>
-                        <input v-model="form.judul" class="w-full mt-1 rounded-xl px-4 py-3
+                        <input v-model="form.judul" placeholder="Enter the title here..." class="w-full mt-1 rounded-xl px-4 py-3
                                    bg-white/80 dark:bg-[#0F172A]
                                    border border-gray-300 dark:border-white/10
                                    text-gray-800 dark:text-gray-100
@@ -132,7 +140,7 @@ async function deleteAllAnnouncements() {
                         <label class="font-semibold text-gray-700 dark:text-gray-300">
                             Content
                         </label>
-                        <textarea v-model="form.pengumuman" rows="4" class="w-full mt-1 rounded-xl px-4 py-3
+                        <textarea v-model="form.pengumuman" rows="4" placeholder="Type your message here..." class="w-full mt-1 rounded-xl px-4 py-3
                                    bg-white/80 dark:bg-[#0F172A]
                                    border border-gray-300 dark:border-white/10
                                    text-gray-800 dark:text-gray-100

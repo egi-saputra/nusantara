@@ -73,9 +73,8 @@ const hapus = (id) => {
                         </p>
                     </div>
                     <Link :href="route('admin.kejuruan.create')"
-                        class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition text-sm sm:text-base">
-                        + <span class="inline-block sm:hidden">Add</span>
-                        <span class="sm:inline-block hidden">Add Program</span>
+                        class="px-4 py-2 rounded sm:block hidden bg-blue-600 text-white hover:bg-blue-700 transition text-sm sm:text-base">
+                        + <span>Add Program</span>
                     </Link>
                 </div>
 
@@ -94,7 +93,7 @@ const hapus = (id) => {
                             <tr v-for="(k, index) in props.kejuruan" :key="k.id"
                                 class="hover:bg-indigo-50 dark:hover:bg-gray-700 transition">
                                 <td class="px-4 py-2 text-gray-800 dark:text-gray-200 text-center">{{ index + 1
-                                    }}</td>
+                                }}</td>
                                 <td class="px-6 py-2 text-left font-medium text-gray-800 dark:text-gray-200">{{
                                     k.kejuruan }}</td>
                                 <td class="px-6 py-2 text-left text-gray-600 dark:text-gray-300">{{
@@ -142,6 +141,12 @@ const hapus = (id) => {
                     <div v-if="props.kejuruan.length === 0" class="text-center py-6 text-gray-500 dark:text-gray-400">
                         No vocational program data available
                     </div>
+
+                    <!-- FLOATING CREATE BUTTON -->
+                    <Link :href="route('admin.kejuruan.create')"
+                        class="fixed bottom-6 right-5 z-50 flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-2xl active:scale-95 transition">
+                        + Add
+                    </Link>
                 </div>
 
             </div>

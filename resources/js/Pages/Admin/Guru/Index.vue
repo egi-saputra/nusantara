@@ -3,7 +3,8 @@ import MenuLayout from '@/Layouts/MenuLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3'
 import { route } from 'ziggy-js'
 import { ref } from 'vue'
-import { PencilSquareIcon, TrashIcon, XMarkIcon } from '@heroicons/vue/24/solid'
+import { PencilSquareIcon, TrashIcon } from '@heroicons/vue/24/outline'
+import { XMarkIcon } from '@heroicons/vue/24/solid'
 
 const props = defineProps({
     guru: Array,
@@ -68,9 +69,8 @@ const hapus = (id) => {
                 </div>
 
                 <Link :href="route('admin.guru.create')"
-                    class="px-4 py-2 rounded-lg bg-blue-800 text-white hover:bg-blue-900 transition">
-                    + <span class="inline-block sm:hidden">Add</span>
-                    <span class="sm:inline-block hidden">Add Teacher</span>
+                    class="px-4 py-2 sm:block hidden rounded bg-blue-800 text-white hover:bg-blue-900 transition">
+                    + <span>Add Teacher</span>
                 </Link>
             </div>
 
@@ -111,6 +111,40 @@ const hapus = (id) => {
                         </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- CARD FOR MOBILE -->
+            <div class="md:hidden space-y-4">
+                <div v-for="(g, index) in props.guru" :key="g.id"
+                    class="bg-white/60 dark:bg-gray-700/50 rounded p-5 shadow hover:shadow-lg transition">
+                    <div class="flex justify-between items-center mb-2">
+                        <h2 class="font-semibold dark:text-white text-blue-600">{{ g.nama_lengkap }}</h2>
+                        <span class="text-gray-500 dark:text-gray-300"># {{ index + 1 }}</span>
+                    </div>
+                    <div class="flex gap-2 justify-end mt-3">
+                        <button @click="openEdit(g)"
+                            class="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded-xl text-sm hover:bg-blue-700 transition">
+                            <PencilSquareIcon class="w-4 h-4" /> Edit
+                        </button>
+                        <button @click="hapus(g.id)"
+                            class="flex items-center gap-1 px-3 py-1 bg-red-600 text-white rounded-xl text-sm hover:bg-red-700 transition">
+                            <TrashIcon class="w-4 h-4" /> Delete
+                        </button>
+                    </div>
+                </div>
+                <div v-if="props.guru.length === 0" class="text-center py-6 text-gray-500 dark:text-gray-400">
+                    No vocational program data available
+                </div>
+
+                <!-- FLOATING CREATE BUTTON -->
+                <Link href="/admin/guru/create" class="fixed bottom-6 right-5 z-50
+               flex items-center gap-2
+               px-6 py-3 rounded-full
+               bg-gradient-to-r from-blue-600 to-indigo-600
+               text-white font-semibold shadow-2xl
+               active:scale-95 transition">
+                    + Add
+                </Link>
             </div>
         </div>
     </MenuLayout>

@@ -27,10 +27,11 @@ const submit = () => {
     <Head title="Edit Student Data" />
 
     <MenuLayout>
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-xl p-6 transition">
+
             <!-- Header -->
             <div class="flex items-center gap-2 mb-6">
-                <h1 class="text-xl font-semibold">Edit Student Data</h1>
+                <h1 class="text-xl dark:text-gray-100 font-semibold">Edit Student Data</h1>
             </div>
 
             <!-- Form -->
@@ -38,8 +39,9 @@ const submit = () => {
 
                 <!-- Full Name -->
                 <div>
-                    <label class="block text-sm font-medium mb-1">Full Name</label>
-                    <input v-model="form.nama_lengkap" type="text" class="w-full rounded-lg border-gray-300" />
+                    <label class="block text-sm dark:text-gray-300 font-medium mb-1">Full Name</label>
+                    <input v-model="form.nama_lengkap" type="text"
+                        class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-700/50 px-4 py-2 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
                     <div v-if="form.errors.nama_lengkap" class="text-red-500 text-sm">
                         {{ form.errors.nama_lengkap }}
                     </div>
@@ -47,8 +49,9 @@ const submit = () => {
 
                 <!-- Status -->
                 <div>
-                    <label class="block text-sm font-medium mb-1">Account Status</label>
-                    <select v-model="form.status" class="w-full rounded-lg border-gray-300">
+                    <label class="block text-sm dark:text-gray-300 font-medium mb-1">Account Status</label>
+                    <select v-model="form.status"
+                        class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-700/50 px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
                         <option value="Activated">Active</option>
                         <option value="Deactivated">Inactive</option>
                     </select>
@@ -56,8 +59,9 @@ const submit = () => {
 
                 <!-- NIS -->
                 <div>
-                    <label class="block text-sm font-medium mb-1">NIS</label>
-                    <input v-model="form.nis" type="text" maxlength="10" class="w-full rounded-lg border-gray-300" />
+                    <label class="block text-sm dark:text-gray-300 font-medium mb-1">NIS</label>
+                    <input v-model="form.nis" type="text" maxlength="10" placeholder="Enter NIS here..."
+                        class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-700/50 px-4 py-2 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
                     <div v-if="form.errors.nis" class="text-red-500 text-sm">
                         {{ form.errors.nis }}
                     </div>
@@ -65,8 +69,9 @@ const submit = () => {
 
                 <!-- NISN -->
                 <div>
-                    <label class="block text-sm font-medium mb-1">NISN</label>
-                    <input v-model="form.nisn" type="text" maxlength="10" class="w-full rounded-lg border-gray-300" />
+                    <label class="block text-sm dark:text-gray-300 font-medium mb-1">NISN</label>
+                    <input v-model="form.nisn" type="text" maxlength="10" placeholder="Enter NISN here..."
+                        class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-700/50 px-4 py-2 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
                     <div v-if="form.errors.nisn" class="text-red-500 text-sm">
                         {{ form.errors.nisn }}
                     </div>
@@ -74,8 +79,9 @@ const submit = () => {
 
                 <!-- Class Unit -->
                 <div>
-                    <label class="block text-sm font-medium mb-1">Class Unit</label>
-                    <select v-model="form.kelas_id" class="w-full rounded-lg border-gray-300">
+                    <label class="block text-sm dark:text-gray-300 font-medium mb-1">Class Unit</label>
+                    <select v-model="form.kelas_id"
+                        class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-700/50 px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
                         <option value="">-- Select Class --</option>
                         <option v-for="k in kelas" :key="k.id" :value="k.id">
                             {{ k.kelas }}
@@ -88,8 +94,9 @@ const submit = () => {
 
                 <!-- Major / Study Program -->
                 <div>
-                    <label class="block text-sm font-medium mb-1">Vocational Program</label>
-                    <select v-model="form.kejuruan_id" class="w-full rounded-lg border-gray-300">
+                    <label class="block text-sm dark:text-gray-300 font-medium mb-1">Vocational Program</label>
+                    <select v-model="form.kejuruan_id"
+                        class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-700/50 px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
                         <option value="">-- Select Program --</option>
                         <option v-for="k in kejuruan" :key="k.id" :value="k.id">
                             {{ k.kejuruan }}
@@ -101,12 +108,12 @@ const submit = () => {
                 </div>
 
                 <!-- Actions -->
-                <div class="md:col-span-2 flex justify-end gap-2 pt-4">
-                    <Link :href="route('admin.siswa.index')" class="px-4 py-2 rounded-lg border">
+                <div class="md:col-span-2 flex dark:text-gray-300 justify-end gap-2 pt-4">
+                    <Link :href="route('admin.siswa.index')" class="px-4 py-2 dark:hover:bg-gray-800 rounded-lg border">
                         Cancel
                     </Link>
                     <button type="submit"
-                        class="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition"
+                        class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
                         :disabled="form.processing">
                         Save Changes
                     </button>

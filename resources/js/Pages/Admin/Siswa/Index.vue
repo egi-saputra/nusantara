@@ -192,7 +192,7 @@ const hapus = (id) => {
                         <div class="flex-1">
                             <div class="flex gap-3">
                                 <div
-                                    class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg">
+                                    class="w-7 h-7 rounded-full bg-gradient-to-r from-blue-600 to-pink-600 text-white flex items-center justify-center font-bold text-lg">
                                     {{ s.nama_lengkap.charAt(0).toUpperCase() }}
                                 </div>
                                 <h3 class="font-semibold mb-3 dark:text-gray-300 text-gray-800">{{ s.nama_lengkap }}
@@ -220,7 +220,7 @@ const hapus = (id) => {
 
                     <div class="absolute right-4 bottom-4 flex gap-2">
                         <Link :href="route('admin.siswa.edit', s.id)"
-                            class="w-9 h-9 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-100 flex items-center justify-center">
+                            class="w-9 h-9 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:bg-indigo-100 flex items-center justify-center">
                             <PencilSquareIcon class="w-5 h-5" />
                         </Link>
 

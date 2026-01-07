@@ -71,9 +71,8 @@ const hapus = (id) => {
                         <p class="text-sm text-gray-500 dark:text-gray-400">Manage class / homeroom data</p>
                     </div>
                     <Link :href="route('admin.kelas.create')"
-                        class="px-4 py-2 rounded bg-blue-700 hover:bg-blue-800 text-white shadow transition">
-                        + <span class="inline-block sm:hidden">Add</span>
-                        <span class="sm:inline-block hidden">Add Class</span>
+                        class="px-4 py-2 rounded sm:block hidden bg-blue-700 hover:bg-blue-800 text-white shadow transition">
+                        + <span>Add Class</span>
                     </Link>
                 </div>
 
@@ -136,6 +135,12 @@ const hapus = (id) => {
                     <div v-if="kelas.length === 0" class="text-center py-6 text-gray-500 dark:text-gray-400">
                         No class data available
                     </div>
+
+                    <!-- FLOATING CREATE BUTTON -->
+                    <Link :href="route('admin.kelas.create')"
+                        class="fixed bottom-6 right-5 z-50 flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold shadow-2xl active:scale-95 transition">
+                        + Add
+                    </Link>
                 </div>
 
             </div>
