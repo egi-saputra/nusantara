@@ -37,8 +37,8 @@ const isEssay = computed(() => {
 const perPage = 10
 const currentPage = ref(1)
 const token = ref(props.ujianSiswa.token)
-const jawaban = ref(null)
-const jawabanAwal = ref(props.riwayat.jawaban)
+const jawaban = ref(props.riwayat?.jawaban ?? null)
+const jawabanAwal = ref(props.riwayat?.jawaban ?? null)
 const timer = ref(props.sisaDetik)
 let interval = null
 const answeredLocal = ref([...props.answered])
@@ -99,10 +99,15 @@ const onFullscreenChange = () => {
 }
 
 /* ================= SYNC SOAL ================= */
-watch(() => props.quest.id, () => {
-    jawaban.value = props.riwayat.jawaban ?? null
-    jawabanAwal.value = props.riwayat.jawaban ?? null
-}, { immediate: true })
+watch(
+    () => props.quest?.id,
+    (id) => {
+        if (!id) return
+        jawaban.value = props.riwayat?.jawaban ?? null
+        jawabanAwal.value = props.riwayat?.jawaban ?? null
+    },
+    { immediate: true }
+)
 
 /* ================= TIMER ================= */
 const updateTimer = () => {
@@ -129,33 +134,24 @@ watch(jawaban, () => {
 })
 
 /* ================= AUTOSAVE ================= */
-const autosave = () => {
-    if (jawaban.value === null) return Promise.resolve()
+const autosave = async () => {
+    if (jawaban.value === null) return
+    if (isEssay.value && (!jawaban.value || jawaban.value.trim() === ''))
+        return Promise.resolve()
+    if (jawaban.value === jawabanAwal.value) return
 
-    if (isEssay.value && jawaban.value.trim() === '') return Promise.resolve()
+    await axios.post(route('siswa.ujian.autosave'), {
+        soal_id: props.soal.id,
+        quest_id: props.quest.id,
+        jawaban: jawaban.value,
+        token: token.value
+    })
 
-    if (jawaban.value === jawabanAwal.value) return Promise.resolve()
+    jawabanAwal.value = jawaban.value
 
-    return router.post(
-        route('siswa.ujian.autosave'),
-        {
-            soal_id: props.soal.id,
-            quest_id: props.quest.id,
-            jawaban: jawaban.value,
-            token: token.value
-        },
-        {
-            preserveState: true,
-            preserveScroll: true,
-            onSuccess: () => {
-                jawabanAwal.value = jawaban.value
-
-                if (!answeredLocal.value.includes(props.quest.id)) {
-                    answeredLocal.value.push(props.quest.id)
-                }
-            }
-        }
-    )
+    if (!answeredLocal.value.includes(props.quest.id)) {
+        answeredLocal.value.push(props.quest.id)
+    }
 }
 
 /* ================= NAVIGASI ================= */
@@ -332,6 +328,12 @@ const showFullscreenGate = ref(true)
                     class="px-6 py-3 rounded bg-blue-600 hover:bg-blue-700 font-semibold">
                     Mulai Ujian
                 </button>
+            </div>
+        </div>
+
+        <div v-if="isSubmitting" class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
+            <div class="bg-white p-6 rounded-lg shadow">
+                Mengirim jawaban...
             </div>
         </div>
 

@@ -69,5 +69,6 @@ class Kernel extends HttpKernel
         'role' => \App\Http\Middleware\RoleMiddleware::class,
         'check.siswa.data' => \App\Http\Middleware\CheckSiswaData::class,
         'activated' => \App\Http\Middleware\CheckActivated::class,
+        'backup.ujian' => \App\Http\Middleware\BackupJawabanUjian::class,
     ];
 }

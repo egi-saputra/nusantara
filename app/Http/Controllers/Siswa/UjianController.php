@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Cache;
 
 class UjianController extends Controller
 {
@@ -103,38 +104,73 @@ class UjianController extends Controller
         }
 
         // Ambil semua quest untuk soal ini
+        // $questIds = BankSoal::where('soal_id', $soal_id)->pluck('id')->toArray();
+        // $nomorList = $questIds;
         $questIds = BankSoal::where('soal_id', $soal_id)->pluck('id')->toArray();
-        $nomorList = $questIds;
 
-        // Buat riwayat jawaban jika belum ada
-        foreach ($questIds as $qid) {
-            RiwayatUjian::firstOrCreate(
-                [
-                    'user_id' => $userId,
-                    'soal_id' => $soal_id,
-                    'quest_id' => $qid,
-                ],
-                [
-                    'jawaban' => null,
-                    'benar' => 0,
-                    'nilai' => 0,
-                    'status' => 'Belum Dikerjakan',
-                ]
+        $redisKey = "ujian:{$soal_id}:user:{$userId}:urutan";
+        $urutan = Cache::get($redisKey);
+
+        if (!is_array($urutan) || empty($urutan)) {
+            $urutan = $questIds;
+
+            if ($soal->tipe_soal === 'Acak') {
+                shuffle($urutan);
+            }
+
+            Cache::put(
+                $redisKey,
+                $urutan,
+                now()->addMinutes($soal->waktu + 10)
             );
         }
 
+        $urutan = Cache::get($redisKey);
+        $nomorList = $urutan;
+
+        // Buat riwayat jawaban jika belum ada
+        // foreach ($questIds as $qid) {
+        //     RiwayatUjian::firstOrCreate(
+        //         [
+        //             'user_id' => $userId,
+        //             'soal_id' => $soal_id,
+        //             'quest_id' => $qid,
+        //         ],
+        //         [
+        //             'jawaban' => null,
+        //             'benar' => 0,
+        //             'nilai' => 0,
+        //             'status' => 'Belum Dikerjakan',
+        //         ]
+        //     );
+        // }
+
         // Urutan soal (acak jika tipe soal acak)
-        $sessionKey = "urutan_soal_{$soal_id}_{$userId}";
-        if (!session()->has($sessionKey)) {
-            $urutan = $questIds;
-            if ($soal->tipe_soal === 'Acak') shuffle($urutan);
-            session([$sessionKey => $urutan]);
-        }
+        // $sessionKey = "urutan_soal_{$soal_id}_{$userId}";
+        // if (!session()->has($sessionKey)) {
+        //     $urutan = $questIds;
+        //     if ($soal->tipe_soal === 'Acak') shuffle($urutan);
+        //     session([$sessionKey => $urutan]);
+        // }
 
-        $urutan = session($sessionKey);
+        // $redisKey = "ujian:{$soal_id}:user:{$userId}:urutan";
+
+        // if (!Cache::has($redisKey)) {
+        //     $urutan = $questIds;
+        //     if ($soal->tipe_soal === 'Acak') shuffle($urutan);
+
+        //     Cache::put($redisKey, $urutan, now()->addMinutes($soal->waktu + 10));
+        // }
+
+        // $urutan = Cache::get($redisKey);
         $total = count($urutan);
-        $no = max(1, min((int)($request->no ?? 1), $total));
+            if ($total === 0) {
+                return redirect()
+                    ->route('dashboard')
+                    ->with('error', 'Soal ujian tidak valid.');
+            }
 
+        $no = max(1, min((int) ($request->no ?? 1), $total));
         $questId = $urutan[$no - 1];
         $quest = BankSoal::findOrFail($questId);
 
@@ -145,9 +181,21 @@ class UjianController extends Controller
         ])->first();
 
         // Hitung sisa waktu
-        $waktuMulai = \Carbon\Carbon::parse($ujianSiswa->waktu_mulai);
-        $waktuSelesai = $waktuMulai->copy()->addMinutes($soal->waktu ?? 0);
-        $sisaDetik = max(0, now()->diffInSeconds($waktuSelesai, false));
+        $timerKey = "ujian:{$soal_id}:user:{$userId}:end_time";
+
+        if (!Cache::has($timerKey)) {
+            Cache::put(
+                $timerKey,
+                now()->addMinutes($soal->waktu),
+                now()->addMinutes($soal->waktu + 10)
+            );
+        }
+
+        $sisaDetik = max(0, now()->diffInSeconds(Cache::get($timerKey), false));
+
+        // $waktuMulai = \Carbon\Carbon::parse($ujianSiswa->waktu_mulai);
+        // $waktuSelesai = $waktuMulai->copy()->addMinutes($soal->waktu ?? 0);
+        // $sisaDetik = max(0, now()->diffInSeconds($waktuSelesai, false));
 
         // Daftar soal yang sudah dijawab
         $answered = RiwayatUjian::where('user_id', $userId)
@@ -170,48 +218,90 @@ class UjianController extends Controller
         ]);
     }
 
+    // public function autosave(Request $request)
+    // {
+    //     $request->validate([
+    //         'soal_id' => 'required',
+    //         'quest_id' => 'required',
+    //         'jawaban' => 'nullable|string',
+    //     ]);
+
+    //     $userId = Auth::id();
+    //     $quest = BankSoal::find($request->quest_id);
+
+    //     if ($quest) {
+    //         $map = [
+    //             'A' => 'opsi_a',
+    //             'B' => 'opsi_b',
+    //             'C' => 'opsi_c',
+    //             'D' => 'opsi_d',
+    //             'E' => 'opsi_e',
+    //         ];
+
+    //         $jawab = $request->jawaban;
+    //         $benar = (($map[$jawab] ?? null) === $quest->jawaban_benar);
+
+    //         RiwayatUjian::where([
+    //             'user_id' => $userId,
+    //             'soal_id' => $request->soal_id,
+    //             'quest_id' => $request->quest_id,
+    //         ])->update([
+    //             'jawaban' => $jawab,
+    //             'benar'   => $benar ? 1 : 0,
+    //             'nilai'   => $benar ? $quest->nilai : 0,
+    //             'status'  => $jawab ? 'Sedang Dikerjakan' : 'Belum Dikerjakan',
+    //         ]);
+    //     }
+
+    //     // 🔴 PENTING: JANGAN JSON
+    //     return back();
+    //     // ✅ Kembalikan JSON agar Inertia tahu request berhasil
+    //     // return response()->json([
+    //     //     'success' => true,
+    //     //     'jawaban' => $request->jawaban
+    //     // ]);
+    // }
     public function autosave(Request $request)
     {
         $request->validate([
-            'soal_id' => 'required',
-            'quest_id' => 'required',
-            'jawaban' => 'nullable|string',
+            'soal_id' => 'required|integer',
+            'quest_id' => 'required|integer',
+            'jawaban' => 'nullable|in:A,B,C,D,E',
         ]);
 
         $userId = Auth::id();
-        $quest = BankSoal::find($request->quest_id);
 
-        if ($quest) {
-            $map = [
-                'A' => 'opsi_a',
-                'B' => 'opsi_b',
-                'C' => 'opsi_c',
-                'D' => 'opsi_d',
-                'E' => 'opsi_e',
-            ];
+        // ⏱ cek waktu ujian
+        $timerKey = "ujian:{$request->soal_id}:user:{$userId}:end_time";
+        if (!Cache::has($timerKey)) {
+            return response()->json(['expired' => true], 419);
+        }
 
-            $jawab = $request->jawaban;
-            $benar = (($map[$jawab] ?? null) === $quest->jawaban_benar);
+        /* =====================
+        1️⃣ SIMPAN KE REDIS
+        ====================== */
+        $redisKey = "ujian:{$request->soal_id}:user:{$userId}:jawaban";
+        $data = Cache::get($redisKey, []);
+        $data[$request->quest_id] = $request->jawaban;
 
-            RiwayatUjian::where([
+        Cache::put($redisKey, $data, now()->addMinutes(180));
+
+        /* =====================
+        2️⃣ BACKUP KE DB (RINGAN)
+        ====================== */
+        RiwayatUjian::updateOrCreate(
+            [
                 'user_id' => $userId,
                 'soal_id' => $request->soal_id,
                 'quest_id' => $request->quest_id,
-            ])->update([
-                'jawaban' => $jawab,
-                'benar'   => $benar ? 1 : 0,
-                'nilai'   => $benar ? $quest->nilai : 0,
-                'status'  => $jawab ? 'Sedang Dikerjakan' : 'Belum Dikerjakan',
-            ]);
-        }
+            ],
+            [
+                'jawaban' => $request->jawaban,
+                'status'  => 'Sedang Dikerjakan',
+            ]
+        );
 
-        // 🔴 PENTING: JANGAN JSON
-        return back();
-        // ✅ Kembalikan JSON agar Inertia tahu request berhasil
-        // return response()->json([
-        //     'success' => true,
-        //     'jawaban' => $request->jawaban
-        // ]);
+        return response()->noContent();
     }
 
     public function submitUjian(Request $request, $soal_id)
@@ -234,16 +324,25 @@ class UjianController extends Controller
 
         $map = ['A'=>'opsi_a','B'=>'opsi_b','C'=>'opsi_c','D'=>'opsi_d','E'=>'opsi_e'];
 
-        foreach ($riwayat as $item) {
-            $quest = BankSoal::find($item->quest_id);
+        $key = "ujian:{$soal_id}:user:{$userId}:jawaban";
+        $jawabanRedis = Cache::get($key, []);
+
+        foreach ($jawabanRedis as $questId => $jawaban) {
+            $quest = BankSoal::find($questId);
             if (!$quest) continue;
 
-            $benar = (($map[$item->jawaban] ?? null) === $quest->jawaban_benar);
+            // $map = ['A'=>'opsi_a','B'=>'opsi_b','C'=>'opsi_c','D'=>'opsi_d','E'=>'opsi_e'];
+            $benar = (($map[$jawaban] ?? null) === $quest->jawaban_benar);
 
-            $item->update([
+            RiwayatUjian::where([
+                'user_id' => $userId,
+                'soal_id' => $soal_id,
+                'quest_id' => $questId,
+            ])->update([
+                'jawaban' => $jawaban,
                 'benar' => $benar ? 1 : 0,
                 'nilai' => $benar ? $quest->nilai : 0,
-                'status' => 'Selesai'
+                'status' => 'Selesai',
             ]);
         }
 
@@ -252,10 +351,14 @@ class UjianController extends Controller
             'waktu_selesai' => now()
         ]);
 
-        session()->forget("urutan_soal_{$soal_id}_{$userId}");
+        Cache::forget($key);
+        Cache::forget("ujian:{$soal_id}:user:{$userId}:urutan");
+        Cache::forget("ujian:{$soal_id}:user:{$userId}:end_time");
+        // session()->forget("urutan_soal_{$soal_id}_{$userId}");
 
-        return redirect()->route('siswa.ujian.finish')
-            ->with('success', 'Ujian berhasil disubmit!');
+        // return redirect()->route('siswa.ujian.finish')
+        //     ->with('success', 'Ujian berhasil disubmit!');
+        return response()->noContent();
     }
 
     public function refreshToken(Request $request, $soal_id)
