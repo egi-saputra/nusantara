@@ -97,9 +97,15 @@ const goToPage = (page) => {
                             {{ truncate(item.judul, 60) }}
                         </h2>
 
-                        <p class="text-sm text-gray-600 mt-1 sm:mb-4 line-clamp-2">
+                        <div class="text-sm text-gray-600 mt-1 sm:mb-4">
+                            <div class="truncate-wrapper max-w-full">
+                                <div v-html="truncate(item.pengumuman, 140)" class="prose dark:prose-invert max-w-full">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <p class="text-sm text-gray-600 mt-1 sm:mb-4 line-clamp-2">
                             {{ truncate(item.pengumuman, 140) }}
-                        </p>
+                        </p> -->
 
                         <div class="mt-2 sm:flex hidden items-center gap-2 text-xs text-gray-500">
                             <CalendarDaysIcon class="w-4 h-4" />
@@ -149,5 +155,17 @@ const goToPage = (page) => {
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;
+}
+
+.truncate-wrapper {
+    display: block;
+    max-height: 3rem;
+    /* sekitar 2 baris */
+    overflow: hidden;
+}
+
+.truncate-wrapper .prose {
+    margin: 0;
+    /* hapus margin default prose */
 }
 </style>

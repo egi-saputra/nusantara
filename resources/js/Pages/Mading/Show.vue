@@ -53,8 +53,11 @@ const formatDate = (date) => {
                 <div class="my-6 border-t"></div>
 
                 <!-- Content -->
-                <div class="prose prose-indigo max-w-none text-gray-700 leading-relaxed">
+                <!-- <div class="prose prose-indigo max-w-none text-gray-700 leading-relaxed">
                     {{ announcement.pengumuman }}
+                </div> -->
+                <div v-html="announcement.pengumuman"
+                    class="prose prose-indigo max-w-none text-gray-700 leading-relaxed">
                 </div>
             </div>
         </article>

@@ -86,7 +86,7 @@ function confirmDeleteItem(id) {
             </div>
 
             <div v-if="!soal.data || soal.data.length === 0"
-                class="text-center py-20 bg-white rounded-xl shadow border border-gray-200">
+                class="text-center py-20 bg-white dark:border-gray-600 dark:bg-[#0F172A] rounded-xl shadow border border-gray-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-4 h-12 w-12 text-gray-400" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -94,7 +94,7 @@ function confirmDeleteItem(id) {
                 </svg>
                 <p class="text-gray-500 dark:text-gray-300 mb-4">No quizzes or questions available.</p>
                 <Link href="/guru/soal/create"
-                    class="px-4 py-2 bg-blue-600 dark:bg-[#041C32] text-white rounded shadow hover:bg-blue-700 transition">
+                    class="px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700 transition">
                     Create Quiz Now!
                 </Link>
             </div>
@@ -221,9 +221,9 @@ function confirmDeleteItem(id) {
            dark:from-[#020617] dark:to-[#020617]">
 
             <!-- EMPTY STATE -->
-            <div v-if="!soal.data || soal.data.length === 0" class="mt-16 text-center p-10
+            <div v-if="!soal.data || soal.data.length === 0" class="mt-4 text-center p-10
                rounded-2xl
-               bg-white/70 dark:bg-white/5
+               bg-white/70 dark:bg-[#041C32]
                backdrop-blur-xl
                border border-white/20 dark:border-white/10
                shadow-xl">
@@ -234,17 +234,9 @@ function confirmDeleteItem(id) {
                         d="M9 12h6m-3-3v6m-6 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
 
-                <p class="text-gray-600 dark:text-gray-300 mb-5 text-sm">
+                <p class="text-gray-600 dark:bg-[#041C32] dark:text-gray-300 mb-5 text-sm">
                     No quizzes or questions available.
                 </p>
-
-                <Link href="/guru/soal/create" class="inline-flex items-center gap-2 px-6 py-3
-                   rounded-full
-                   bg-gradient-to-r from-blue-600 to-indigo-600
-                   text-white font-semibold shadow-lg
-                   active:scale-95 transition">
-                    + Create Quiz
-                </Link>
             </div>
 
             <!-- LIST -->

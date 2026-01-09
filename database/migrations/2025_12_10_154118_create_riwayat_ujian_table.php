@@ -48,6 +48,7 @@ return new class extends Migration
             $table->enum('status', [
                 'Belum Dikerjakan',
                 'Sedang Dikerjakan',
+                'Terkunci',
                 'Selesai'
             ])->default('Belum Dikerjakan');
 

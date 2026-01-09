@@ -6,6 +6,8 @@ import { CheckIcon, ArrowLeftIcon, DocumentArrowUpIcon, PlusIcon } from '@heroic
 import { ToastAlert } from '@/Composables/ToastAlert.js';
 import { Inertia } from '@inertiajs/inertia';
 import axios from 'axios';
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
 const props = defineProps({ soal_id: [Number, String] });
 const { success, error } = ToastAlert();
@@ -70,11 +72,16 @@ function submitManual() {
     const data = new FormData();
 
     Object.keys(form).forEach(key => {
-        if (key === 'lampiran_file' && form.jenis_lampiran === 'Gambar' && form.lampiran_file) {
-            data.append('lampiran_file', form.lampiran_file);
-        } else {
-            data.append(key, form[key]);
+        if (key === 'lampiran_file') {
+            if (form.jenis_lampiran === 'Gambar' && form.lampiran_file) {
+                data.append('lampiran_file', form.lampiran_file);
+            }
+            return; // ⬅️ penting
         }
+
+        if (key === 'excel') return;
+
+        data.append(key, form[key]);
     });
 
     axios.post('/guru/bank-soal', data)
@@ -209,9 +216,30 @@ function downloadTemplate() { Inertia.visit('/guru/bank-soal/template'); }
 
                     <!-- QUESTION -->
                     <div>
-                        <label class="form-label">Question</label>
-                        <textarea v-model="form.soal" rows="4" placeholder="Write your question here..."
-                            class="form-input dark:text-gray-400" :disabled="isManualDisabled"></textarea>
+                        <label class="font-semibold mb-1 dark:text-gray-300 text-gray-700"><span
+                                class="text-red-600">*</span>
+                            Question</label>
+                        <div
+                            class="relative rounded-xl overflow-hidden border border-gray-300 dark:border-white/10 bg-white dark:bg-[#0F172A] shadow-sm">
+
+                            <QuillEditor v-model:content="form.soal" placeholder="Type the question here..."
+                                content-type="html" theme="snow" class="announcement-editor" :toolbar="[
+                                    ['bold', 'italic', 'underline'],
+                                    [{ list: 'ordered' }, { list: 'bullet' }],
+                                    [{ align: [] }],
+                                    ['clean']
+                                ]" />
+
+                            <!-- BRAND -->
+                            <div class="flex w-full border-t border-gray-300 dark:border-gray-800 justify-end">
+                                <span
+                                    class="flex justify-end px-3 text-xs py-2 editor-brand w-full text-gray-500 dark:text-gray-400">
+                                    Powered by<strong
+                                        class="text-gray-700 pl-1 tracking-widest dark:text-gray-200 font-bold">
+                                        Nusaverse</strong>
+                                </span>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- ATTACHMENT -->

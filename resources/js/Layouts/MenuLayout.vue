@@ -121,19 +121,15 @@ const navLinks = computed(() => {
     const links = {
         admin: [
             { name: 'Dashboard', href: route('admin.dashboard') },
-            { name: 'Users Management', href: route('admin.users.index') }
         ],
         proktor: [
             { name: 'Dashboard', href: route('proktor.dashboard') },
-            { name: 'Users Management', href: route('proktor.peserta.index') },
-            { name: 'Quiz Management', href: route('proktor.soal.index') }
         ],
         guru: [
-            { name: 'Dashboard', href: route('guru.dashboard') }
+            { name: 'Dashboard', href: route('guru.dashboard') },
         ],
         siswa: [
             { name: 'Dashboard', href: route('siswa.dashboard') },
-            { name: 'Ruang Ujian', href: route('siswa.ujian.token') }
         ]
     }
 
@@ -297,9 +293,12 @@ onMounted(() => {
                                                 <p class="font-medium text-gray-700 dark:text-white max-w-60 truncate">
                                                     {{ notif.judul }}
                                                 </p>
-                                                <p class="text-sm text-gray-500 dark:text-gray-400 max-w-60 truncate">
+                                                <div v-html="notif.pengumuman"
+                                                    class="prose dark:prose-invert max-w-60 max-h-8 truncate">
+                                                </div>
+                                                <!-- <p class="text-sm text-gray-500 dark:text-gray-400 max-w-60 truncate">
                                                     {{ notif.pengumuman }}
-                                                </p>
+                                                </p> -->
                                             </div>
                                             <ChevronRightIcon class="w-5 h-5 text-gray-400 dark:text-gray-300" />
                                         </li>

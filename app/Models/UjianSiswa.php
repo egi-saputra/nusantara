@@ -19,7 +19,7 @@ class UjianSiswa extends Model
         'waktu_mulai',
         'waktu_selesai',
         'token',
-        'status'
+        'status',
     ];
 
     public function user()

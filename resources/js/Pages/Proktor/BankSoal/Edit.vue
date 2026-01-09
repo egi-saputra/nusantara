@@ -5,6 +5,8 @@ import { CheckIcon, ArrowLeftIcon, PlusIcon } from '@heroicons/vue/24/solid';
 import Swal from 'sweetalert2';
 import { Inertia } from '@inertiajs/inertia';
 import axios from 'axios';
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
 const props = defineProps({
     bankSoal: Object,
@@ -94,8 +96,8 @@ function submit() {
 
 <template>
     <div class="py-8 px-4 bg-gray-50 min-h-screen">
-        <div class="max-w-3xl mx-auto md:bg-white border border-gray-300 md:rounded-2xl md:shadow-xl md:p-8">
-            <h1 class="md:text-2xl text-lg font-bold text-gray-800 mb-6 text-left">
+        <div class="max-w-3xl mx-auto sm:bg-white sm:border sm:border-gray-300 sm:rounded-2xl sm:shadow-xl sm:p-8">
+            <h1 class="sm:text-2xl text-lg font-bold text-gray-800 mb-6 text-left">
                 Edit Detail Soal
             </h1>
 
@@ -103,10 +105,29 @@ function submit() {
 
                 <!-- Soal -->
                 <div>
-                    <label class="block text-gray-700 font-semibold mb-2">Soal / Pertanyaan</label>
-                    <textarea v-model="form.soal"
-                        class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                        rows="4" placeholder="Masukkan pertanyaan"></textarea>
+                    <label class="font-semibold mb-1 dark:text-gray-300 block text-gray-700">Soal /
+                        Pertanyaan</label>
+                    <div
+                        class="relative rounded-xl overflow-hidden border border-gray-300 dark:border-white/10 bg-white dark:bg-[#0F172A] shadow-sm">
+
+                        <QuillEditor v-model:content="form.soal" placeholder="Type the question here..."
+                            content-type="html" theme="snow" class="announcement-editor" :toolbar="[
+                                ['bold', 'italic', 'underline'],
+                                [{ list: 'ordered' }, { list: 'bullet' }],
+                                [{ align: [] }],
+                                ['clean']
+                            ]" />
+
+                        <!-- BRAND -->
+                        <div class="flex w-full border-t border-gray-300 dark:border-gray-800 justify-end">
+                            <span
+                                class="flex justify-end px-3 text-xs py-2 editor-brand w-full text-gray-500 dark:text-gray-400">
+                                Powered by<strong
+                                    class="text-gray-700 pl-1 tracking-widest dark:text-gray-200 font-bold">
+                                    Nusaverse</strong>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Tipe Soal, Nilai, Jenis Lampiran -->

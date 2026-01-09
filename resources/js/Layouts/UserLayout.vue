@@ -139,20 +139,16 @@ const navLinks = computed(() => {
     const role = page.props.auth.role
     const links = {
         admin: [
-            { name: 'Dashboard', href: route('admin.dashboard') },
-            { name: 'Users Management', href: route('admin.users.index') }
+            { name: 'Profile', href: route('profile.edit') }
         ],
         proktor: [
-            { name: 'Dashboard', href: route('proktor.dashboard') },
-            { name: 'Users Management', href: route('proktor.peserta.index') },
-            { name: 'Quiz Management', href: route('proktor.soal.index') }
+            { name: 'Profile', href: route('profile.edit') }
         ],
         guru: [
             { name: 'Profile', href: route('profile.edit') }
         ],
         siswa: [
-            { name: 'Dashboard', href: route('siswa.dashboard') },
-            { name: 'Ruang Ujian', href: route('siswa.ujian.token') }
+            { name: 'Profile', href: route('profile.edit') }
         ]
     }
 
@@ -279,7 +275,7 @@ onMounted(() => {
 
                                     <!-- Header -->
                                     <h3
-                                        class="px-4 py-2 flex items-center gap-2 font-semibold border-b border-white/30 dark:border-white/10 text-gray-700 dark:text-white">
+                                        class="px-4 py-2 flex items-center gap-2 font-semibold border-b border-gray-200 dark:border-white/10 text-gray-700 dark:text-white">
                                         <i class="bi bi-megaphone text-blue-600 dark:text-blue-400"></i>
                                         Notifikasi Terbaru
                                     </h3>
@@ -293,9 +289,12 @@ onMounted(() => {
                                                 <p class="font-medium text-gray-700 dark:text-white max-w-60 truncate">
                                                     {{ notif.judul }}
                                                 </p>
-                                                <p class="text-sm text-gray-500 dark:text-gray-400 max-w-60 truncate">
+                                                <div v-html="notif.pengumuman"
+                                                    class="prose dark:prose-invert max-w-60 max-h-8 truncate">
+                                                </div>
+                                                <!-- <p class="text-sm text-gray-500 dark:text-gray-400 max-w-60 truncate">
                                                     {{ notif.pengumuman }}
-                                                </p>
+                                                </p> -->
                                             </div>
                                             <ChevronRightIcon class="w-5 h-5 text-gray-400 dark:text-gray-300" />
                                         </li>

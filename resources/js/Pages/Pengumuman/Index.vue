@@ -111,7 +111,7 @@ const goToIndex = (id) => {
                            backdrop-blur-xl
                            border border-white/20 dark:border-white/10
                            shadow-lg hover:shadow-2xl
-                           transition-all duration-300 hover:-translate-y-2">
+                           transition-all duration-300">
 
                     <!-- Gradient Accent -->
                     <div class="absolute top-0 left-0 w-full h-1.5
@@ -134,10 +134,10 @@ const goToIndex = (id) => {
                         </h2>
 
                         <!-- CONTENT -->
-                        <p class="text-gray-600 dark:text-gray-300
-                                   text-sm leading-relaxed line-clamp-4 flex-1">
-                            {{ item.pengumuman }}
-                        </p>
+                        <div class="text-sm text-gray-700 dark:text-gray-300">
+                            <div v-html="item.pengumuman"
+                                class="prose dark:prose-invert max-w-full announcement-content"></div>
+                        </div>
 
                         <!-- META -->
                         <div class="mt-6 pt-4 border-t border-gray-200/50 dark:border-white/10
@@ -157,7 +157,6 @@ const goToIndex = (id) => {
         </div>
     </MenuLayout>
 </template>
-
 
 <style>
 .fade-enter-active,

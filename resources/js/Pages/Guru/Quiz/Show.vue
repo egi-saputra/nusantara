@@ -197,10 +197,10 @@ function confirmDeleteAll() {
                     <InformationCircleIcon class="w-5 h-5 text-blue-500" />
                     Question
                 </p>
-
-                <p class="ml-7 mt-1 text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
-                    {{ item.soal }}
-                </p>
+                <div class="text-sm ml-7 mt-1 text-gray-600 dark:text-gray-400 line-clamp-3">
+                    <div v-html="item.soal" class="prose prose-sm max-w-none dark:prose-invert announcement-content">
+                    </div>
+                </div>
 
                 <!-- ANSWER -->
                 <p class="mt-4 font-semibold flex items-center gap-2 text-gray-800 dark:text-white">

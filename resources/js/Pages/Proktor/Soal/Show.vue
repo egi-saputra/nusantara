@@ -108,7 +108,7 @@ function confirmDeleteAll() {
         </div>
 
         <!-- List Soal -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
             <div v-if="!soal.bank_soal || soal.bank_soal.length === 0"
                 class="col-span-full text-center text-gray-400 p-6 bg-gray-50 rounded-lg shadow">
                 Belum ada soal untuk quiz ini.
@@ -124,16 +124,11 @@ function confirmDeleteAll() {
                 </div>
 
                 <p class="text-green-600 font-bold">Pertanyaan:</p>
-                <p class="text-gray-800 font-semibold mb-3 line-clamp-3" :title="item.soal">{{ item.soal }}</p>
-
-                <p class="text-green-600 font-bold">Link Lampiran:</p>
-                <p class="text-gray-800 font-semibold mb-3 line-clamp-3">
-                    <span v-if="item.link_lampiran">
-                        <a :href="`/${item.link_lampiran}`" target="_blank" class="text-blue-500 underline">{{
-                            item.link_lampiran }}</a>
-                    </span>
-                    <span v-else class="text-gray-400">Tanpa Lampiran</span>
-                </p>
+                <!-- <p class="text-gray-800 font-semibold mb-3 line-clamp-3" :title="item.soal">{{ item.soal }}</p> -->
+                <div class="text-sm text-gray-700 dark:text-gray-300">
+                    <div v-html="item.soal" class="prose prose-sm max-w-none dark:prose-invert announcement-content">
+                    </div>
+                </div>
 
                 <!-- Jawaban Benar -->
                 <p class="text-green-600 font-bold mb-3">

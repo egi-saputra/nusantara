@@ -217,9 +217,19 @@ const refreshToken = async () => {
 }
 
 /* ================= BLOCK EXIT ================= */
-const blockExit = () => {
+// const blockExit = () => {
+//     clearInterval(interval)
+//     refreshToken()
+//     window.location.href = route('siswa.ujian.token')
+// }
+const blockExit = async () => {
     clearInterval(interval)
     refreshToken()
+
+    try {
+        await axios.post(route('siswa.ujian.forceExit', props.soal.id))
+    } catch (e) { }
+
     window.location.href = route('siswa.ujian.token')
 }
 
@@ -259,6 +269,13 @@ const onVisibilityChange = () => {
         blockExit()
 }
 
+const handleBeforeUnload = () => {
+    navigator.sendBeacon(
+        route('siswa.ujian.refreshToken', props.soal.id),
+        new Blob([], { type: 'application/json' })
+    )
+}
+
 onMounted(() => {
     interval = setInterval(updateTimer, 1000)
 
@@ -275,24 +292,33 @@ onMounted(() => {
     document.addEventListener('msfullscreenchange', onFullscreenChange)
 
     // before unload → refresh token
-    window.addEventListener('beforeunload', refreshToken)
+    // window.addEventListener('beforeunload', refreshToken)
+    window.addEventListener('beforeunload', handleBeforeUnload)
 
     // close legend
     window.addEventListener('click', closeLegend)
 
     // blokir back browser
-    history.pushState(null, '', location.href)
-    window.onpopstate = () => {
-        history.pushState(null, '', location.href)
-        alert('Tidak dapat kembali! Ujian sedang berlangsung.')
-    }
+    // history.pushState(null, '', location.href)
+    // window.onpopstate = () => {
+    //     history.pushState(null, '', location.href)
+    //     alert('Tidak dapat kembali! Ujian sedang berlangsung.')
+    // }
+
+    window.addEventListener('pageshow', (e) => {
+        // halaman dibuka dari back/forward cache
+        if (e.persisted) {
+            blockExit()
+        }
+    })
 })
 
 onBeforeUnmount(() => {
     clearInterval(interval)
 
     document.removeEventListener('visibilitychange', onVisibilityChange)
-    window.removeEventListener('beforeunload', refreshToken)
+    // window.removeEventListener('beforeunload', refreshToken)
+    window.removeEventListener('beforeunload', handleBeforeUnload)
     window.removeEventListener('click', closeLegend)
     document.removeEventListener('keydown', blockKeydown)
     document.removeEventListener('keydown', blockScreenshot)
@@ -375,7 +401,8 @@ const showFullscreenGate = ref(true)
                         class="w-full max-w-sm max-h-24 sm:max-h-32 object-contain object-left" />
                 </div>
 
-                <div v-html="quest.soal" :key="quest.id" class="mb-6 text-gray-800 dark:text-gray-100 leading-relaxed">
+                <div v-html="quest.soal" :key="quest.id"
+                    class="announcement-content prose prose-sm max-w-none dark:prose-invert mb-6 text-gray-800 dark:text-gray-100 leading-relaxed">
                 </div>
 
                 <!-- JAWABAN -->

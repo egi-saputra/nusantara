@@ -7,6 +7,8 @@ import Swal from 'sweetalert2';
 import { ToastAlert } from '@/Composables/ToastAlert.js';
 import { Inertia } from '@inertiajs/inertia';
 import axios from 'axios';
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
 const page = usePage();
 const { success, error, confirm } = ToastAlert();
@@ -163,9 +165,30 @@ function submit() {
 
                     <!-- SECTION : Question -->
                     <section>
-                        <label class="form-label">Question</label>
-                        <textarea v-model="form.soal" rows="4" placeholder="Write the question here..."
-                            class="form-input dark:text-gray-400"></textarea>
+                        <div>
+                            <label class="font-semibold mb-1 block text-gray-700 dark:text-gray-300">Question</label>
+                            <div
+                                class="relative rounded-xl overflow-hidden border border-gray-300 dark:border-white/10 bg-white dark:bg-[#0F172A] shadow-sm">
+
+                                <QuillEditor v-model:content="form.soal" placeholder="Type the question here..."
+                                    content-type="html" theme="snow" class="announcement-editor" :toolbar="[
+                                        ['bold', 'italic', 'underline'],
+                                        [{ list: 'ordered' }, { list: 'bullet' }],
+                                        [{ align: [] }],
+                                        ['clean']
+                                    ]" />
+
+                                <!-- BRAND -->
+                                <div class="flex w-full border-t border-gray-300 dark:border-gray-800 justify-end">
+                                    <span
+                                        class="flex justify-end px-3 text-xs py-2 editor-brand w-full text-gray-500 dark:text-gray-400">
+                                        Powered by<strong
+                                            class="text-gray-700 pl-1 tracking-widest dark:text-gray-200 font-bold">
+                                            Nusaverse</strong>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </section>
 
                     <!-- SECTION : Options -->

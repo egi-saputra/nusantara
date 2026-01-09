@@ -6,6 +6,8 @@ import { useAlert } from '@/Composables/useAlert.js';
 import { Inertia } from '@inertiajs/inertia';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
 const props = defineProps({ soal_id: [Number, String] });
 const { success, error } = useAlert();
@@ -114,10 +116,10 @@ function downloadTemplate() { Inertia.visit('/proktor/bank-soal/template'); }
 </script>
 
 <template>
-    <div class="p-6 py-12 bg-gray-100 mx-auto">
+    <div class="p-6 sm:py-12 sm:bg-gray-100 mx-auto">
 
         <form @submit.prevent="submitManual"
-            class="bg-white border border-gray-300 backdrop-blur mx-auto max-w-3xl shadow rounded-2xl p-6 space-y-5">
+            class="sm:bg-white sm:border sm:border-gray-300 backdrop-blur mx-auto sm:max-w-3xl sm:shadow sm:rounded-2xl sm:p-6 space-y-5">
 
             <h1 class="text-2xl font-extrabold mb-6 text-gray-800">
                 <span class="text-3xl">+</span> Tambahkan Soal Quiz
@@ -168,18 +170,36 @@ function downloadTemplate() { Inertia.visit('/proktor/bank-soal/template'); }
 
             <!-- Pertanyaan -->
             <div>
-                <label class="font-semibold mb-1 block text-gray-700"><span class="text-red-600">*</span> Soal /
+                <label class="font-semibold mb-1 dark:text-gray-300 block !text-gray-700"><span
+                        class="text-red-600">*</span> Soal /
                     Pertanyaan</label>
-                <textarea v-model="form.soal" rows="4"
-                    class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
-                    placeholder="Masukkan pertanyaan!" :disabled="isManualDisabled">
-                </textarea>
+                <div
+                    class="relative rounded-xl overflow-hidden border border-gray-300 dark:border-white/10 bg-white dark:bg-[#0F172A] shadow-sm">
+
+                    <QuillEditor v-model:content="form.soal" placeholder="Type the question here..." content-type="html"
+                        theme="snow" class="announcement-editor" :toolbar="[
+                            ['bold', 'italic', 'underline'],
+                            [{ list: 'ordered' }, { list: 'bullet' }],
+                            [{ align: [] }],
+                            ['clean']
+                        ]" />
+
+                    <!-- BRAND -->
+                    <div class="flex w-full border-t border-gray-300 dark:border-gray-800 justify-end">
+                        <span
+                            class="flex justify-end px-3 text-xs py-2 editor-brand w-full text-gray-500 dark:text-gray-400">
+                            Powered by<strong class="text-gray-700 pl-1 tracking-widest dark:text-gray-200 font-bold">
+                                Nusaverse</strong>
+                        </span>
+                    </div>
+                </div>
             </div>
 
             <!-- Jenis Lampiran -->
             <div>
                 <label class="font-semibold mb-1 block text-gray-700">Jenis Lampiran</label>
-                <select v-model="form.jenis_lampiran" class="w-full border p-3 rounded-lg" :disabled="isManualDisabled">
+                <select v-model="form.jenis_lampiran" class="w-full border border-gray-300 p-3 rounded-lg"
+                    :disabled="isManualDisabled">
                     <option value="Tanpa Lampiran">Tanpa Lampiran</option>
                     <option value="Gambar">Gambar</option>
                 </select>
@@ -195,7 +215,7 @@ function downloadTemplate() { Inertia.visit('/proktor/bank-soal/template'); }
             <!-- OPTIONS -->
             <div v-if="form.tipe_soal === 'PG'" class="space-y-4 pt-4">
                 <div class="flex sm:flex-row flex-col gap-3 justify-start sm:justify-between">
-                    <h3 class="font-semibold text-gray-700 dark:text-gray-200">
+                    <h3 class="font-semibold !text-gray-700 dark:text-gray-200">
                         Answer Options
                     </h3>
                     <div class="flex gap-2">
@@ -215,10 +235,10 @@ function downloadTemplate() { Inertia.visit('/proktor/bank-soal/template'); }
 
                 <div class="grid md:grid-cols-2 gap-4">
                     <div v-for="key in opsiState" :key="key">
-                        <label class="text-sm font-medium dark:text-gray-300">
+                        <label class="text-sm font-medium !text-gray-700 dark:text-gray-300">
                             Option {{ key.toUpperCase() }}
                         </label>
-                        <input v-model="form['opsi_' + key]" class="form-input dark:text-gray-400"
+                        <input v-model="form['opsi_' + key]" class="form-input dark:text-gray-400 !text-gray-700"
                             placeholder="Enter Optional Answer" />
                     </div>
                 </div>
@@ -232,7 +252,7 @@ function downloadTemplate() { Inertia.visit('/proktor/bank-soal/template'); }
                     class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
                     :disabled="isManualDisabled" />
                 <select v-else v-model="form.jawaban_benar"
-                    class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
+                    class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
                     :disabled="isManualDisabled">
                     <option value="opsi_a">A. {{ form.opsi_a }}</option>
                     <option value="opsi_b">B. {{ form.opsi_b }}</option>
@@ -246,7 +266,7 @@ function downloadTemplate() { Inertia.visit('/proktor/bank-soal/template'); }
             <div>
                 <label class="font-semibold mb-1 block text-gray-700">Bobot Nilai</label>
                 <input v-model="form.nilai" type="number" min="0"
-                    class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
+                    class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
                     :disabled="isManualDisabled" />
             </div>
 

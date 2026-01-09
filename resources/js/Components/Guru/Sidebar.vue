@@ -21,7 +21,7 @@ const menuItems = [
         icon: AdjustmentsHorizontalIcon,
         children: [
             { name: 'Quiz List', routeName: 'guru.soal.index' },
-            { name: 'Assessments', routeName: 'guru.NilaiUjian.index' },
+            { name: 'Assessment', routeName: 'guru.NilaiUjian.index' },
         ]
     },
 ];
