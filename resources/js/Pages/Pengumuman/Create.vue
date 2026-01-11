@@ -200,7 +200,7 @@ async function deleteAllAnnouncements() {
                                 <span
                                     class="flex justify-end px-3 text-xs py-2 editor-brand w-full text-gray-500 dark:text-gray-400">
                                     Powered by<strong
-                                        class="text-gray-700 pl-1 tracking-widest dark:text-gray-200 font-bold">
+                                        class="text-gray-700 pl-1 tracking-wide dark:text-gray-200 font-bold">
                                         Nusaverse</strong>
                                 </span>
                             </div>

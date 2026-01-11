@@ -51,7 +51,8 @@ class AuthenticatedSessionController extends Controller
         'proktor' => '/proktor/dashboard',
         'guru' => '/guru/dashboard',
         'siswa' => '/siswa/dashboard',
-        default => '/siswa/dashboard',
+        'user' => '/user/dashboard',
+        default => '/user/dashboard',
     };
 
     if ($request->ajax() || $request->wantsJson()) {
@@ -71,9 +72,11 @@ class AuthenticatedSessionController extends Controller
     public function destroy(Request $request)
     {
         Auth::guard('web')->logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Inertia::location(route('login')); // ← paksa Inertia redirect full page
+        return redirect()->route('login');
     }
+
 }

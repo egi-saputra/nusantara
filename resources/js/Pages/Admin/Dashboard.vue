@@ -5,13 +5,11 @@ import { Head, usePage, router, Link } from '@inertiajs/vue3'
 import { route } from 'ziggy-js'
 import {
     UserGroupIcon,
-    RectangleStackIcon,
     ClipboardDocumentListIcon,
     AcademicCapIcon,
     CheckBadgeIcon,
     XMarkIcon,
-    WrenchScrewdriverIcon,
-    DocumentTextIcon
+    MegaphoneIcon
 } from '@heroicons/vue/24/outline'
 import { UserIcon } from '@heroicons/vue/24/solid'
 import { BookUserIcon, BookCheckIcon, Building2Icon, FileCog2Icon } from 'lucide-vue-next';
@@ -42,6 +40,7 @@ const menuItems = [
     { title: 'Class Room', icon: Building2Icon, route: route('admin.kelas.index') },
     { title: 'Subjects', icon: BookCheckIcon, route: route('admin.mapel.index') },
     { title: 'Vocational', icon: FileCog2Icon, route: route('admin.kejuruan.index') },
+    { title: 'Announcement', icon: MegaphoneIcon, route: route('pengumuman.create') },
 ]
 
 const goTo = (url) => {
@@ -70,7 +69,6 @@ const goTo = (url) => {
                 <XMarkIcon class="w-5 h-5 text-white" />
             </button>
         </div>
-
 
         <!-- DESKTOP TOAST (pojok kanan atas) -->
         <div v-if="toast.show" class="hidden md:flex fixed top-5 right-5 w-full max-w-sm 
@@ -174,7 +172,7 @@ const goTo = (url) => {
         </div>
 
         <!-- Mobile Menu Buttons -->
-        <div class="max-w-7xl mx-auto space-y-6">
+        <div class="max-w-7xl pb-16 mx-auto space-y-6">
             <div class="grid md:hidden grid-cols-2 sm:grid-cols-3 gap-4">
                 <Link v-for="item in menuItems" :key="item.title" :href="item.route" prefetch="hover" preserve-scroll
                     preserve-state
@@ -187,23 +185,4 @@ const goTo = (url) => {
             </div>
         </div>
     </UserLayout>
-
-    <!-- MOBILE BOTTOM NAV -->
-    <!-- <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200
-           md:hidden safe-bottom">
-        <div class="flex justify-around items-center h-16">
-
-            <button v-for="item in menuItems" :key="item.title" @click="goTo(item.route)" class="flex flex-col items-center justify-center gap-1 w-full h-full
-                   transition-all" :class="isActive(item.route)
-                    ? 'text-indigo-600'
-                    : 'text-gray-400 hover:text-indigo-500'">
-                <component :is="item.icon" class="w-6 h-6" :class="isActive(item.route) ? 'scale-110' : ''" />
-                <span class="text-[11px] font-medium leading-none">
-                    {{ item.title }}
-                </span>
-            </button>
-
-        </div>
-    </nav> -->
-
 </template>

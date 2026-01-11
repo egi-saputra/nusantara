@@ -36,13 +36,19 @@ const kelasForEdit = computed(() => {
 });
 
 // Refresh data
+// const refreshData = () => {
+//     filterNama.value = '';
+//     filterKelas.value = '';
+//     Inertia.get(route('proktor.peserta.index'), {}, {
+//         preserveScroll: true,
+//         preserveState: true
+//     });
+// };
+
 const refreshData = () => {
     filterNama.value = '';
     filterKelas.value = '';
-    Inertia.get(route('proktor.peserta.index'), {}, {
-        preserveScroll: true,
-        preserveState: false
-    });
+    currentPage.value = 1;
 };
 
 // --- Pagination Frontend ---
@@ -198,7 +204,7 @@ onMounted(() => {
                             <option v-for="k in kelasAll" :key="k.id" :value="k.id">{{ k.kelas }}</option>
                         </select>
                         <button @click="refreshData"
-                            class="flex gap-2 bg-gray-700 text-white px-4 py-2 rounded w-full sm:w-auto">
+                            class="flex gap-2 justify-center bg-gray-700 text-white px-4 py-2 rounded w-full sm:w-auto">
                             <ArrowPathIcon class="w-5 h-5" /> Refresh
                         </button>
                     </div>

@@ -35,7 +35,7 @@ const submit = () => {
                     <div>
                         <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Program
                             Name</label>
-                        <input v-model="form.kejuruan" type="text" placeholder="Enter vocational program"
+                        <input v-model="form.kejuruan" type="text" placeholder="Enter vocational program" required
                             class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-700/50 px-4 py-2 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" />
                         <div v-if="form.errors.kejuruan" class="text-red-600 dark:text-red-400 text-sm mt-1">
                             {{ form.errors.kejuruan }}
@@ -46,7 +46,7 @@ const submit = () => {
                     <div>
                         <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Head of
                             Program</label>
-                        <select v-model="form.guru_id"
+                        <select v-model="form.guru_id" required
                             class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-700 50 px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
                             <option value="">-- Select Teacher --</option>
                             <option v-for="g in props.guru" :key="g.id" :value="g.id">{{ g.nama_lengkap }}</option>

@@ -17,6 +17,9 @@ class Siswa extends Model
         'kejuruan_id',
         'id_siswa',
         'status',
+        'sekretaris',
+        'bendahara',
+        'osis',
     ];
 
     public function kelas()

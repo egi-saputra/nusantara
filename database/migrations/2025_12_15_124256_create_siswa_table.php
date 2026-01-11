@@ -30,6 +30,9 @@ return new class extends Migration
 
             // Status
             $table->enum('status', ['Activated', 'Deactivated'])->default('Activated');
+            $table->enum('sekretaris', ['yes', 'no'])->default('no');
+            $table->enum('bendahara', ['yes', 'no'])->default('no');
+            $table->enum('osis', ['yes', 'no'])->default('no');
 
             $table->timestamps();
         });

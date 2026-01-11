@@ -51,7 +51,7 @@ class RegisteredUserController extends Controller
         // ->with('success', 'Your account has been created successfully.');
 
         return redirect()
-            ->route('siswa.form.create')
+            ->route('user.dashboard')
             ->with('success', 'Your account has been created successfully.');
 
     }

@@ -110,22 +110,12 @@ const goTo = (url) => {
         </div>
 
         <!-- Cards Section -->
-        <div class="sm:grid hidden mb-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-
-            <!-- Admin -->
-            <div
-                class="bg-white dark:bg-gradient-to-br dark:from-[#1e1b4b] dark:via-[#312e81] dark:to-[#4c1d95] rounded-lg shadow p-5 flex items-center gap-4 hover:shadow-lg transition">
-                <UserIcon class="w-10 h-10 text-red-500" />
-                <div>
-                    <p class="text-gray-500 dark:text-white">Admin</p>
-                    <h3 class="text-xl font-bold dark:text-white">{{ page.props.usersCount.admin }}</h3>
-                </div>
-            </div>
+        <div class="sm:grid hidden mb-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
             <!-- Proktor -->
             <div
                 class="bg-white dark:bg-gradient-to-br dark:from-[#1e1b4b] dark:via-[#312e81] dark:to-[#4c1d95] rounded-lg shadow p-5 flex items-center gap-4 hover:shadow-lg transition">
-                <UserGroupIcon class="w-10 h-10 dark:text-orange-500 text-purple-500" />
+                <UserIcon class="w-10 h-10 dark:text-orange-500 text-purple-500" />
                 <div>
                     <p class="text-gray-500 dark:text-white">Proktor</p>
                     <h3 class="text-xl font-bold dark:text-white">{{ page.props.usersCount.proktor }}</h3>
@@ -145,7 +135,7 @@ const goTo = (url) => {
             <!-- Siswa -->
             <div
                 class="bg-white dark:bg-gradient-to-br dark:from-[#1e1b4b] dark:via-[#312e81] dark:to-[#4c1d95] rounded-lg shadow p-5 flex items-center gap-4 hover:shadow-lg transition">
-                <ClipboardDocumentListIcon class="w-10 h-10 text-blue-500" />
+                <UserGroupIcon class="w-10 h-10 text-blue-500" />
                 <div>
                     <p class="text-gray-500 dark:text-white">Siswa</p>
                     <h3 class="text-xl font-bold dark:text-white">{{ page.props.usersCount.siswa }}</h3>

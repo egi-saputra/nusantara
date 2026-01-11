@@ -189,7 +189,7 @@ onMounted(() => {
 <template>
     <div id="theme-transition-layer"></div>
 
-    <div class="h-screen bg-gray-100 dark:bg-[#0B1F3A] flex flex-col overflow-hidden">
+    <div class="h-screen bg-white sm:bg-gray-100 dark:bg-[#0B1F3A] flex flex-col overflow-hidden">
         <!-- Navbar SPA -->
         <nav
             class="bg-white dark:bg-[#041C32] sm:dark:bg-[#0F172A] border-b border-gray-300 dark:sm:border-gray-600 dark:border-[#1e1b4b] sticky top-0 z-50 backdrop-blur-xl">

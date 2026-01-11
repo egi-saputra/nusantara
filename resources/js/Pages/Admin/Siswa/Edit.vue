@@ -15,6 +15,7 @@ const form = useForm({
     kelas_id: props.siswa.kelas_id,
     kejuruan_id: props.siswa.kejuruan_id,
     status: props.siswa.status,
+    osis: props.siswa.osis,
 })
 
 const submit = () => {
@@ -104,6 +105,26 @@ const submit = () => {
                     </select>
                     <div v-if="form.errors.kejuruan_id" class="text-red-500 text-sm">
                         {{ form.errors.kejuruan_id }}
+                    </div>
+                </div>
+
+                <!-- OSIS -->
+                <div>
+                    <label class="block text-sm dark:text-gray-300 font-medium mb-1">
+                        OSIS Member
+                    </label>
+
+                    <select v-model="form.osis" class="w-full rounded-xl border border-gray-200 dark:border-gray-700
+               bg-white/60 dark:bg-gray-700/50
+               px-4 py-2 text-gray-900 dark:text-white
+               focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                        <option value="">-- Select --</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+
+                    <div v-if="form.errors.osis" class="text-red-500 text-sm">
+                        {{ form.errors.osis }}
                     </div>
                 </div>
 

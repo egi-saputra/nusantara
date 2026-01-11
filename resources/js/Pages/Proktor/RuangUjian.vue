@@ -131,12 +131,25 @@ const deleteAllPeserta = async () => {
 }
 
 // FETCH DATA REAL-TIME
+// const fetchPeserta = async () => {
+//     try {
+//         const res = await axios.get('/proktor/ruang-ujian');
+//         pesertaList.value.splice(0, pesertaList.value.length, ...res.data.peserta);
+//     } catch (err) {
+//         console.error(err);
+//     }
+// }
 const fetchPeserta = async () => {
     try {
         const res = await axios.get('/proktor/ruang-ujian');
-        pesertaList.value.splice(0, pesertaList.value.length, ...res.data.peserta);
+
+        // fallback ke array kosong jika peserta undefined
+        const peserta = Array.isArray(res.data.peserta) ? res.data.peserta : [];
+
+        // replace pesertaList tanpa error
+        pesertaList.value.splice(0, pesertaList.value.length, ...peserta);
     } catch (err) {
-        console.error(err);
+        console.error('Gagal fetch peserta:', err);
     }
 }
 

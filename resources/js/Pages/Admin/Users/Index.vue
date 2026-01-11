@@ -146,7 +146,7 @@ const openDelete = (id) => {
                 </div>
 
                 <Link :href="route('admin.users.create')"
-                    class="px-5 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-lg text-sm font-medium">
+                    class="px-5 py-2 text-center rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition sm:shadow-lg text-sm font-medium">
                     + Create User
                 </Link>
             </div>
@@ -165,6 +165,7 @@ const openDelete = (id) => {
                         <option value="guru">Guru</option>
                         <option value="proktor">Proktor</option>
                         <option value="siswa">Siswa</option>
+                        <option value="user">User</option>
                     </select>
 
                     <!-- Sort -->
@@ -177,7 +178,7 @@ const openDelete = (id) => {
 
                 <!-- Reset -->
                 <button @click="resetFilter"
-                    class="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-transparent text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 transition">
+                    class="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 py-1 dark:border-gray-600 bg-gray-100 dark:bg-transparent text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 transition">
                     <ArrowPathIcon class="w-4 h-4" />
                     Reset
                 </button>

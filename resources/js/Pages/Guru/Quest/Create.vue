@@ -1,5 +1,5 @@
 <script setup>
-import MenuLayout from '@/Layouts/MenuLayout.vue';
+import AppLayout from '@/Layouts/AppLayout.vue';
 import { ref, computed, onMounted, watch } from 'vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
 import { CheckIcon, ArrowLeftIcon, DocumentArrowUpIcon, PlusIcon } from '@heroicons/vue/24/solid';
@@ -125,18 +125,18 @@ function downloadTemplate() { Inertia.visit('/guru/bank-soal/template'); }
 
 
 <template>
-    <MenuLayout>
-        <div class="max-w-5xl mx-auto sm:px-4 sm:py-6">
+    <AppLayout>
+        <div class="sm:max-w-5xl mx-auto sm:px-4 sm:py-6">
 
             <form @submit.prevent="submitManual" class="relative overflow-hidden
-                       bg-white/80 dark:bg-white/5
+                       sm:bg-white/80 dark:sm:bg-white/5
                        backdrop-blur-xl
-                       border border-gray-200/60 dark:border-white/10
-                       sm:rounded-3xl rounded-xl sm:shadow-2xl p-6 md:p-8 space-y-8">
+                       sm:border border-gray-200/60 dark:border-white/10
+                       sm:rounded-3xl sm:shadow-2xl p-6 md:p-8 space-y-8">
 
                 <!-- HEADER -->
                 <div class="flex items-center gap-4">
-                    <div class="p-3 rounded-xl bg-blue-600/10 text-blue-600">
+                    <div class="p-3 rounded-xl sm:block hidden bg-blue-600/10 text-blue-600">
                         <PlusIcon class="w-6 h-6" />
                     </div>
                     <div>
@@ -185,7 +185,7 @@ function downloadTemplate() { Inertia.visit('/guru/bank-soal/template'); }
                                 <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
                             </svg>
 
-                            {{ form.processing ? 'Importing...' : 'Import Excel' }}
+                            {{ form.processing ? 'Importing...' : 'Import' }}
                         </button>
 
                         <button type="button" @click="downloadTemplate" class="btn-secondary">
@@ -322,5 +322,5 @@ function downloadTemplate() { Inertia.visit('/guru/bank-soal/template'); }
 
             </form>
         </div>
-    </MenuLayout>
+    </AppLayout>
 </template>

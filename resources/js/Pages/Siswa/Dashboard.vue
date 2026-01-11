@@ -38,10 +38,10 @@ const showToast = (message, type = 'info') => {
 
 /* ================= MENU ================= */
 const menuItems = [
-    { title: 'Ruang Materi', icon: NewspaperIcon, route: route('siswa.dashboard') },
-    { title: 'Ruang Tugas', icon: DocumentTextIcon, route: route('siswa.dashboard') },
-    { title: 'Ruang Ujian', icon: ClipboardDocumentListIcon, route: route('siswa.ujian.token') },
-    { title: 'Ruang Siswa', icon: UserGroupIcon, route: route('siswa.dashboard') },
+    { title: 'Learning', icon: NewspaperIcon, route: route('siswa.dashboard') },
+    { title: 'Assignment', icon: DocumentTextIcon, route: route('siswa.dashboard') },
+    { title: 'Exam Room', icon: ClipboardDocumentListIcon, route: route('siswa.ujian.token') },
+    { title: 'Student Room', icon: UserGroupIcon, route: route('siswa.dashboard') },
 ]
 
 /* ================= SISWA ================= */
@@ -119,14 +119,12 @@ const exportExcel = () => {
                             bg-gradient-to-br items-center from-indigo-600 via-blue-600 to-purple-600 dark:bg-gradient-to-br dark:sm:from-[#1e1b4b] dark:sm:via-[#312e81] dark:sm:to-[#4c1d95] dark:from-[#063970] dark:via-[#0a4e8c] dark:to-[#1e1b4b] flex gap-4 sm:flex-row flex-col
                             text-white dark:shadow-xl">
 
-                    <UserIcon class="w-12 h-12 text-center text-white" />
+                    <UserIcon class="w-12 h-12 text-center sm:mt-0 mt-3 text-white" />
                     <div class="relative z-10">
-                        <h1 class="text-2xl sm:text-3xl font-bold">
-                            Selamat datang, {{ userName }} 👋
+                        <h1 class="text-xl text-center sm:text-left sm:text-3xl font-bold">
+                            Welcome, {{ userName }}! 👋
                         </h1>
-                        <p class="text-white/90 text-sm sm:text-base mt-1">
-                            Semoga harimu tetap produktif dan menyenangkan!
-                        </p>
+                        <p class="text-white/90 sm:text-base text-xs">May your day remain productive and enjoyable!</p>
                     </div>
 
                     <div class="absolute sm:hidden -top-20 -right-20 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
@@ -136,7 +134,7 @@ const exportExcel = () => {
                 <h1 class="sm:inline-flex hidden font-bold -mb-2 text-2xl font-raleway mt-4 pl-3 text-gray-800 gap-3">
                     <UserIcon
                         class="w-10 h-10 p-1 dark:bg-gradient-to-br dark:from-[#1e1b4b] dark:via-[#312e81] dark:to-[#4c1d95] dark:border-none dark:text-white border-2 border-gray-600 rounded-xl text-center" />
-                    <span class="mt-1 dark:text-gray-300">Informasi Pribadi</span>
+                    <span class="mt-1 dark:text-gray-300">Personal Information</span>
                 </h1>
                 <div class="min-w-full snap-center
                 rounded-xl sm:rounded-3xl bg-white/70 dark:backdrop-blur-xl
@@ -182,7 +180,7 @@ const exportExcel = () => {
                                 : 'bg-red-100 text-red-700'
                         ]">
                             <CheckBadgeIcon v-if="siswa.status === 'Activated'" class="w-3 h-3" />
-                            Status: {{ siswa.status === 'Activated' ? 'Aktif' : 'Tidak Aktif' }}
+                            Status: {{ siswa.status === 'Activated' ? 'Active' : 'Inactive' }}
                         </span>
                     </div>
                 </div>

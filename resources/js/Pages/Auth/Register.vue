@@ -174,23 +174,6 @@ const toggleFocus = (field, status) => {
                 </p>
             </div>
 
-            <!-- Confirm Password -->
-            <!-- <div class="relative">
-                <input id="password_confirmation" type="password" v-model="form.password_confirmation" placeholder=""
-                    required @focus="toggleFocus('password_confirmation', true)"
-                    @blur="toggleFocus('password_confirmation', false)"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-400 transition duration-300" />
-                <label for="password_confirmation"
-                    class="absolute left-4 bg-white px-1 transition-all duration-300 text-gray-400" :class="{
-                        '-top-2.5 text-sm text-indigo-500': form.password_confirmation || isFocused.password_confirmation,
-                        'top-3 text-base': !form.password_confirmation && !isFocused.password_confirmation
-                    }">
-                    Confirm Password
-                </label>
-                <p v-if="form.errors.password_confirmation" class="text-xs text-red-500 mt-1">{{
-                    form.errors.password_confirmation }}</p>
-            </div> -->
-
             <!-- Submit -->
             <div class="flex flex-col items-center space-y-4">
                 <!-- <button type="submit" :disabled="form.processing"

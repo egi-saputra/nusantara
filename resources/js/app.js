@@ -28,7 +28,7 @@ createInertiaApp({
         ? {
               color: "#2563EB",
               includeCSS: true,
-              showSpinner: false,
+              showSpinner: true,
           }
         : false,
 });

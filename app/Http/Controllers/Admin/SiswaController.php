@@ -88,9 +88,11 @@ class SiswaController extends Controller
             'kelas_id'    => ['required'],
             'kejuruan_id' => ['required'],
             'status'      => ['required', 'in:Activated,Deactivated'],
+            'osis' => ['required', 'in:yes,no'],
         ]);
 
-        $siswa->update($request->all());
+        // $siswa->update($request->all());
+        $siswa->update($validated);
 
         return redirect()
             ->route('admin.siswa.index')

@@ -101,7 +101,6 @@ Route::middleware('auth', 'verified')->group(function () {
         $user = Auth::user();
 
         $usersCount = [
-            'admin'   => User::where('role', 'admin')->count(),
             'proktor' => User::where('role', 'proktor')->count(),
             'guru'    => User::where('role', 'guru')->count(),
             'siswa'   => User::where('role', 'siswa')->count(),

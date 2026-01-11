@@ -33,7 +33,7 @@ const submit = () => {
                     <div>
                         <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Class
                             Name</label>
-                        <input v-model="form.kelas" type="text" placeholder="Enter class name / unit"
+                        <input v-model="form.kelas" type="text" placeholder="Enter class name / unit" required
                             class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-700/50 px-4 py-2 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" />
                         <div v-if="form.errors.kelas" class="text-red-600 text-sm mt-1">
                             {{ form.errors.kelas }}
@@ -45,7 +45,8 @@ const submit = () => {
                         <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Homeroom Teacher
                             (Walas)</label>
                         <select v-model="form.guru_id"
-                            class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-700 50 px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                            class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-700 50 px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                            required>
                             <option value="">-- select teacher --</option>
                             <option v-for="g in guru" :key="g.id" :value="g.id">
                                 {{ g.nama_lengkap }}

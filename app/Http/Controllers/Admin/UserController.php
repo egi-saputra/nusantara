@@ -23,16 +23,8 @@ class UserController extends Controller
 
     public function create()
     {
-        // return Inertia::render('Admin/Users/Create', [
-        //     'roles' => User::select('role')
-        //         ->whereNotNull('role')
-        //         ->where('role', '!=', 'admin')
-        //         ->distinct()
-        //         ->orderBy('role')
-        //         ->pluck('role'),
-        // ]);
         return Inertia::render('Admin/Users/Create', [
-            'roles' => ['proktor', 'guru', 'siswa'], // ← langsung hardcoded
+            'roles' => ['proktor', 'guru', 'siswa', 'user'], // ← langsung hardcoded
         ]);
     }
 
@@ -44,9 +36,8 @@ class UserController extends Controller
                 'required',
                 'email',
                 'unique:users,email',
-                // hanya boleh gmail.com & simstal.com
-                // 'regex:/^[a-zA-Z0-9._%+-]+@(gmail\.com|simstal\.com)$/'
-                'regex:/^[a-zA-Z0-9._%+-]+@(gmail\.com)$/'
+                // hanya boleh gmail.com & nusantara .com
+                // 'regex:/^[a-zA-Z0-9._%+-]+@(gmail\.com|nusantara\.com)$/'
             ],
             'password' => 'required|min:6',
             'role'     => [
@@ -54,9 +45,9 @@ class UserController extends Controller
                 'string',
                 Rule::notIn(['admin']),
             ],
-        ], [
-            'email.regex' => 'Email must use the @gmail.com or valid domain.',
-        ]);
+        ],
+        // ['email.regex' => 'Email must use the @gmail.com or valid domain.',]
+        );
 
         $data['password'] = bcrypt($data['password']);
 
@@ -69,18 +60,9 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        // return Inertia::render('Admin/Users/Edit', [
-        //     'user'  => $user,
-        //     'roles' => User::select('role')
-        //         ->whereNotNull('role')
-        //         ->where('role', '!=', 'admin')
-        //         ->distinct()
-        //         ->orderBy('role')
-        //         ->pluck('role'),
-        // ]);
         return Inertia::render('Admin/Users/Edit', [
             'user'  => $user,
-            'roles' => ['proktor', 'guru', 'siswa'],
+            'roles' => ['proktor', 'guru', 'siswa', 'user'],
         ]);
     }
 
@@ -92,7 +74,7 @@ class UserController extends Controller
                 'required',
                 'email',
                 Rule::unique('users', 'email')->ignore($user->id),
-                'regex:/^[a-zA-Z0-9._%+-]+@(gmail\.com)$/',
+                // 'regex:/^[a-zA-Z0-9._%+-]+@(gmail\.com)$/',
             ],          
             'password' => 'nullable|min:6',
             'role'     => [

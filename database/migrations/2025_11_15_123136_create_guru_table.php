@@ -17,6 +17,9 @@ return new class extends Migration
                   ->constrained('users')
                   ->onDelete('cascade');
             $table->string('nama_lengkap');
+            $table->enum('akses', ['yes', 'no'])->default('no');
+            $table->enum('kaprog', ['yes', 'no'])->default('no');
+            $table->enum('piket', ['yes', 'no'])->default('no');
             $table->timestamps();
         });
     }
