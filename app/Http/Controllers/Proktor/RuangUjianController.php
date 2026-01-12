@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Proktor;
 
 use App\Http\Controllers\Controller;
 use App\Models\UjianSiswa;
+use App\Events\PesertaUpdated;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -11,55 +12,56 @@ class RuangUjianController extends Controller
 {
     public function index()
     {
-        $peserta = UjianSiswa::with([
-            'user.siswa.kelas',  // ambil nama lengkap + kelas
-            'soal.mapel',        // ambil mapel
-        ])
-        ->orderBy('id', 'DESC')
-        ->get();
+        $peserta = $this->getPeserta();
 
         return Inertia::render('Proktor/RuangUjian', [
             'peserta' => $peserta
         ]);
     }
 
-    public function refreshToken($peserta)
+    public function refreshToken($id)
     {
-        $peserta = UjianSiswa::findOrFail($peserta);
+        $peserta = UjianSiswa::findOrFail($id);
+
+        // kalau token memang digenerate ulang, lakukan di sini
+        // $peserta->token = Str::random(6);
+        // $peserta->save();
+
+        $this->broadcastPeserta();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function destroyPeserta($id)
+    {
+        UjianSiswa::findOrFail($id)->delete();
+
+        $this->broadcastPeserta();
 
         return response()->json([
-            'token' => $peserta->token
+            'message' => 'Peserta berhasil dihapus!'
         ]);
     }
 
-    public function destroyPeserta($peserta)
+    /**
+     * =========================
+     * HELPER (PRIVATE METHOD)
+     * =========================
+     */
+    private function getPeserta()
     {
-        try {
-            $pesertaModel = UjianSiswa::findOrFail($peserta);
-            $pesertaModel->delete();
-
-            return response()->json([
-                'message' => 'Peserta berhasil dihapus!'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Gagal menghapus peserta!'
-            ], 500);
-        }
-    }
-
-    // RuangUjianController.php
-    public function refreshAll(Request $request)
-    {
-        $peserta = UjianSiswa::with([
+        return UjianSiswa::with([
             'user.siswa.kelas',
             'soal.mapel',
         ])
         ->orderBy('id', 'DESC')
         ->get();
+    }
 
-        return response()->json([
-            'peserta' => $peserta
-        ]);
+    private function broadcastPeserta()
+    {
+        broadcast(new PesertaUpdated(
+            $this->getPeserta()
+        ));
     }
 }

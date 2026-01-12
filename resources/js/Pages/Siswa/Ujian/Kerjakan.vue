@@ -178,27 +178,33 @@ const goTo = (n) => {
 /* ================= SUBMIT ================= */
 const isSubmitting = ref(false)
 const submitUjian = async () => {
+    if (isSubmitting.value) return
     isSubmitting.value = true
 
     try {
-        // Autosave soal terakhir jika ada jawaban
-        if (jawaban.value !== null && jawaban.value !== jawabanAwal.value) {
-            await router.post(
-                route('siswa.ujian.autosave'),
-                { soal_id: props.soal.id, quest_id: props.quest.id, jawaban: jawaban.value, token: token.value },
-                { preserveState: true, preserveScroll: true, onSuccess: () => jawabanAwal.value = jawaban.value }
-            )
+        // 🔥 PAKSA autosave terakhir
+        if (jawaban.value !== null) {
+            await axios.post(route('siswa.ujian.autosave'), {
+                soal_id: props.soal.id,
+                quest_id: props.quest.id,
+                jawaban: jawaban.value,
+                token: token.value
+            })
         }
 
+        // submit ujian
         await axios.post(route('siswa.ujian.submit', props.soal.id), {
             token: token.value
         })
 
-        // Keluar fullscreen sebelum redirect
         ujianSelesai.value = true
         exitFullscreen()
 
         router.get(route('siswa.ujian.finish'))
+
+    } catch (e) {
+        console.error(e)
+        alert('Gagal menyimpan jawaban terakhir')
     } finally {
         isSubmitting.value = false
     }

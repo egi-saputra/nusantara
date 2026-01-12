@@ -94,33 +94,46 @@ const deleteSingleEmail = (email) => {
     updateSuggestion();
 };
 
-const submitLogin = async () => {
-    form.processing = true; // mulai spinner
-    try {
-        const res = await axios.post(route('login'), {
-            email: form.email,
-            password: form.password,
-            remember: form.remember
-        }, {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        });
+// const submitLogin = async () => {
+//     form.processing = true; // mulai spinner
+//     try {
+//         const res = await axios.post(route('login'), {
+//             email: form.email,
+//             password: form.password,
+//             remember: form.remember
+//         }, {
+//             headers: { 'X-Requested-With': 'XMLHttpRequest' }
+//         });
 
-        // simpan email ke history saat login berhasil
-        saveEmailToHistory();
+//         // simpan email ke history saat login berhasil
+//         saveEmailToHistory();
 
-        if (res.data.redirect) {
-            window.location.href = res.data.redirect;
+//         if (res.data.redirect) {
+//             window.location.href = res.data.redirect;
+//         }
+//     } catch (err) {
+//         let msg = 'These credentials do not match our records.';
+//         if (err.response?.status === 422 && err.response.data.errors) {
+//             const errors = err.response.data.errors;
+//             msg = errors.email ? errors.email[0] : msg;
+//         }
+//         alertError.value.open(msg);
+//     } finally {
+//         form.processing = false; // hentikan spinner
+//     }
+// }
+const submitLogin = () => {
+    form.post(route('login'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            saveEmailToHistory()
+        },
+        onError: (errors) => {
+            alertError.value.open(
+                errors.email ?? 'These credentials do not match our records.'
+            )
         }
-    } catch (err) {
-        let msg = 'These credentials do not match our records.';
-        if (err.response?.status === 422 && err.response.data.errors) {
-            const errors = err.response.data.errors;
-            msg = errors.email ? errors.email[0] : msg;
-        }
-        alertError.value.open(msg);
-    } finally {
-        form.processing = false; // hentikan spinner
-    }
+    })
 }
 
 onMounted(() => {

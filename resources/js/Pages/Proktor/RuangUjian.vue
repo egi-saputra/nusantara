@@ -5,7 +5,7 @@ import {
     CheckCircleIcon, ClipboardDocumentIcon, BuildingLibraryIcon, MagnifyingGlassIcon,
     TrashIcon, ArrowPathIcon
 } from "@heroicons/vue/24/outline";
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 import axios from 'axios';
 import { ToastAlert } from '@/Composables/ToastAlert.js';
 
@@ -92,14 +92,7 @@ const copyToken = (token) => {
 }
 
 const refreshToken = async (id) => {
-    try {
-        const res = await axios.get(`/proktor/ruang-ujian/peserta/${id}/refresh-token`);
-        const idx = pesertaList.value.findIndex(p => p.id === id);
-        if (idx !== -1) pesertaList.value[idx].token = res.data.token;
-        success("Berhasil merefresh token terbaru!");
-    } catch {
-        error("Gagal refresh token");
-    }
+    await axios.get(`/proktor/ruang-ujian/peserta/${id}/refresh-token`);
 }
 
 // DELETE
@@ -107,14 +100,8 @@ const deletePeserta = async (id) => {
     const result = await confirm({ text: 'Hapus peserta ini?' });
     if (!result.isConfirmed) return;
 
-    try {
-        await axios.delete(`/proktor/ruang-ujian/peserta/${id}`);
-        pesertaList.value = pesertaList.value.filter(p => p.id !== id);
-        success("Peserta dihapus!");
-    } catch (err) {
-        console.error(err.response || err);
-        error("Gagal hapus peserta");
-    }
+    await axios.delete(`/proktor/ruang-ujian/peserta/${id}`);
+    success("Peserta dihapus!");
 }
 
 const deleteAllPeserta = async () => {
@@ -123,42 +110,23 @@ const deleteAllPeserta = async () => {
 
     try {
         await axios.delete(`/proktor/ruang-ujian/peserta/destroy-all`);
-        pesertaList.value = [];
         success("Semua peserta dihapus!");
     } catch {
         error("Gagal hapus semua peserta");
     }
 }
 
-// FETCH DATA REAL-TIME
-// const fetchPeserta = async () => {
-//     try {
-//         const res = await axios.get('/proktor/ruang-ujian');
-//         pesertaList.value.splice(0, pesertaList.value.length, ...res.data.peserta);
-//     } catch (err) {
-//         console.error(err);
-//     }
-// }
-const fetchPeserta = async () => {
-    try {
-        const res = await axios.get('/proktor/ruang-ujian');
-
-        // fallback ke array kosong jika peserta undefined
-        const peserta = Array.isArray(res.data.peserta) ? res.data.peserta : [];
-
-        // replace pesertaList tanpa error
-        pesertaList.value.splice(0, pesertaList.value.length, ...peserta);
-    } catch (err) {
-        console.error('Gagal fetch peserta:', err);
-    }
-}
-
-const autoRefresh = () => {
-    setInterval(fetchPeserta, 5000); // refresh tiap 5 detik
-}
-
 onMounted(() => {
-    autoRefresh();
+    Echo.leave('ruang-ujian');
+
+    Echo.channel('ruang-ujian')
+        .listen('.PesertaUpdated', (e) => {
+            pesertaList.value.splice(0, pesertaList.value.length, ...e.peserta);
+        });
+});
+
+onBeforeUnmount(() => {
+    Echo.leave('ruang-ujian');
 });
 </script>
 

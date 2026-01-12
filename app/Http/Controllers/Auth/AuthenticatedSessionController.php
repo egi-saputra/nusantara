@@ -39,32 +39,25 @@ class AuthenticatedSessionController extends Controller
     // }
 
     public function store(LoginRequest $request)
-{
-    $remember = $request->filled('remember');
-    $request->authenticate($remember);
-    $request->session()->regenerate();
+    {
+        $remember = $request->boolean('remember');
 
-    $user = Auth::user();
+        $request->authenticate($remember);
+        $request->session()->regenerate();
 
-    $redirectUrl = match($user->role) {
-        'admin' => '/admin/dashboard',
-        'proktor' => '/proktor/dashboard',
-        'guru' => '/guru/dashboard',
-        'siswa' => '/siswa/dashboard',
-        'user' => '/user/dashboard',
-        default => '/user/dashboard',
-    };
+        $user = Auth::user();
 
-    if ($request->ajax() || $request->wantsJson()) {
-        return response()->json([
-            'success' => true,
-            'redirect' => $redirectUrl
-        ]);
+        $redirectUrl = match ($user->role) {
+            'admin' => '/admin/dashboard',
+            'proktor' => '/proktor/dashboard',
+            'guru' => '/guru/dashboard',
+            'siswa' => '/siswa/dashboard',
+            'user' => '/user/dashboard',
+            default => '/user/dashboard',
+        };
+
+        return redirect()->intended($redirectUrl);
     }
-
-    return redirect()->intended($redirectUrl);
-}
-
 
     /**
      * Destroy an authenticated session.

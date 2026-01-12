@@ -36,20 +36,20 @@ const kelasForEdit = computed(() => {
 });
 
 // Refresh data
-const refreshData = () => {
-    filterNama.value = '';
-    filterKelas.value = '';
-    Inertia.get(route('proktor.peserta.index'), {}, {
-        preserveScroll: true,
-        preserveState: true
-    });
-};
-
 // const refreshData = () => {
 //     filterNama.value = '';
 //     filterKelas.value = '';
-//     currentPage.value = 1;
+//     Inertia.get(route('proktor.peserta.index'), {}, {
+//         preserveScroll: true,
+//         preserveState: true
+//     });
 // };
+
+const refreshData = () => {
+    filterNama.value = '';
+    filterKelas.value = '';
+    currentPage.value = 1;
+};
 
 // --- Pagination Frontend ---
 const currentPage = ref(1);
