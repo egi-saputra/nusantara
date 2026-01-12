@@ -123,9 +123,11 @@ class UjianController extends Controller
         // Status Terkunci → tetap bisa masuk karena token valid
         $ujianSiswa->update(['status' => 'Sedang Dikerjakan']);
 
-        broadcast(new PesertaUpdated(
-            $ujianSiswa->load(['user.siswa.kelas', 'soal.mapel'])
-        ));
+        broadcast(
+            new PesertaUpdated(
+                $ujianSiswa->load(['user.siswa.kelas', 'soal.mapel'])
+            )
+        )->toOthers();
 
         // 3️⃣ TIMER (SINGLE SOURCE OF TRUTH)
         $timerKey = "ujian:{$soal_id}:user:{$userId}:end_time";

@@ -61,6 +61,10 @@ Route::middleware(['auth', 'verified', 'role:proktor'])->prefix('proktor')->name
         // Ruang Ujian
         Route::delete('/ruang-ujian/peserta/destroy-all', [RuangUjianController::class, 'destroyAll']);
 
+        // 🔥 AJAX initial sync
+        Route::get('/ruang-ujian/peserta', [RuangUjianController::class, 'peserta']
+        )->name('ruangUjian.peserta');
+
         Route::get('/ruang-ujian', [RuangUjianController::class, 'index'])
         ->name('ruangUjian.index');
 

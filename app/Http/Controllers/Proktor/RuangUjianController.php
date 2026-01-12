@@ -16,19 +16,30 @@ class RuangUjianController extends Controller
             'peserta' => UjianSiswa::with([
                 'user.siswa.kelas',
                 'soal.mapel',
-            ])->orderBy('id', 'DESC')->get()
+            ])->orderByDesc('id')->get()
         ]);
+    }
+
+    // 🔥 API untuk initial sync
+    public function peserta()
+    {
+        return UjianSiswa::with([
+            'user.siswa.kelas',
+            'soal.mapel',
+        ])->orderByDesc('id')->get();
     }
 
     public function refreshToken($id)
     {
-        $peserta = UjianSiswa::with([
-            'user.siswa.kelas',
-            'soal.mapel',
-        ])->findOrFail($id);
+        $peserta = UjianSiswa::findOrFail($id);
 
-        // $peserta->token = Str::random(6);
-        // $peserta->save();
+        // contoh
+        // $peserta->update(['token' => Str::random(6)]);
+
+        $peserta->refresh()->load([
+            'user.siswa.kelas',
+            'soal.mapel'
+        ]);
 
         broadcast(new PesertaUpdated($peserta));
 
@@ -47,4 +58,3 @@ class RuangUjianController extends Controller
         return response()->json(['message' => 'Peserta berhasil dihapus!']);
     }
 }
-

@@ -116,19 +116,26 @@ const deleteAllPeserta = async () => {
     }
 }
 
-onMounted(() => {
+onMounted(async () => {
+    try {
+        // 🔄 SYNC AWAL (WAJIB)
+        const { data } = await axios.get('/proktor/ruang-ujian/peserta')
+        pesertaList.value = data
+    } catch (e) {
+        console.error('Gagal sync peserta', e)
+    }
+
+    // 🔴 REALTIME
     Echo.channel('ruang-ujian')
         .listen('.PesertaUpdated', (e) => {
 
-            // 🔴 HANDLE DELETE
-            if (e.peserta.deleted) {
+            if (e.peserta?.deleted) {
                 pesertaList.value = pesertaList.value.filter(
                     p => p.id !== e.peserta.id
                 )
                 return
             }
 
-            // 🔵 HANDLE UPDATE / ADD
             const index = pesertaList.value.findIndex(
                 p => p.id === e.peserta.id
             )
