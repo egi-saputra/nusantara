@@ -117,11 +117,10 @@ const deleteAllPeserta = async () => {
 }
 
 onMounted(() => {
-    Echo.leave('ruang-ujian');
-
     Echo.channel('ruang-ujian')
         .listen('.PesertaUpdated', (e) => {
-            pesertaList.value.splice(0, pesertaList.value.length, ...e.peserta);
+            console.log('REALTIME OK', e.peserta.length)
+            pesertaList.value = e.peserta
         });
 });
 
