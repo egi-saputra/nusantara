@@ -12,22 +12,25 @@ class RuangUjianController extends Controller
 {
     public function index()
     {
-        $peserta = $this->getPeserta();
-
         return Inertia::render('Proktor/RuangUjian', [
-            'peserta' => $peserta
+            'peserta' => UjianSiswa::with([
+                'user.siswa.kelas',
+                'soal.mapel',
+            ])->orderBy('id', 'DESC')->get()
         ]);
     }
 
     public function refreshToken($id)
     {
-        $peserta = UjianSiswa::findOrFail($id);
+        $peserta = UjianSiswa::with([
+            'user.siswa.kelas',
+            'soal.mapel',
+        ])->findOrFail($id);
 
-        // kalau token memang digenerate ulang, lakukan di sini
         // $peserta->token = Str::random(6);
         // $peserta->save();
 
-        $this->broadcastPeserta();
+        broadcast(new PesertaUpdated($peserta));
 
         return response()->json(['success' => true]);
     }
@@ -36,32 +39,12 @@ class RuangUjianController extends Controller
     {
         UjianSiswa::findOrFail($id)->delete();
 
-        $this->broadcastPeserta();
+        broadcast(new PesertaUpdated([
+            'id' => $id,
+            'deleted' => true
+        ]));
 
-        return response()->json([
-            'message' => 'Peserta berhasil dihapus!'
-        ]);
-    }
-
-    /**
-     * =========================
-     * HELPER (PRIVATE METHOD)
-     * =========================
-     */
-    private function getPeserta()
-    {
-        return UjianSiswa::with([
-            'user.siswa.kelas',
-            'soal.mapel',
-        ])
-        ->orderBy('id', 'DESC')
-        ->get();
-    }
-
-    private function broadcastPeserta()
-    {
-        broadcast(new PesertaUpdated(
-            $this->getPeserta()
-        ));
+        return response()->json(['message' => 'Peserta berhasil dihapus!']);
     }
 }
+

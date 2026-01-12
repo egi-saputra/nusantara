@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Cache;
+use App\Events\PesertaUpdated;
 
 class UjianController extends Controller
 {
@@ -122,6 +123,10 @@ class UjianController extends Controller
         // Status Terkunci → tetap bisa masuk karena token valid
         $ujianSiswa->update(['status' => 'Sedang Dikerjakan']);
 
+        broadcast(new PesertaUpdated(
+            $ujianSiswa->load(['user.siswa.kelas', 'soal.mapel'])
+        ))->toOthers();
+
         // 3️⃣ TIMER (SINGLE SOURCE OF TRUTH)
         $timerKey = "ujian:{$soal_id}:user:{$userId}:end_time";
         if (!Cache::has($timerKey)) {
@@ -184,49 +189,6 @@ class UjianController extends Controller
         ]);
     }
 
-    // public function autosave(Request $request)
-    // {
-    //     $request->validate([
-    //         'soal_id' => 'required|integer',
-    //         'quest_id' => 'required|integer',
-    //         // 'jawaban' => 'nullable|in:A,B,C,D,E',
-    //         'jawaban' => 'nullable|string',
-    //     ]);
-
-    //     $userId = Auth::id();
-
-    //     // ⏱ cek waktu ujian
-    //     $timerKey = "ujian:{$request->soal_id}:user:{$userId}:end_time";
-    //     if (!Cache::has($timerKey)) {
-    //         return response()->json(['expired' => true], 419);
-    //     }
-
-    //     /* =====================
-    //     1️⃣ SIMPAN KE REDIS
-    //     ====================== */
-    //     $redisKey = "ujian:{$request->soal_id}:user:{$userId}:jawaban";
-    //     $data = Cache::get($redisKey, []);
-    //     $data[$request->quest_id] = $request->jawaban;
-
-    //     Cache::put($redisKey, $data, now()->addMinutes(180));
-
-    //     /* =====================
-    //     2️⃣ BACKUP KE DB (RINGAN)
-    //     ====================== */
-    //     RiwayatUjian::updateOrCreate(
-    //         [
-    //             'user_id' => $userId,
-    //             'soal_id' => $request->soal_id,
-    //             'quest_id' => $request->quest_id,
-    //         ],
-    //         [
-    //             'jawaban' => $request->jawaban,
-    //             'status'  => 'Sedang Dikerjakan',
-    //         ]
-    //     );
-
-    //     return response()->noContent();
-    // }
     public function autosave(Request $request)
     {
         $request->validate([
@@ -330,6 +292,10 @@ class UjianController extends Controller
             'status' => 'Selesai',
             'waktu_selesai' => now()
         ]);
+
+        broadcast(new PesertaUpdated(
+            $ujian->load(['user.siswa.kelas', 'soal.mapel'])
+        ));
 
         Cache::forget($key);
         Cache::forget("ujian:{$soal_id}:user:{$userId}:urutan");

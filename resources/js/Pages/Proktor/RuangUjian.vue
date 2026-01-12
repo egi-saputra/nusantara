@@ -119,10 +119,27 @@ const deleteAllPeserta = async () => {
 onMounted(() => {
     Echo.channel('ruang-ujian')
         .listen('.PesertaUpdated', (e) => {
-            console.log('REALTIME OK', e.peserta.length)
-            pesertaList.value = e.peserta
-        });
-});
+
+            // 🔴 HANDLE DELETE
+            if (e.peserta.deleted) {
+                pesertaList.value = pesertaList.value.filter(
+                    p => p.id !== e.peserta.id
+                )
+                return
+            }
+
+            // 🔵 HANDLE UPDATE / ADD
+            const index = pesertaList.value.findIndex(
+                p => p.id === e.peserta.id
+            )
+
+            if (index !== -1) {
+                pesertaList.value[index] = e.peserta
+            } else {
+                pesertaList.value.unshift(e.peserta)
+            }
+        })
+})
 
 onBeforeUnmount(() => {
     Echo.leave('ruang-ujian');
