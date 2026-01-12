@@ -125,7 +125,7 @@ class UjianController extends Controller
 
         broadcast(new PesertaUpdated(
             $ujianSiswa->load(['user.siswa.kelas', 'soal.mapel'])
-        ))->toOthers();
+        ));
 
         // 3️⃣ TIMER (SINGLE SOURCE OF TRUTH)
         $timerKey = "ujian:{$soal_id}:user:{$userId}:end_time";
