@@ -295,9 +295,11 @@ class UjianController extends Controller
             'waktu_selesai' => now()
         ]);
 
-        broadcast(new PesertaUpdated(
+        broadcast(
+        new PesertaUpdated(
             $ujian->load(['user.siswa.kelas', 'soal.mapel'])
-        ));
+        )
+    )->toOthers();
 
         Cache::forget($key);
         Cache::forget("ujian:{$soal_id}:user:{$userId}:urutan");
@@ -317,8 +319,15 @@ class UjianController extends Controller
         ])->first();
 
         if ($ujian) {
-            // $ujian->update(['token' => Str::upper(Str::random(6))]);
-            $ujian->update(['token' => str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT)]);
+            $ujian->update([
+                'token' => str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT)
+            ]);
+
+            broadcast(
+                new PesertaUpdated(
+                    $ujian->load(['user.siswa.kelas', 'soal.mapel'])
+                )
+            )->toOthers();
         }
 
         return response()->json(['success' => true]);

@@ -31,11 +31,7 @@ class PesertaUpdated implements ShouldBroadcast
     public function broadcastWith()
     {
         return [
-            'peserta' => $this->peserta->load([
-                'user.siswa.kelas',
-                'soal.mapel'
-            ])
+            'peserta' => $this->peserta
         ];
     }
-
 }

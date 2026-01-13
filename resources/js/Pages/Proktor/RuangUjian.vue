@@ -125,27 +125,19 @@ onMounted(async () => {
         console.error('Gagal sync peserta', e)
     }
 
-    // 🔴 REALTIME
     Echo.channel('ruang-ujian')
         .listen('.PesertaUpdated', (e) => {
-
-            if (e.peserta?.deleted) {
-                pesertaList.value = pesertaList.value.filter(
-                    p => p.id !== e.peserta.id
-                )
-                return
-            }
-
-            const index = pesertaList.value.findIndex(
-                p => p.id === e.peserta.id
-            )
+            const index = pesertaList.value.findIndex(p => p.id === e.peserta.id)
 
             if (index !== -1) {
+                // UPDATE data lama
                 pesertaList.value[index] = e.peserta
             } else {
+                // TAMBAH peserta baru
                 pesertaList.value.unshift(e.peserta)
             }
         })
+
 })
 
 onBeforeUnmount(() => {
