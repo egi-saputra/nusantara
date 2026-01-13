@@ -195,10 +195,10 @@ const openDelete = (id) => {
 
                     <!-- User Info -->
                     <div class="flex items-center gap-4 mt-2">
-                        <div
+                        <!-- <div
                             class="w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg">
                             {{ user.name.charAt(0).toUpperCase() }}
-                        </div>
+                        </div> -->
 
                         <div class="flex-1">
                             <h3 class="font-semibold text-gray-800 dark:text-gray-100">

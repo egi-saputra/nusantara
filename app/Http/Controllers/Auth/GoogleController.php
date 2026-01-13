@@ -58,5 +58,4 @@ class GoogleController extends Controller
 
         return redirect()->intended('user/dashboard');
     }
-
 }

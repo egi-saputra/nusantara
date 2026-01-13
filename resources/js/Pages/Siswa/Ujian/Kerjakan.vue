@@ -344,7 +344,7 @@ const showFullscreenGate = ref(true)
 
 
 <template>
-    <div class="min-h-screen w-full md:py-10 p-4 dark:bg-[#020617] md:px-6">
+    <div class="min-h-screen w-full py-4 md:py-10 p-4 dark:bg-[#020617] md:px-6">
 
         <!-- ================= FULLSCREEN GATE ================= -->
         <div v-if="showFullscreenGate"
