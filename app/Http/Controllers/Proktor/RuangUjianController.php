@@ -15,12 +15,28 @@ class RuangUjianController extends Controller
         ]);
     }
 
+    // ✅ TAMBAHKAN METHOD INI
+    private function getPeserta()
+    {
+        return UjianSiswa::with([
+            'user.siswa.kelas',
+            'soal.mapel',
+        ])->orderByDesc('id')->get();
+    }
+
+    public function peserta()
+    {
+        return response()->json([
+            'peserta' => $this->getPeserta()
+        ]);
+    }
+
     public function refreshToken($id)
     {
         $peserta = UjianSiswa::findOrFail($id);
 
-        // optional:
-        // $peserta->update(['token' => Str::random(6)]);
+        // contoh kalau mau update token
+        // $peserta->update(['token' => str_pad(random_int(0,999999),6,'0',STR_PAD_LEFT)]);
 
         return response()->json(['success' => true]);
     }
@@ -31,15 +47,4 @@ class RuangUjianController extends Controller
 
         return response()->json(['message' => 'Peserta berhasil dihapus!']);
     }
-
-    public function peserta()
-    {
-        return response()->json([
-            'peserta' => UjianSiswa::with([
-                'user.siswa.kelas',
-                'soal.mapel',
-            ])->orderByDesc('id')->get()
-        ]);
-    }
-
 }
