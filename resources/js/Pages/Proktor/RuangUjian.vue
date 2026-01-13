@@ -143,6 +143,17 @@ onMounted(async () => {
 onBeforeUnmount(() => {
     Echo.leave('ruang-ujian');
 });
+
+const reloadPeserta = async () => {
+    try {
+        const { data } = await axios.get('/proktor/ruang-ujian/peserta')
+        pesertaList.value = data.peserta
+        success('Data peserta diperbarui')
+    } catch (e) {
+        console.error(e)
+        error('Gagal reload peserta')
+    }
+}
 </script>
 
 <template>
@@ -193,6 +204,18 @@ onBeforeUnmount(() => {
                     class="flex-1 sm:flex-none sm:flex hidden items-center justify-center gap-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
                     <TrashIcon class="w-5 h-5" /> Delete All
                 </button>
+
+                <div class="flex flex-row w-full justify-end gap-3 mb-10 sm:mb-4">
+                    <button @click="reloadPeserta"
+                        class="flex-1 sm:flex-none flex items-center justify-center gap-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                        <ArrowPathIcon class="w-5 h-5" /> Reload Peserta
+                    </button>
+
+                    <button @click="deleteAllPeserta"
+                        class="flex-1 sm:flex-none sm:flex hidden items-center justify-center gap-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
+                        <TrashIcon class="w-5 h-5" /> Delete All
+                    </button>
+                </div>
             </div>
 
             <!-- DESKTOP TABLE -->
@@ -230,10 +253,6 @@ onBeforeUnmount(() => {
                                 </span>
                             </td>
                             <td class="p-3 flex gap-2 justify-center">
-                                <button @click="refreshToken(p.id)"
-                                    class="flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">
-                                    <ArrowPathIcon class="w-4 h-4" /> Refresh
-                                </button>
                                 <button @click="deletePeserta(p.id)"
                                     class="flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
                                     <TrashIcon class="w-4 h-4" />
@@ -275,10 +294,6 @@ onBeforeUnmount(() => {
                         </div>
                     </div>
                     <div class="flex gap-2 mt-3">
-                        <button @click="refreshToken(p.id)"
-                            class="flex-1 flex items-center justify-center gap-1 bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition">
-                            <ArrowPathIcon class="w-4 h-4" /> Refresh
-                        </button>
                         <button @click="deletePeserta(p.id)"
                             class="flex-1 flex items-center justify-center gap-1 bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition">
                             <TrashIcon class="w-4 h-4" /> Hapus
