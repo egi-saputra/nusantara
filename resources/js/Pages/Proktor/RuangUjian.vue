@@ -127,17 +127,13 @@ onMounted(async () => {
 
     Echo.channel('ruang-ujian')
         .listen('.PesertaUpdated', (e) => {
-            const index = pesertaList.value.findIndex(p => p.id === e.peserta.id)
+            const p = pesertaList.value.find(x => x.id === e.id)
+            if (!p) return
 
-            if (index !== -1) {
-                // UPDATE data lama
-                pesertaList.value[index] = e.peserta
-            } else {
-                // TAMBAH peserta baru
-                pesertaList.value.unshift(e.peserta)
-            }
+            // Update hanya status & token
+            if (e.status !== null) p.status = e.status
+            if (e.token !== null) p.token = e.token
         })
-
 })
 
 onBeforeUnmount(() => {
@@ -200,15 +196,10 @@ const reloadPeserta = async () => {
                     <ArrowPathIcon class="w-5 h-5" /> Refresh
                 </button>
 
-                <button @click="deleteAllPeserta"
-                    class="flex-1 sm:flex-none sm:flex hidden items-center justify-center gap-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
-                    <TrashIcon class="w-5 h-5" /> Delete All
-                </button>
-
                 <div class="flex flex-row w-full justify-end gap-3 mb-10 sm:mb-4">
                     <button @click="reloadPeserta"
                         class="flex-1 sm:flex-none flex items-center justify-center gap-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-                        <ArrowPathIcon class="w-5 h-5" /> Reload Peserta
+                        <ArrowPathIcon class="w-5 h-5" /> Reload
                     </button>
 
                     <button @click="deleteAllPeserta"

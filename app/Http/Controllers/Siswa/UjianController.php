@@ -123,11 +123,11 @@ class UjianController extends Controller
         // Status Terkunci → tetap bisa masuk karena token valid
         $ujianSiswa->update(['status' => 'Sedang Dikerjakan']);
 
-        broadcast(
-            new PesertaUpdated(
-                $ujianSiswa->load(['user.siswa.kelas', 'soal.mapel'])
-            )
-        )->toOthers();
+        broadcast(new PesertaUpdated(
+            $ujianSiswa->id,
+            $ujianSiswa->status,
+            $ujianSiswa->token
+        ))->toOthers();
 
         // 3️⃣ TIMER (SINGLE SOURCE OF TRUTH)
         $timerKey = "ujian:{$soal_id}:user:{$userId}:end_time";
@@ -295,11 +295,11 @@ class UjianController extends Controller
             'waktu_selesai' => now()
         ]);
 
-        broadcast(
-        new PesertaUpdated(
-            $ujian->load(['user.siswa.kelas', 'soal.mapel'])
-        )
-    )->toOthers();
+        broadcast(new PesertaUpdated(
+            $ujian->id,
+            $ujian->status,
+            $ujian->token
+        ))->toOthers();
 
         Cache::forget($key);
         Cache::forget("ujian:{$soal_id}:user:{$userId}:urutan");
@@ -323,11 +323,11 @@ class UjianController extends Controller
                 'token' => str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT)
             ]);
 
-            broadcast(
-                new PesertaUpdated(
-                    $ujian->load(['user.siswa.kelas', 'soal.mapel'])
-                )
-            )->toOthers();
+            broadcast(new PesertaUpdated(
+                $ujian->id,
+                null, // status tidak berubah
+                $ujian->token
+            ))->toOthers();
         }
 
         return response()->json(['success' => true]);
