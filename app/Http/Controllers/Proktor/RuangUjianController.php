@@ -32,11 +32,14 @@ class RuangUjianController extends Controller
         return response()->json(['message' => 'Peserta berhasil dihapus!']);
     }
 
-    private function getPeserta()
+    public function peserta()
     {
-        return UjianSiswa::with([
-            'user.siswa.kelas',
-            'soal.mapel',
-        ])->orderByDesc('id')->get();
+        return response()->json([
+            'peserta' => UjianSiswa::with([
+                'user.siswa.kelas',
+                'soal.mapel',
+            ])->orderByDesc('id')->get()
+        ]);
     }
+
 }
