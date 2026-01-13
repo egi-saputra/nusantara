@@ -196,17 +196,15 @@ const reloadPeserta = async () => {
                     <ArrowPathIcon class="w-5 h-5" /> Refresh
                 </button>
 
-                <div class="flex flex-row w-full justify-end gap-3 mb-10 sm:mb-4">
-                    <button @click="reloadPeserta"
-                        class="flex-1 sm:flex-none flex items-center justify-center gap-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-                        <ArrowPathIcon class="w-5 h-5" /> Reload
-                    </button>
+                <button @click="reloadPeserta"
+                    class="flex-1 sm:flex-none flex items-center justify-center gap-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                    <ArrowPathIcon class="w-5 h-5" /> Reload
+                </button>
 
-                    <button @click="deleteAllPeserta"
-                        class="flex-1 sm:flex-none sm:flex hidden items-center justify-center gap-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
-                        <TrashIcon class="w-5 h-5" /> Delete All
-                    </button>
-                </div>
+                <button @click="deleteAllPeserta"
+                    class="flex-1 sm:flex-none sm:flex hidden items-center justify-center gap-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
+                    <TrashIcon class="w-5 h-5" /> Delete All
+                </button>
             </div>
 
             <!-- DESKTOP TABLE -->
