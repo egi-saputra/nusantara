@@ -120,7 +120,7 @@ onMounted(async () => {
     try {
         // 🔄 SYNC AWAL (WAJIB)
         const { data } = await axios.get('/proktor/ruang-ujian/peserta')
-        pesertaList.value = data
+        pesertaList.value = data.peserta
     } catch (e) {
         console.error('Gagal sync peserta', e)
     }

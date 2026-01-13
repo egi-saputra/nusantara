@@ -17,7 +17,7 @@ const menuItems = [
     { name: 'Dashboard', routeName: 'proktor.dashboard', icon: HomeIcon },
     { name: 'Daftar Peserta', routeName: 'proktor.peserta.index', icon: UsersIcon },
     { name: 'Ruang Quiz / Soal', routeName: 'proktor.soal.index', icon: ClipboardDocumentIcon },
-    { name: 'Kelola Ruang Ujian', routeName: 'proktor.ruangUjian.peserta', icon: AcademicCapIcon },
+    { name: 'Kelola Ruang Ujian', routeName: 'proktor.ruangUjian.index', icon: AcademicCapIcon },
     { name: 'Rekap Nilai Ujian', routeName: 'proktor.nilai.index', icon: CheckBadgeIcon },
     { name: 'Ruang Informasi', routeName: 'pengumuman.create', icon: MegaphoneIcon },
     // {
