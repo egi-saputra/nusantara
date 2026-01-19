@@ -34,7 +34,6 @@ const showToast = (message, type = 'info') => {
 };
 
 const menuItems = [
-    // { title: 'Peserta', icon: ClipboardDocumentListIcon, route: route('siswa.peserta.index') },
     { title: 'Learning', icon: NewspaperIcon, route: route('guru.dashboard') },
     { title: 'Assigment', icon: DocumentTextIcon, route: route('guru.dashboard') },
     { title: 'Quiz List', icon: ClipboardDocumentListIcon, route: route('guru.soal.index') },

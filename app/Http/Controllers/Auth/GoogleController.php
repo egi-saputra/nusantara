@@ -14,31 +14,6 @@ class GoogleController extends Controller
         return Socialite::driver('google')->redirect();
     }
 
-    // public function callback()
-    // {
-    //     $googleUser = Socialite::driver('google')->user();
-
-    //     // Cek apakah email sudah ada
-    //     $user = User::where('email', $googleUser->getEmail())->first();
-
-    //     // Jika belum ada → buat user baru
-    //     if (!$user) {
-    //         $user = User::create([
-    //             'name'       => $googleUser->getName(),
-    //             'email'      => $googleUser->getEmail(),
-    //             'password'   => null, // password null
-    //             'google_id'  => $googleUser->getId(),
-    //         ]);
-    //     }
-
-    //     // Login user
-    //     Auth::login($user);
-
-    //     // Redirect dengan pesan sukses
-    //     return redirect()
-    //         ->intended('user/dashboard');
-    // }
-
     public function callback()
     {
         $googleUser = Socialite::driver('google')->stateless()->user();
@@ -54,8 +29,17 @@ class GoogleController extends Controller
             ]);
         }
 
-        Auth::login($user, true);
+        $user = Auth::user();
 
-        return redirect()->intended('user/dashboard');
+        $redirectUrl = match ($user->role) {
+            'admin' => '/admin/dashboard',
+            'proktor' => '/proktor/dashboard',
+            'guru' => '/guru/dashboard',
+            'siswa' => '/siswa/dashboard',
+            'user' => '/user/dashboard',
+            default => '/user/dashboard',
+        };
+
+        return redirect()->intended($redirectUrl);
     }
 }
