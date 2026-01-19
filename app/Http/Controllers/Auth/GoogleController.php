@@ -18,8 +18,10 @@ class GoogleController extends Controller
     {
         $googleUser = Socialite::driver('google')->stateless()->user();
 
+        // Ambil user dari DB
         $user = User::where('email', $googleUser->getEmail())->first();
 
+        // Jika belum ada, buat user baru
         if (!$user) {
             $user = User::create([
                 'name'       => $googleUser->getName(),
@@ -29,8 +31,10 @@ class GoogleController extends Controller
             ]);
         }
 
-        $user = Auth::user();
+        // Login user
+        Auth::login($user, true);
 
+        // Redirect sesuai role
         $redirectUrl = match ($user->role) {
             'admin' => '/admin/dashboard',
             'proktor' => '/proktor/dashboard',
