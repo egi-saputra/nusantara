@@ -25,7 +25,8 @@ class AppServiceProvider extends ServiceProvider
             'auth' => function () {
                 return [
                     'user' => auth()->user(),
-                    'role' => auth()->user()?->role, // misal 'proktor', 'guru', 'siswa'
+                    'avatar' => auth()->user()?->avatar,
+                    'role' => auth()->user()?->role,
                 ];
             },
         ]);

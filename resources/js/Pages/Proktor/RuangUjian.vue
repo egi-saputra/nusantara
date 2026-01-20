@@ -8,6 +8,8 @@ import {
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 import axios from 'axios';
 import { ToastAlert } from '@/Composables/ToastAlert.js';
+import Echo from 'laravel-echo';
+window.Pusher = require('pusher-js');
 
 const { success, error, confirm } = ToastAlert();
 
@@ -116,25 +118,58 @@ const deleteAllPeserta = async () => {
     }
 }
 
+// onMounted(async () => {
+//     try {
+//         // 🔄 SYNC AWAL (WAJIB)
+//         const { data } = await axios.get('/proktor/ruang-ujian/peserta')
+//         pesertaList.value = data.peserta
+//     } catch (e) {
+//         console.error('Gagal sync peserta', e)
+//     }
+
+//     Echo.channel('ruang-ujian')
+//         .listen('.PesertaUpdated', (e) => {
+//             const p = pesertaList.value.find(x => x.id === e.id)
+//             if (!p) return
+
+//             // Update hanya status & token
+//             if (e.status !== null) p.status = e.status
+//             if (e.token !== null) p.token = e.token
+//         })
+// })
 onMounted(async () => {
     try {
-        // 🔄 SYNC AWAL (WAJIB)
-        const { data } = await axios.get('/proktor/ruang-ujian/peserta')
-        pesertaList.value = data.peserta
+        // 🔄 SYNC AWAL
+        const { data } = await axios.get('/proktor/ruang-ujian/peserta');
+        pesertaList.value = data.peserta;
     } catch (e) {
-        console.error('Gagal sync peserta', e)
+        console.error('Gagal sync peserta', e);
     }
 
+    // ✅ LISTEN EVENT REACTIVELY
     Echo.channel('ruang-ujian')
         .listen('.PesertaUpdated', (e) => {
-            const p = pesertaList.value.find(x => x.id === e.id)
-            if (!p) return
+            // e.peserta = data peserta dari backend
+            const updated = e.peserta;
+            const index = pesertaList.value.findIndex(p => p.id === updated.id);
 
-            // Update hanya status & token
-            if (e.status !== null) p.status = e.status
-            if (e.token !== null) p.token = e.token
-        })
-})
+
+            if (index !== -1) {
+                // Update peserta yang sudah ada
+                if (updated.status !== null) p.status = updated.status;
+                if (updated.token !== null) p.token = updated.token;
+
+                // Merge data lain jika perlu
+                pesertaList.value[index] = {
+                    ...pesertaList.value[index],
+                    ...updated
+                };
+            } else {
+                // Kalau peserta baru, push ke list
+                pesertaList.value.push(updated);
+            }
+        });
+});
 
 onBeforeUnmount(() => {
     Echo.leave('ruang-ujian');

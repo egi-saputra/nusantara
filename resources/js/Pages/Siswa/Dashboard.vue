@@ -17,7 +17,8 @@ import {
 
 /* ================= PAGE & USER ================= */
 const page = usePage()
-const userName = page.props.auth.user.name || 'User'
+// const user = page.props.auth.user.name || 'User'
+const user = computed(() => page.props.auth.user || {})
 
 /* ================= TOAST ================= */
 const toast = ref({
@@ -114,17 +115,22 @@ const exportExcel = () => {
                        -mx-6 px-6 md:mx-0 md:px-0">
 
                 <!-- ===== SLIDE 1 : WELCOME ===== -->
-                <div class="min-w-full snap-center
-                            relative overflow-hidden rounded-xl sm:rounded-3xl p-6 sm:p-8
-                            bg-gradient-to-br items-center from-indigo-600 via-blue-600 to-purple-600 dark:bg-gradient-to-br dark:sm:from-[#1e1b4b] dark:sm:via-[#312e81] dark:sm:to-[#4c1d95] dark:from-[#063970] dark:via-[#0a4e8c] dark:to-[#1e1b4b] flex gap-4 sm:flex-row flex-col
-                            text-white dark:shadow-xl">
+                <div
+                    class="min-w-full snap-center relative overflow-hidden rounded-xl sm:rounded-3xl p-6 sm:p-8 bg-gradient-to-br items-center from-indigo-600 via-blue-600 to-purple-600 dark:bg-gradient-to-br dark:sm:from-[#1e1b4b] dark:sm:via-[#312e81] dark:sm:to-[#4c1d95] dark:from-[#063970] dark:via-[#0a4e8c] dark:to-[#1e1b4b] flex gap-4 sm:flex-row flex-col text-white dark:shadow-xl">
 
-                    <UserIcon class="w-12 h-12 text-center sm:mt-0 mt-3 text-white" />
+                    <!-- Avatar / Fallback -->
+                    <img v-if="user.avatar" :src="user.avatar" alt="Avatar"
+                        class="sm:w-16 sm:h-16 w-14 h-14 rounded-full object-cover border-2 border-white/60 shadow-lg" />
+
+                    <UserIcon v-else class="w-12 h-12 text-white" />
+
                     <div class="relative z-10">
                         <h1 class="text-xl text-center sm:text-left sm:text-3xl font-bold">
-                            Welcome, {{ userName }}! 👋
+                            <span class="sm:inline-block hidden">Welcome,</span> {{ user.name }}! 👋
                         </h1>
-                        <p class="text-white/90 sm:text-base text-xs">May your day remain productive and enjoyable!</p>
+                        <p class="text-white/90 sm:text-base text-xs">
+                            May your day remain productive and enjoyable!
+                        </p>
                     </div>
 
                     <div class="absolute sm:hidden -top-20 -right-20 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
@@ -141,7 +147,7 @@ const exportExcel = () => {
                 border border-gray-200 dark:border-gray-500 dark:shadow-xl dark:bg-[#0F172A] p-6">
 
                     <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2 mb-4">
-                        <UserIcon class="w-6 h-6 sm:hidden text-white" />
+                        <!-- <UserIcon class="w-6 h-6 sm:hidden dark:text-white" /> -->
                         <span class="dark:text-gray-200">{{ siswa.nama_lengkap }}</span>
                     </h3>
 
@@ -165,7 +171,7 @@ const exportExcel = () => {
                         </div>
 
                         <div class="sm:border-l-2 sm:pl-4 dark:border-gray-400">
-                            <span class="dark:text-gray-400">NIS: {{ siswa.nis }}</span>
+                            <span class="dark:text-gray-400">NIS: {{ siswa.nis?.nis || '-' }}</span>
                         </div>
                         <div class="sm:border-x-2 sm:pl-4 dark:border-gray-400">
                             <span class="dark:text-gray-400">NISN: {{ siswa.nisn }}</span>

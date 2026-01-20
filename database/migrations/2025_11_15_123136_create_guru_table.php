@@ -17,9 +17,13 @@ return new class extends Migration
                   ->constrained('users')
                   ->onDelete('cascade');
             $table->string('nama_lengkap');
-            $table->enum('akses', ['yes', 'no'])->default('no');
-            $table->enum('kaprog', ['yes', 'no'])->default('no');
-            $table->enum('piket', ['yes', 'no'])->default('no');
+            $table->string('ttl')->nullable();
+            $table->string('alamat')->nullable();
+            $table->enum('jabatan', ['Tenaga Pendidik', 'Staff', 'Guru'])->default('Guru');
+            $table->string('nuptk')->unique()->nullable();
+            $table->enum('pesan', ['yes', 'no'])->default('no');
+            $table->enum('artikel', ['yes', 'no'])->default('no');
+            $table->enum('topik', ['yes', 'no'])->default('no');
             $table->timestamps();
         });
     }

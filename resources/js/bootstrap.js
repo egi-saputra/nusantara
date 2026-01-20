@@ -16,12 +16,27 @@ window.Pusher = Pusher;
  */
 import Echo from "laravel-echo";
 
+// Tentukan scheme otomatis
+const isSecure =
+    (import.meta.env.VITE_REVERB_SCHEME ??
+        window.location.protocol.replace(":", "")) === "https";
+
+// window.Echo = new Echo({
+//     broadcaster: "reverb",
+//     key: import.meta.env.VITE_REVERB_APP_KEY,
+//     wsHost: import.meta.env.VITE_REVERB_HOST ?? window.location.hostname,
+//     wsPort: import.meta.env.VITE_REVERB_PORT ?? 8080,
+//     wssPort: import.meta.env.VITE_REVERB_PORT ?? 443,
+//     forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? "https") === "https",
+//     enabledTransports: ["ws", "wss"],
+// });
+
 window.Echo = new Echo({
     broadcaster: "reverb",
     key: import.meta.env.VITE_REVERB_APP_KEY,
     wsHost: import.meta.env.VITE_REVERB_HOST ?? window.location.hostname,
-    wsPort: import.meta.env.VITE_REVERB_PORT ?? 8080,
-    wssPort: import.meta.env.VITE_REVERB_PORT ?? 443,
-    forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? "https") === "https",
-    enabledTransports: ["ws", "wss"],
+    wsPort: import.meta.env.VITE_REVERB_PORT ?? 8080, // Port WS
+    wssPort: import.meta.env.VITE_REVERB_PORT ?? 443, // Port WSS
+    forceTLS: isSecure, // true jika server pakai https
+    enabledTransports: isSecure ? ["wss", "ws"] : ["ws"], // pakai wss kalau production
 });

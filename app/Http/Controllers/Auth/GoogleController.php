@@ -14,34 +14,70 @@ class GoogleController extends Controller
         return Socialite::driver('google')->redirect();
     }
 
+    // public function callback()
+    // {
+    //     $googleUser = Socialite::driver('google')->stateless()->user();
+
+    //     // Ambil user dari DB
+    //     $user = User::where('email', $googleUser->getEmail())->first();
+
+    //     // Jika belum ada, buat user baru
+    //     if (!$user) {
+    //         $user = User::create([
+    //             'name'       => $googleUser->getName(),
+    //             'email'      => $googleUser->getEmail(),
+    //             'password'   => null,
+    //             'google_id'  => $googleUser->getId(),
+    //         ]);
+    //     }
+
+    //     // Login user
+    //     Auth::login($user, true);
+
+    //     // Redirect sesuai role
+    //     $redirectUrl = match ($user->role) {
+    //         'admin' => '/admin/dashboard',
+    //         'proktor' => '/proktor/dashboard',
+    //         'guru' => '/guru/dashboard',
+    //         'siswa' => '/siswa/dashboard',
+    //         'user' => '/user/dashboard',
+    //         default => '/user/dashboard',
+    //     };
+
+    //     return redirect()->intended($redirectUrl);
+    // }
+
     public function callback()
     {
         $googleUser = Socialite::driver('google')->stateless()->user();
 
-        // Ambil user dari DB
         $user = User::where('email', $googleUser->getEmail())->first();
 
-        // Jika belum ada, buat user baru
         if (!$user) {
+            // 🔥 USER BARU → default role siswa
             $user = User::create([
-                'name'       => $googleUser->getName(),
-                'email'      => $googleUser->getEmail(),
-                'password'   => null,
-                'google_id'  => $googleUser->getId(),
+                'name'      => $googleUser->getName(),
+                'email'     => $googleUser->getEmail(),
+                'password'  => null,
+                'google_id' => $googleUser->getId(),
+                'avatar'    => $googleUser->getAvatar(),
+                'role'      => 'siswa', // ✅ DEFAULT ROLE
+            ]);
+        } else {
+            // 🔁 USER LAMA → JANGAN UBAH ROLE
+            $user->update([
+                'avatar' => $googleUser->getAvatar(),
             ]);
         }
 
-        // Login user
         Auth::login($user, true);
 
-        // Redirect sesuai role
         $redirectUrl = match ($user->role) {
-            'admin' => '/admin/dashboard',
+            'admin'   => '/admin/dashboard',
             'proktor' => '/proktor/dashboard',
-            'guru' => '/guru/dashboard',
-            'siswa' => '/siswa/dashboard',
-            'user' => '/user/dashboard',
-            default => '/user/dashboard',
+            'guru'    => '/guru/dashboard',
+            'siswa'   => '/siswa/dashboard',
+            default   => '/siswa/dashboard',
         };
 
         return redirect()->intended($redirectUrl);

@@ -51,9 +51,9 @@ class AuthenticatedSessionController extends Controller
             'admin' => '/admin/dashboard',
             'proktor' => '/proktor/dashboard',
             'guru' => '/guru/dashboard',
-            'siswa' => '/siswa/dashboard',
             'user' => '/user/dashboard',
-            default => '/user/dashboard',
+            'siswa' => '/siswa/dashboard',
+            default => '/siswa/dashboard',
         };
 
         return redirect()->intended($redirectUrl);
