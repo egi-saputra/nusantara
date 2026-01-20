@@ -1,0 +1,55 @@
+---
+import "../styles/global.css";
+const {
+  title = "SMK Nusantara | SMK Pusat Keunggulan di Bojong Gede",
+  description = "SMK Nusantara adalah SMK Pusat Keunggulan di Bojong Gede dengan program akademik dan karakter unggulan sejak 2009."
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <!-- Basic -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- SEO -->
+  <title>{title}</title>
+  <meta name="description" content={description} />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="id_ID" />
+
+  <!-- Schema School -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "School",
+    "name": "SMK Nusantara",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Jl. Pendidikan No.1",
+      "addressLocality": "Bojong Gede",
+      "addressCountry": "ID"
+    },
+    "telephone": "+62812XXXXXXXX",
+    "foundingDate": "2009"
+  }
+  </script>
+
+  <!-- Astro -->
+  <meta name="generator" content={Astro.generator} />
+</head>
+
+<body>
+  <slot />
+
+  <script type="module" src="/scripts/main.js"></script>
+</body>
+</html>

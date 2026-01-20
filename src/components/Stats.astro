@@ -1,0 +1,95 @@
+---
+import { Users, UserCheck, Award, Calendar } from "lucide-astro";
+---
+
+<section id="about" class="py-24 bg-black/95 text-white">
+  <div class="max-w-7xl mx-auto px-6">
+    <h3 class="text-3xl sm:text-5xl font-bold mb-12 text-center text-white">
+      Informasi Statistik Sekolah
+    </h3>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <!-- Siswa -->
+      <div class="group relative rounded-2xl p-6 flex flex-col
+        bg-gradient-to-br from-yellow-400/10 via-orange-400/5 to-yellow-600/10
+        backdrop-blur-xl border border-white/10
+        transition-all duration-300
+        hover:border-yellow-400/40
+        hover:from-yellow-400/20 hover:via-orange-400/15 hover:to-yellow-600/20">
+
+        <!-- Inner glow -->
+        <div class="pointer-events-none absolute inset-0 rounded-2xl
+          opacity-0 group-hover:opacity-100 transition duration-300
+          shadow-[inset_0_0_30px_rgba(250,204,21,0.25)]">
+        </div>
+
+        <div class="flex flex-row gap-4">
+        <Users class="w-10 h-10 mb-3 text-yellow-400" />
+        <h4 class="text-3xl font-bold mt-2">1200+</h4></div>
+        <p class="text-white/80">Siswa</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4">
+      <!-- Guru -->
+      <div class="group relative rounded-2xl p-6 flex flex-col
+        bg-gradient-to-br from-green-400/10 via-emerald-400/5 to-teal-500/10
+        backdrop-blur-xl border border-white/10
+        transition-all duration-300
+        hover:border-green-400/40
+        hover:from-green-400/20 hover:via-emerald-400/15 hover:to-teal-500/20">
+
+        <div class="pointer-events-none absolute inset-0 rounded-2xl
+          opacity-0 group-hover:opacity-100 transition duration-300
+          shadow-[inset_0_0_30px_rgba(34,197,94,0.25)]">
+        </div>
+
+        <div class="flex flex-row gap-3">
+        <UserCheck class="w-10 h-10 mb-3 text-green-400" />
+        <h4 class="text-3xl font-bold mt-2">80+</h4></div>
+        <p class="text-white/80 text-sm">Tenaga pendidik dan guru yang berpengalaman dan bersertifikasi.</p>
+      </div>
+
+      <!-- Prestasi -->
+      <div class="group relative rounded-2xl p-6 flex flex-col
+        bg-gradient-to-br from-pink-400/10 via-rose-400/5 to-red-500/10
+        backdrop-blur-xl border border-white/10
+        transition-all duration-300
+        hover:border-pink-400/40
+        hover:from-pink-400/20 hover:via-rose-400/15 hover:to-red-500/20">
+
+        <div class="pointer-events-none absolute inset-0 rounded-2xl
+          opacity-0 group-hover:opacity-100 transition duration-300
+          shadow-[inset_0_0_30px_rgba(244,114,182,0.25)]">
+        </div>
+
+        <div class="flex flex-row gap-2">
+        <Award class="w-10 h-10 mb-3 text-pink-400" />
+        <h4 class="text-3xl font-bold mt-1">50+</h4></div>
+        <p class="text-white/80 text-sm">Prestasi tingkat daerah hingga nasional yang telah berhasil dicapai.</p>
+      </div>
+
+      <!-- Tahun Berdiri -->
+      <div class="group relative rounded-2xl p-6 flex flex-col md:col-span-2
+        bg-gradient-to-br from-indigo-400/10 via-blue-400/5 to-indigo-600/10
+        backdrop-blur-xl border border-white/10
+        transition-all duration-300
+        hover:border-indigo-400/40
+        hover:from-indigo-400/20 hover:via-blue-400/15 hover:to-indigo-600/20">
+
+        <div class="pointer-events-none absolute inset-0 rounded-2xl
+          opacity-0 group-hover:opacity-100 transition duration-300
+          shadow-[inset_0_0_30px_rgba(99,102,241,0.25)]">
+        </div>
+
+        <div class="flex flex-row gap-3">
+          <Calendar class="w-10 h-10 mb-3 text-indigo-400" />
+          <h4 class="text-3xl font-bold mt-1">18 Tahun</h4>
+        </div>
+        <p class="text-white/80 text-sm">Berdiri sejak tahun 2009 dan menjadi sekolah pertama yang bersertifikasi dalam program Sekolah Menengah Kejuruan Pusat Keunggulan (SMK PK), yang diselenggarakan oleh Kementrian Pendidikan (KEMDIKDASMEN) pada tahun 2025 pada Korwil Satuan Pendidikan Tingkat Daerah Bojong Gede.</p>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="contact"></div>
+</section>

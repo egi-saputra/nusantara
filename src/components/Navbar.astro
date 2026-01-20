@@ -1,0 +1,107 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/logo.png";
+---
+<nav
+  id="navbar"
+  class="fixed w-full z-50
+    bg-black/20 backdrop-blur-xl
+    transition-all duration-300"
+>
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center relative">
+    
+    <!-- LOGO + NAMA -->
+    <div class="sm:flex hidden items-center gap-3">
+      <Image
+        src={logo}
+        alt="Logo"
+        width={46}
+        height={46}
+        loading="eager"
+        priority
+        format="webp"
+      />
+
+      <!-- TITLE -->
+      <h1
+        id="navTitle"
+        class="text-2xl font-extrabold tracking-wide
+          text-white
+          transition-all duration-300"
+      >
+        SMK NUSANTARA
+      </h1>
+    </div>
+
+    <!-- MENU DESKTOP -->
+    <ul class="hidden md:flex gap-6 font-medium text-white">
+      <li><a href="#about" class="hover:text-blue-400 transition">About</a></li>
+      <li><a href="#program" class="hover:text-blue-400 transition">Program</a></li>
+      <li><a href="#contact" class="hover:text-blue-400 transition">Contact</a></li>
+      <li><a href="/" class="hover:text-blue-400 transition">PPDB</a></li>
+      <li><a href="https://lms.smknusantara.id" class="hover:text-blue-400 transition">LMS</a></li>
+    </ul>
+
+    <!-- HAMBURGER -->
+    <button
+      id="menuBtn"
+      class="md:hidden flex flex-col gap-1.5 focus:outline-none"
+    >
+      <span class="w-6 h-0.5 bg-white"></span>
+      <span class="w-6 h-0.5 bg-white"></span>
+      <span class="w-6 h-0.5 bg-white"></span>
+    </button>
+  </div>
+
+  <!-- MOBILE MENU -->
+  <div
+    id="mobileMenu"
+    class="md:hidden absolute top-full left-1/2 -translate-x-1/2 mt-2
+      max-h-0 overflow-hidden
+      bg-white/70 backdrop-blur
+      rounded-md shadow
+      transition-all duration-300 w-44"
+  >
+    <ul class="flex flex-col px-4 py-2 gap-2 font-medium text-gray-700">
+      <li><a href="#program" class="hover:text-blue-600">Info PPDB</a></li>
+      <li><a href="#hero" class="hover:text-blue-600">About</a></li>
+      <li><a href="#kontak" class="hover:text-blue-600">Contact</a></li>
+      <li><a href="#">LMS App</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- STYLE UNTUK MODE GRADIENT -->
+<style>
+  .title-gradient {
+    background: linear-gradient(to right, #60a5fa, #3b82f6, #6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 6px rgba(59, 130, 246, 0.35);
+  }
+</style>
+
+<script>
+  const navbar = document.getElementById("navbar")!;
+  const title = document.getElementById("navTitle")!;
+
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 20) {
+      // Navbar solid
+      navbar.classList.add("bg-black", "shadow-lg", "backdrop-blur-none");
+      navbar.classList.remove("bg-black/20", "backdrop-blur-xl");
+
+      // Title jadi gradient
+      title.classList.remove("text-white");
+      title.classList.add("title-gradient");
+    } else {
+      // Navbar blur
+      navbar.classList.remove("bg-black", "shadow-lg", "backdrop-blur-none");
+      navbar.classList.add("bg-black/20", "backdrop-blur-xl");
+
+      // Title jadi putih solid
+      title.classList.remove("title-gradient");
+      title.classList.add("text-white");
+    }
+  });
+</script>

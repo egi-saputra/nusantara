@@ -1,0 +1,20 @@
+---
+import "../styles/global.css"
+import MainLayout from "../layouts/MainLayout.astro";
+import Navbar from "../components/Navbar.astro";
+import Hero from "../components/Hero.astro";
+import Program from "../components/Program.astro";
+import Stats from "../components/Stats.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<MainLayout
+  title = "SMK Nusantara | SMK Pusat Keunggulan di Bojong Gede",
+  description = "SMK Nusantara adalah Sekolah Menengah Kejuruan swasta yang tersertifikasi dalam program Pusat Keunggulan (PK) dari Dinas Pendidikan (KEMDIKDASMEN) Pertama di wilayah Bojong Gede dengan program akademik dan karakter unggulan sejak 2009."
+>
+  <Navbar />
+  <Hero />
+  <Program />
+  <Stats />
+  <Footer />
+</MainLayout>
