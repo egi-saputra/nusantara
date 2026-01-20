@@ -19,7 +19,7 @@ import SiswaSidebar from '@/Components/Siswa/Sidebar.vue'
 /* ================= PROPS ================= */
 const props = defineProps({
     disableSwal: { type: Boolean, default: false },
-    logoUrl: { type: String, default: '/public/images/logo.png' }
+    logoUrl: { type: String, default: '/images/logo.png' }
 })
 
 const page = usePage()
