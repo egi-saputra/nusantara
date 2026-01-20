@@ -19,7 +19,7 @@ import SiswaSidebar from '@/Components/Siswa/Sidebar.vue'
 /* ================= PROPS ================= */
 const props = defineProps({
     disableSwal: { type: Boolean, default: false },
-    logoUrl: { type: String, default: '/storage/logo_app/logo.png' }
+    logoUrl: { type: String, default: '/public/images/logo.png' }
 })
 
 const page = usePage()
@@ -41,7 +41,7 @@ const notifications = computed(() => {
 
     return anns
         .filter(item => {
-            if (item.penerima === 'semua') return true
+            // if (item.penerima === 'semua') return true
             if (item.penerima === role) return true
             if (role === 'siswa' && item.kelas_id) {
                 return Number(item.kelas_id) === Number(page.props.kelasId)

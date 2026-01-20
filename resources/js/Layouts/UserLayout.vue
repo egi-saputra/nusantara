@@ -6,7 +6,7 @@ import { onClickOutside } from '@vueuse/core'
 
 import Dropdown from '@/Components/Dropdown.vue'
 import DropdownLink from '@/Components/DropdownLink.vue'
-import NavLink from '@/Components/NavLink.vue'
+// import NavLink from '@/Components/NavLink.vue'
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue'
 
 import AdminSidebar from '@/Components/Admin/Sidebar.vue'
@@ -21,7 +21,7 @@ import { ChevronRightIcon } from '@heroicons/vue/24/solid'
 /* ================= PROPS ================= */
 const props = defineProps({
     disableSwal: { type: Boolean, default: false },
-    logoUrl: { type: String, default: '/storage/logo_app/logo.png' }
+    logoUrl: { type: String, default: '/public/images/logo.png' }
 })
 
 const page = usePage()
