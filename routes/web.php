@@ -26,7 +26,7 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('Auth/Login', function () {
+Route::get('/', function () {
     return Inertia::render('Auth/Login', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
