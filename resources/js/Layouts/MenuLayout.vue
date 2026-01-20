@@ -137,12 +137,17 @@ const navLinks = computed(() => {
 })
 
 /* ================= BACK ================= */
+// const goBack = () => {
+//     if (window.history.length > 1) {
+//         window.history.back()
+//     } else {
+//         router.visit(route(`${page.props.auth.role}.dashboard`))
+//     }
+// }
+
 const goBack = () => {
-    if (window.history.length > 1) {
-        window.history.back()
-    } else {
-        router.visit(route(`${page.props.auth.role}.dashboard`))
-    }
+    const role = page.props.auth.role || 'user';
+    router.visit(route(`${role}.dashboard`));
 }
 
 /* ================= DARK MODE ================= */
