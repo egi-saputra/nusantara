@@ -26,7 +26,7 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
+Route::get('Auth/Login', function () {
     return Inertia::render('Auth/Login', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -34,9 +34,6 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-
-Route::get('/central-login', [CentralController::class, 'showLoginForm'])->name('auth.central.login');
-Route::post('/central-login', [CentralController::class, 'central'])->name('auth.central');
 
 Route::resource('mading', MadingController::class)->only(['index']);
 Route::get('/mading/{id}', [MadingController::class, 'show'])
