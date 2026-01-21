@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # build output
 dist/
 
@@ -26,3 +27,38 @@ pnpm-debug.log*
 # Custom Folders
 backup
 README.md
+=======
+# Laravel / PHP
+/vendor
+/storage/*.key
+.phpunit.result.cache
+/.phpunit.cache
+
+# Environment
+.env
+.env.*
+auth.json
+
+# Node / Frontend
+/node_modules
+/npm-debug.log
+/yarn-error.log
+
+# Build output
+/public/build
+/public/hot
+/public/storage
+
+# IDE / Editor
+/.idea
+/.vscode
+/.fleet
+
+# Homestead
+Homestead.json
+Homestead.yaml
+
+# Backup / Misc
+backup
+backup_soal_video
+>>>>>>> b5e2a3cad44a6e56c1ab72be7454475665580f0a

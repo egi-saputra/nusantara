@@ -1,4 +1,8 @@
 User-agent: *
+<<<<<<< HEAD
 Allow: /
 
 Sitemap: https://smacerdasbangsa.sch.id/sitemap-index.xml
+=======
+Disallow:
+>>>>>>> b5e2a3cad44a6e56c1ab72be7454475665580f0a

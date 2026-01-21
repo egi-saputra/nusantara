@@ -1,0 +1,226 @@
+<script setup>
+import { ref } from 'vue';
+import { Link } from '@inertiajs/vue3';
+import { CheckIcon, ArrowLeftIcon, PlusIcon } from '@heroicons/vue/24/solid';
+import Swal from 'sweetalert2';
+import { Inertia } from '@inertiajs/inertia';
+import axios from 'axios';
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css'
+
+const props = defineProps({
+    bankSoal: Object,
+});
+
+const form = ref({
+    soal: props.bankSoal.soal,
+    tipe_soal: props.bankSoal.tipe_soal,
+    jawaban_benar: props.bankSoal.jawaban_benar ?? "",
+    nilai: props.bankSoal.nilai,
+    jenis_lampiran: props.bankSoal.jenis_lampiran,
+    link_lampiran: props.bankSoal.link_lampiran,
+    lampiran_file: null,
+    opsi_a: props.bankSoal.opsi_a,
+    opsi_b: props.bankSoal.opsi_b,
+    opsi_c: props.bankSoal.opsi_c,
+    opsi_d: props.bankSoal.opsi_d,
+    opsi_e: props.bankSoal.opsi_e,
+    processing: false,
+});
+
+// simpan info file lama agar bisa ditampilkan
+const existingFile = ref(props.bankSoal.link_lampiran || '');
+
+// State opsi jawaban dinamis
+const opsiState = ref([]);
+['a', 'b', 'c', 'd', 'e'].forEach(k => {
+    if (form.value['opsi_' + k]) opsiState.value.push(k);
+});
+if (!opsiState.value.length) opsiState.value.push('a');
+
+function addOpsi() {
+    if (opsiState.value.length < 5) {
+        const nextOpsi = String.fromCharCode(97 + opsiState.value.length); // 'b', 'c', ...
+        opsiState.value.push(nextOpsi);
+    }
+}
+
+// handle file upload
+function handleFile(event) {
+    const file = event.target.files[0];
+    if (file) {
+        form.value.lampiran_file = file;
+    }
+}
+
+function submit() {
+    form.value.processing = true;
+
+    const data = new FormData();
+    Object.keys(form.value).forEach(key => {
+        if (key === 'lampiran_file' && form.value.lampiran_file) {
+            data.append('lampiran_file', form.value.lampiran_file);
+        } else {
+            data.append(key, form.value[key]);
+        }
+    });
+
+    // sertakan existing file agar backend tahu kalau perlu hapus file lama jika ada file baru
+    if (existingFile.value) data.append('existing_file', existingFile.value);
+
+    axios.post(`/proktor/bank-soal/${props.bankSoal.id}?_method=PUT`, data)
+        .then(res => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: res.data.success || 'Butir soal berhasil diperbarui!',
+                confirmButtonText: 'OKE',
+                confirmButtonColor: '#3b82f6',
+            }).then(result => {
+                if (result.isConfirmed) {
+                    Inertia.visit(`/proktor/soal/${props.bankSoal.soal_id}`);
+                }
+            });
+        })
+        .catch(err => {
+            const errors = err.response?.data?.errors;
+            if (errors) {
+                Object.values(errors).forEach(e => Swal.fire('Error', e[0], 'error'));
+            } else {
+                Swal.fire('Error', 'Terjadi kesalahan saat update', 'error');
+            }
+        })
+        .finally(() => { form.value.processing = false; });
+}
+</script>
+
+<template>
+    <div class="py-8 px-4 bg-gray-50 min-h-screen">
+        <div class="max-w-3xl mx-auto sm:bg-white sm:border sm:border-gray-300 sm:rounded-2xl sm:shadow-xl sm:p-8">
+            <h1 class="sm:text-2xl text-lg font-bold text-gray-800 mb-6 text-left">
+                Edit Detail Soal
+            </h1>
+
+            <form @submit.prevent="submit" class="space-y-5">
+
+                <!-- Soal -->
+                <div>
+                    <label class="font-semibold mb-1 dark:text-gray-300 block text-gray-700">Soal /
+                        Pertanyaan</label>
+                    <div
+                        class="relative rounded-xl overflow-hidden border border-gray-300 dark:border-white/10 bg-white dark:bg-[#0F172A] shadow-sm">
+
+                        <QuillEditor v-model:content="form.soal" placeholder="Type the question here..."
+                            content-type="html" theme="snow" class="announcement-editor" :toolbar="[
+                                ['bold', 'italic', 'underline'],
+                                [{ list: 'ordered' }, { list: 'bullet' }],
+                                [{ align: [] }],
+                                ['clean']
+                            ]" />
+
+                        <!-- BRAND -->
+                        <div class="flex w-full border-t border-gray-300 dark:border-gray-800 justify-end">
+                            <span
+                                class="flex justify-end px-3 text-xs py-2 editor-brand w-full text-gray-500 dark:text-gray-400">
+                                Powered by<strong
+                                    class="text-gray-700 pl-1 tracking-widest dark:text-gray-200 font-bold">
+                                    Nusaverse</strong>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tipe Soal, Nilai, Jenis Lampiran -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Tipe Soal</label>
+                        <select v-model="form.tipe_soal"
+                            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
+                            <option value="PG">Pilihan Ganda</option>
+                            <option value="Essay">Essay</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Bobot Nilai</label>
+                        <input type="number" v-model="form.nilai" min="0"
+                            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                            placeholder="Nilai soal" />
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Jenis Lampiran</label>
+                        <select v-model="form.jenis_lampiran"
+                            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
+                            <option value="Tanpa Lampiran">Tanpa Lampiran</option>
+                            <option value="Gambar">Gambar</option>
+                            <option value="Video">Video</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Lampiran File / Link -->
+                <div v-if="form.jenis_lampiran === 'Gambar'">
+                    <label class="block text-gray-700 font-semibold mb-1">Upload Gambar</label>
+                    <input type="file" @change="handleFile" class="border p-2 rounded-lg w-full" />
+                    <p v-if="form.lampiran_file" class="text-green-600 mt-1">{{ form.lampiran_file.name }}</p>
+                    <p v-else-if="form.link_lampiran" class="text-gray-500 mt-1">Current: {{ form.link_lampiran }}</p>
+                </div>
+                <div v-else-if="form.jenis_lampiran === 'Video'">
+                    <label class="block text-gray-700 font-semibold mb-1">Link Video</label>
+                    <input type="text" v-model="form.link_lampiran" placeholder="Masukkan URL video"
+                        class="w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition" />
+                </div>
+
+                <!-- Opsi PG -->
+                <div v-if="form.tipe_soal === 'PG'" class="grid grid-cols-1 gap-4">
+                    <div v-for="key in opsiState" :key="key">
+                        <label class="font-semibold">Opsi {{ key.toUpperCase() }}</label>
+                        <input v-model="form['opsi_' + key]"
+                            class="w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition" />
+                    </div>
+                    <button v-if="opsiState.length < 5" type="button" @click="addOpsi"
+                        class="flex items-center gap-1 text-blue-600 font-semibold">
+                        <PlusIcon class="w-4 h-4" /> Tambah
+                    </button>
+                </div>
+
+                <!-- Jawaban Benar -->
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Jawaban Benar</label>
+                    <input v-if="form.tipe_soal === 'Essay'" v-model="form.jawaban_benar" type="text"
+                        placeholder="Jawaban Essay"
+                        class="w-full border pl-3 border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition" />
+                    <select v-else v-model="form.jawaban_benar"
+                        class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
+                        <option v-for="key in opsiState" :key="key" :value="'opsi_' + key">
+                            {{ key.toUpperCase() }}. {{ form['opsi_' + key] }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Tombol aksi -->
+                <div class="flex flex-col sm:flex-row gap-4 mt-6">
+                    <button type="submit"
+                        class="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold rounded-lg shadow-lg hover:from-blue-600 hover:to-blue-800 transition"
+                        :disabled="form.processing">
+                        <svg v-if="form.processing" class="w-5 h-5 animate-spin text-white"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                            </circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                        </svg>
+                        <CheckIcon v-else class="w-5 h-5" />
+                        <span>{{ form.processing ? 'Updating process...' : 'Update' }}</span>
+                    </button>
+
+                    <Link :href="`/proktor/soal/${props.bankSoal.soal_id}`"
+                        class="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-700 text-white font-semibold rounded-lg shadow-lg hover:from-gray-600 hover:to-gray-800 transition">
+                        <ArrowLeftIcon class="w-5 h-5" /> Cancel
+                    </Link>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</template>
