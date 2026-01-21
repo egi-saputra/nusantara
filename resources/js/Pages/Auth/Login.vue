@@ -168,12 +168,12 @@ onMounted(() => {
             <div class="relative fade-in-fast scale-soft z-10 mt-4 mx-auto grid grid-cols-1 gap-4 md:gap-5">
 
                 <!-- FEATURE ITEM -->
-                <Link href="https://smknusantara.id"
+                <a href="https://smknusantara.id"
                     class="flex items-center gap-3 bg-white/10 backdrop-blur-sm px-4 py-3 rounded-xl border border-white/20 hover:bg-white/20 transition duration-200"
                     target="_blank" rel="noopener noreferrer">
                     <MegaphoneIcon class="w-6 h-6 text-white flex-shrink-0" />
                     <p class="text-sm md:text-base opacity-95">Profil Sekolah - SMK NUSANTARA</p>
-                </Link>
+                </a>
 
                 <!-- FEATURE ITEM -->
                 <Link :href="route('mading.index')" prefetch preserve-scroll preserve-state
