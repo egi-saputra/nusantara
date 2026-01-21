@@ -170,9 +170,7 @@ onMounted(() => {
                 <!-- FEATURE ITEM -->
                 <Link href="https://smknusantara.id"
                     class="flex items-center gap-3 bg-white/10 backdrop-blur-sm px-4 py-3 rounded-xl border border-white/20 hover:bg-white/20 transition duration-200"
-                    target="_blank" <!-- buka di tab baru -->
-                    rel="noopener noreferrer"
-                    >
+                    target="_blank" rel="noopener noreferrer">
                     <MegaphoneIcon class="w-6 h-6 text-white flex-shrink-0" />
                     <p class="text-sm md:text-base opacity-95">Profil Sekolah - SMK NUSANTARA</p>
                 </Link>
