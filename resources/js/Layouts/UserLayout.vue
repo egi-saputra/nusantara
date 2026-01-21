@@ -290,7 +290,7 @@ onMounted(() => {
                                                     {{ notif.judul }}
                                                 </p>
                                                 <div v-html="notif.pengumuman"
-                                                    class="prose dark:prose-invert max-w-60 max-h-8 truncate">
+                                                    class="prose dark:prose-invert  text-gray-700 dark:text-white max-w-60 max-h-8 truncate">
                                                 </div>
                                                 <!-- <p class="text-sm text-gray-500 dark:text-gray-400 max-w-60 truncate">
                                                     {{ notif.pengumuman }}

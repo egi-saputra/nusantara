@@ -168,11 +168,11 @@ onMounted(() => {
             <div class="relative fade-in-fast scale-soft z-10 mt-4 mx-auto grid grid-cols-1 gap-4 md:gap-5">
 
                 <!-- FEATURE ITEM -->
-                <div
-                    class="flex cursor-pointer items-center gap-3 bg-white/10 backdrop-blur-sm px-4 py-3 rounded-xl border border-white/20 hover:bg-white/20 transition duration-200">
-                    <BuildingLibraryIcon class="w-6 h-6 text-white flex-shrink-0" />
+                <Link :href="url('https://smknusantara.id')" prefetch preserve-scroll preserve-state
+                    class="flex items-center gap-3 bg-white/10 backdrop-blur-sm px-4 py-3 rounded-xl border border-white/20 hover:bg-white/20 transition duration-200">
+                    <MegaphoneIcon class="w-6 h-6 text-white flex-shrink-0" />
                     <p class="text-sm md:text-base opacity-95">Profil Sekolah - SMK NUSANTARA</p>
-                </div>
+                </Link>
 
                 <!-- FEATURE ITEM -->
                 <Link :href="route('mading.index')" prefetch preserve-scroll preserve-state

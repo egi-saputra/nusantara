@@ -9,7 +9,6 @@ import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 import axios from 'axios';
 import { ToastAlert } from '@/Composables/ToastAlert.js';
 import Echo from 'laravel-echo';
-window.Pusher = require('pusher-js');
 
 const { success, error, confirm } = ToastAlert();
 
