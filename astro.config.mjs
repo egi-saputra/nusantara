@@ -3,6 +3,6 @@ import tailwind from "@astrojs/tailwind";
 import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-  site: "https://smacerdasbangsa.sch.id",
+  site: "https://smknusantara.id",
   integrations: [tailwind(), sitemap()],
 });

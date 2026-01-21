@@ -1,107 +1,272 @@
 ---
-import { Image } from "astro:assets";
-import logo from "../assets/logo.png";
+import { Image } from 'astro:assets';
+import Logo from '/src/assets/logo.png';
+
+const menuItems = [
+  { name: "Beranda", href: "#home", alt:"Beranda" },
+  { name: "Tentang Kami", href: "#about", alt:"About Us" },
+  {
+    name: "Program",
+    href: "#program",
+    alt:"Vocational",
+    submenu: [
+      { name: "Bisnis Retail / Pemasaran (BR)", href: "/", alt:"Bisnis Retail", },
+      { name: "Manajemen Perkantoran (MPLB)", href: "/", alt:"Manajemen Perkantoran", },
+    ],
+  },
+  { name: "SPMB", href: "/", alt:"Pendaftaran Peserta Didik Baru", },
+  { name: "Contact", href: "#contact", alt:"Contact", },
+  // { name: "LMS", href: "https://lms.smknusantara.id" },
+];
 ---
+
 <nav
-  id="navbar"
-  class="fixed w-full z-50
-    bg-black/20 backdrop-blur-xl
-    transition-all duration-300"
+  class="
+    fixed w-full z-50
+    bg-white/80 dark:bg-gray-900/80
+    backdrop-blur-md
+    shadow-md
+    transition-all duration-300
+  "
 >
-  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center relative">
-    
-    <!-- LOGO + NAMA -->
-    <div class="sm:flex hidden items-center gap-3">
-      <Image
-        src={logo}
-        alt="Logo"
-        width={46}
-        height={46}
-        loading="eager"
-        priority
-        format="webp"
-      />
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="relative flex items-center h-16 justify-between">
 
-      <!-- TITLE -->
-      <h1
-        id="navTitle"
-        class="text-2xl font-extrabold tracking-wide
-          text-white
-          transition-all duration-300"
-      >
-        SMK NUSANTARA
-      </h1>
+      <!-- Logo -->
+      <a href="/" class="flex items-center space-x-2">
+        <Image
+          src={Logo}
+          alt="Logo Sekolah"
+          width={40}
+          height={40}
+          loading="eager"
+          decoding="sync"
+          class="rounded-full"
+        />
+        <span class="sm:text-xl text-base font-bold text-blue-600 dark:text-blue-400">
+          SMK NUSANTARA
+        </span>
+      </a>
+
+      <!-- Desktop Menu -->
+      <div class="hidden md:flex absolute left-1/2 -translate-x-1/2 space-x-8">
+        {menuItems.map(item => (
+          <div class="relative group">
+            <a
+              href={item.href}
+              class="font-medium text-gray-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition"
+            >
+              {item.name}
+            </a>
+
+            {item.submenu && (
+              <div
+                class="
+                  absolute mt-3 w-60
+                  bg-white/90 dark:bg-gray-800/90
+                  backdrop-blur-md
+                  rounded-lg shadow-lg
+                  opacity-0 invisible
+                  group-hover:opacity-100 group-hover:visible
+                  translate-y-2 group-hover:translate-y-0
+                  transition-all duration-200
+                "
+              >
+                {item.submenu.map(sub => (
+                  <a
+                    href={sub.href}
+                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-100/60 dark:hover:bg-gray-700/60 transition"
+                    aria-label={sub.name}
+                  >
+                    {sub.name}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <!-- Right Desktop -->
+      <div class="hidden md:flex items-center space-x-3">
+        <button
+          id="dark-toggle" aria-label="Darkmode Toggle"
+          class="
+            p-2 rounded-md
+            bg-gray-200/70 dark:bg-gray-700/70
+            transition transform hover:scale-110
+          "
+        >
+          <span id="dark-icon">🌙</span>
+        </button>
+
+        <a
+          href="https://lms.smknusantara.id"
+          class="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition"
+        >
+          LMS APP
+        </a>
+      </div>
+
+      <!-- Mobile -->
+      <div class="md:hidden flex items-center">
+        <button id="mobile-menu-btn" aria-label="Buka menu navigasi">
+          <svg role="img" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <title>Menu</title>
+            <path stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
     </div>
-
-    <!-- MENU DESKTOP -->
-    <ul class="hidden md:flex gap-6 font-medium text-white">
-      <li><a href="#about" class="hover:text-blue-400 transition">About</a></li>
-      <li><a href="#program" class="hover:text-blue-400 transition">Program</a></li>
-      <li><a href="#contact" class="hover:text-blue-400 transition">Contact</a></li>
-      <li><a href="/" class="hover:text-blue-400 transition">PPDB</a></li>
-      <li><a href="https://lms.smknusantara.id" class="hover:text-blue-400 transition">LMS</a></li>
-    </ul>
-
-    <!-- HAMBURGER -->
-    <button
-      id="menuBtn"
-      class="md:hidden flex flex-col gap-1.5 focus:outline-none"
-    >
-      <span class="w-6 h-0.5 bg-white"></span>
-      <span class="w-6 h-0.5 bg-white"></span>
-      <span class="w-6 h-0.5 bg-white"></span>
-    </button>
   </div>
 
-  <!-- MOBILE MENU -->
+  <!-- Mobile Menu -->
   <div
-    id="mobileMenu"
-    class="md:hidden absolute top-full left-1/2 -translate-x-1/2 mt-2
-      max-h-0 overflow-hidden
-      bg-white/70 backdrop-blur
-      rounded-md shadow
-      transition-all duration-300 w-44"
+    id="mobile-menu"
+    class="
+      md:hidden
+      absolute top-full left-0 w-full
+      grid grid-rows-[0fr]
+      opacity-0
+      pointer-events-none
+      bg-white/95 dark:bg-gray-900/95
+      backdrop-blur-md
+      border-t border-gray-200 dark:border-gray-700
+      transition-all duration-300 ease-in-out
+    "
   >
-    <ul class="flex flex-col px-4 py-2 gap-2 font-medium text-gray-700">
-      <li><a href="#program" class="hover:text-blue-600">Info PPDB</a></li>
-      <li><a href="#hero" class="hover:text-blue-600">About</a></li>
-      <li><a href="#kontak" class="hover:text-blue-600">Contact</a></li>
-      <li><a href="#">LMS App</a></li>
-    </ul>
+  <div class="overflow-hidden">
+    {menuItems.map((item, i) => (
+      <div class="border-b border-gray-200 dark:border-gray-700">
+        {item.submenu ? (
+          <>
+            <button
+              data-submenu-btn
+              aria-label={`Buka submenu ${item.name}`}
+              aria-expanded="false"
+              role="menuitem"
+              class="w-full px-4 py-3 flex justify-between items-center text-gray-800 dark:text-gray-200"
+              data-target={`submenu-${i}`}
+            >
+              <span>{item.name}</span>
+              <span class="transition-transform duration-300" aria-hidden="true">+</span>
+            </button>
+            <div
+              id={`submenu-${i}`}
+              class="
+                grid grid-rows-[0fr]
+                opacity-0
+                transition-all duration-300 ease-in-out
+                pl-6
+              "
+            >
+              <div class="overflow-hidden">
+                {item.submenu.map(sub => (
+                  <a
+                    href={sub.href}
+                    class="block py-2 text-sm text-gray-600 dark:text-gray-300"
+                  >
+                    {sub.name}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </>
+        ) : (
+          <a href={item.href} class="block px-4 py-3 text-gray-800 dark:text-gray-200">
+            {item.name}
+          </a>
+        )}
+      </div>
+    ))}
+
+    <div class="flex justify-between items-center p-4">
+      <button aria-label="Mobile Darkmode Toggle"
+        id="dark-toggle-mobile"
+        class="p-2 rounded-md bg-gray-200/70 dark:bg-gray-700/70 transition transform hover:scale-110"
+      >
+        <span id="dark-icon-mobile">🌙</span>
+      </button>
+
+      <a href="https://lms.smknusantara.id" class="px-4 py-2 bg-blue-600 text-white rounded-md">
+        LMS APP
+      </a>
+    </div>
+  </div>
   </div>
 </nav>
 
-<!-- STYLE UNTUK MODE GRADIENT -->
-<style>
-  .title-gradient {
-    background: linear-gradient(to right, #60a5fa, #3b82f6, #6366f1);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 6px rgba(59, 130, 246, 0.35);
+<script is:inline>
+  const html = document.documentElement;
+
+  const desktopToggle = document.getElementById('dark-toggle');
+  const mobileToggle = document.getElementById('dark-toggle-mobile');
+
+  const desktopIcon = document.getElementById('dark-icon');
+  const mobileIcon = document.getElementById('dark-icon-mobile');
+
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+
+  const submenuBtns = document.querySelectorAll('[data-submenu-btn]');
+
+  /* ---------- DARK MODE ---------- */
+  if (localStorage.theme === 'dark') {
+    html.classList.add('dark');
+    desktopIcon.textContent = '☀️';
+    mobileIcon.textContent = '☀️';
   }
-</style>
 
-<script>
-  const navbar = document.getElementById("navbar")!;
-  const title = document.getElementById("navTitle")!;
+  function toggleDark() {
+    const isDark = html.classList.toggle('dark');
+    localStorage.theme = isDark ? 'dark' : 'light';
+    desktopIcon.textContent = isDark ? '☀️' : '🌙';
+    mobileIcon.textContent = isDark ? '☀️' : '🌙';
+  }
 
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 20) {
-      // Navbar solid
-      navbar.classList.add("bg-black", "shadow-lg", "backdrop-blur-none");
-      navbar.classList.remove("bg-black/20", "backdrop-blur-xl");
+  desktopToggle?.addEventListener('click', toggleDark);
+  mobileToggle?.addEventListener('click', toggleDark);
 
-      // Title jadi gradient
-      title.classList.remove("text-white");
-      title.classList.add("title-gradient");
-    } else {
-      // Navbar blur
-      navbar.classList.remove("bg-black", "shadow-lg", "backdrop-blur-none");
-      navbar.classList.add("bg-black/20", "backdrop-blur-xl");
+  /* ---------- MOBILE MENU ---------- */
+  function openMenu() {
+    menu.classList.remove('grid-rows-[0fr]', 'opacity-0', 'pointer-events-none');
+    menu.classList.add('grid-rows-[1fr]', 'opacity-100');
+  }
 
-      // Title jadi putih solid
-      title.classList.remove("title-gradient");
-      title.classList.add("text-white");
+  function closeMenu() {
+    menu.classList.add('grid-rows-[0fr]', 'opacity-0', 'pointer-events-none');
+    menu.classList.remove('grid-rows-[1fr]', 'opacity-100');
+
+    // close all submenus
+    document.querySelectorAll('[id^="submenu-"]').forEach(sub => {
+      sub.classList.remove('grid-rows-[1fr]', 'opacity-100');
+      sub.classList.add('grid-rows-[0fr]', 'opacity-0');
+    });
+  }
+
+  menuBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    menu.classList.contains('opacity-100') ? closeMenu() : openMenu();
+  });
+
+  /* ---------- SUBMENU SMOOTH ---------- */
+  submenuBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.dataset.target);
+
+      const open = target.classList.contains('grid-rows-[1fr]');
+
+      target.classList.toggle('grid-rows-[1fr]', !open);
+      target.classList.toggle('opacity-100', !open);
+      target.classList.toggle('grid-rows-[0fr]', open);
+      target.classList.toggle('opacity-0', open);
+    });
+  });
+
+  /* ---------- CLICK OUTSIDE CLOSE ---------- */
+  window.addEventListener('click', (e) => {
+    if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
+      closeMenu();
     }
   });
 </script>

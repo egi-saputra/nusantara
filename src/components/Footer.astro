@@ -2,7 +2,7 @@
 import { Instagram, Facebook, Youtube } from "lucide-astro";
 ---
 
-<footer
+<footer id="contact"
   class="bg-black/90 text-gray-300"
 >
 
@@ -78,7 +78,7 @@ import { Instagram, Facebook, Youtube } from "lucide-astro";
 
         <!-- Instagram -->
         <a
-          href="https://instagram.com/smknusantara"
+          href="/"
           aria-label="Instagram SMK Nusantara"
           target="_blank"
           rel="noopener"
@@ -89,7 +89,7 @@ import { Instagram, Facebook, Youtube } from "lucide-astro";
 
         <!-- Facebook -->
         <a
-          href="https://facebook.com/smknusantara"
+          href="/"
           aria-label="Facebook SMK Nusantara"
           target="_blank"
           rel="noopener"
@@ -100,7 +100,7 @@ import { Instagram, Facebook, Youtube } from "lucide-astro";
 
         <!-- YouTube -->
         <a
-          href="https://youtube.com/@smknusantara"
+          href="/"
           aria-label="YouTube SMK Nusantara"
           target="_blank"
           rel="noopener"
@@ -113,23 +113,22 @@ import { Instagram, Facebook, Youtube } from "lucide-astro";
 
     <div class="grid gap-10 sm:grid-cols-2 sm:border-r sm:border-gray-600">
       <!-- Kontak -->
-      <div class="whitespace-nowrap">
+      <div>
         <h3 class="text-sm font-semibold text-white uppercase tracking-wider">
           Kontak
         </h3>
         <address class="not-italic mt-4 space-y-2 text-sm text-gray-400">
-          <p>Jl. Pendidikan No. 1</p>
-          <p>Kecamatan Nusantara, Indonesia</p>
+          <p>Jl. Raya Citayam - Parung KM 03 RT.002 / RW.002 Desa Ragajaya, Kecamatan Bojonggede, Kabupaten Bogor, Jawa Barat 16920.</p>
           <p>
             Telp:
             <a href="tel:+62812XXXXXXXX" class="hover:text-white transition">
               0812-xxxx-xxxx
             </a>
           </p>
-          <p>
+          <p class="whitespace-nowrap">
             Email:
             <a href="tel:+62812XXXXXXXX" class="hover:text-white transition">
-              cs@smknusantara.com
+              info@smknusantara.id
             </a>
           </p>
         </address>
@@ -149,16 +148,16 @@ import { Instagram, Facebook, Youtube } from "lucide-astro";
       </div>
     </div>
 
-    <div class="flex flex-col w-full sm:bg-gray-900/60 backdrop-blur-md sm:rounded sm:border sm:border-gray-600 justify-center">
-      <!-- <h3 class="text-sm font-semibold text-white uppercase tracking-wider">
-        Lokasi Sekolah
-      </h3> -->
+    <h3 class="text-sm sm:hidden -mb-10 inline-block font-semibold text-white uppercase tracking-wider">
+      Lokasi Sekolah
+    </h3>
 
+    <div class="flex flex-col w-full sm:bg-gray-900/60 backdrop-blur-md sm:rounded sm:border sm:border-gray-600 justify-center">
       <div class="overflow-hidden rounded border border-gray-700">
         <iframe
           title="Lokasi SMK Nusantara"
           src="https://www.google.com/maps?q=SMK+Nusantara&output=embed"
-          class="w-full h-40 transition duration-300 grayscale hover:grayscale-0"
+          class="w-full sm:h-48 h-40 transition duration-300 grayscale-0 sm:grayscale sm:hover:grayscale-0"
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
         ></iframe>
@@ -168,12 +167,16 @@ import { Instagram, Facebook, Youtube } from "lucide-astro";
   </div>
 
   <div class="border-gray-800 py-4 px-4 sm:px-12 text-center sm:text-sm text-xs text-gray-500">
-    <div class="flex sm:flex-row border-t border-gray-600 py-6 flex-col w-full justify-between">
+    <div class="flex sm:flex-row sm:gap-0 gap-3 border-t border-gray-600 py-6 flex-col w-full justify-between">
       <div>
         © {new Date().getFullYear()} SMK NUSANTARA. All rights reserved.
       </div>
 
-      <div class="flex flex-row justify-center text-center gap-6">
+      <p class="sm:block hidden">
+        <a href="/">Powered by NeuroStack Inc</a>
+      </p>
+
+      <div class="flex flex-row justify-center text-center gap-3 sm:gap-6">
         <span>Support</span>
         <div class=" border-r border-gray-600"></div>
         <span>Terms of Use</span>
