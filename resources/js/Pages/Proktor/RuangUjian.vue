@@ -136,6 +136,8 @@ const deleteAllPeserta = async () => {
 //             if (e.token !== null) p.token = e.token
 //         })
 // })
+let channel = null;
+
 onMounted(async () => {
     try {
         // 🔄 SYNC AWAL
@@ -146,32 +148,28 @@ onMounted(async () => {
     }
 
     // ✅ LISTEN EVENT REACTIVELY
-    Echo.channel('ruang-ujian')
-        .listen('.PesertaUpdated', (e) => {
-            // e.peserta = data peserta dari backend
-            const updated = e.peserta;
-            const index = pesertaList.value.findIndex(p => p.id === updated.id);
+    channel = Echo.channel('ruang-ujian');
 
+    channel.listen('.PesertaUpdated', (e) => {
+        const updated = e.peserta;
+        const index = pesertaList.value.findIndex(p => p.id === updated.id);
 
-            if (index !== -1) {
-                // Update peserta yang sudah ada
-                if (updated.status !== null) p.status = updated.status;
-                if (updated.token !== null) p.token = updated.token;
-
-                // Merge data lain jika perlu
-                pesertaList.value[index] = {
-                    ...pesertaList.value[index],
-                    ...updated
-                };
-            } else {
-                // Kalau peserta baru, push ke list
-                pesertaList.value.push(updated);
-            }
-        });
+        if (index !== -1) {
+            // Update peserta yang sudah ada
+            pesertaList.value[index] = { ...pesertaList.value[index], ...updated };
+        } else {
+            // Kalau peserta baru, push ke list
+            pesertaList.value.push(updated);
+        }
+    });
 });
 
 onBeforeUnmount(() => {
-    Echo.leave('ruang-ujian');
+    // ✅ LEAVE CHANNEL DENGAN BENAR
+    if (channel) {
+        channel.leave();
+        channel = null;
+    }
 });
 
 const reloadPeserta = async () => {
