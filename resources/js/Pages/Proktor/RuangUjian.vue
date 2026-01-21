@@ -148,24 +148,25 @@ onMounted(async () => {
     }
 
     // ✅ LISTEN EVENT REACTIVELY
-    channel = Echo.channel('ruang-ujian');
+    if (window.Echo && typeof window.Echo.channel === 'function') {
+        channel = window.Echo.channel('ruang-ujian');
 
-    channel.listen('.PesertaUpdated', (e) => {
-        const updated = e.peserta;
-        const index = pesertaList.value.findIndex(p => p.id === updated.id);
+        channel.listen('.PesertaUpdated', (e) => {
+            const updated = e.peserta;
+            const index = pesertaList.value.findIndex(p => p.id === updated.id);
 
-        if (index !== -1) {
-            // Update peserta yang sudah ada
-            pesertaList.value[index] = { ...pesertaList.value[index], ...updated };
-        } else {
-            // Kalau peserta baru, push ke list
-            pesertaList.value.push(updated);
-        }
-    });
+            if (index !== -1) {
+                pesertaList.value[index] = { ...pesertaList.value[index], ...updated };
+            } else {
+                pesertaList.value.push(updated);
+            }
+        });
+    } else {
+        console.error('Echo belum siap, channel tidak bisa dibuat.');
+    }
 });
 
 onBeforeUnmount(() => {
-    // ✅ LEAVE CHANNEL DENGAN BENAR
     if (channel) {
         channel.leave();
         channel = null;
