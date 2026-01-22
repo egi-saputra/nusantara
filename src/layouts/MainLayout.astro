@@ -16,15 +16,21 @@ const {
   <!-- SEO -->
   <title>{title}</title>
   <meta name="description" content={description} />
+  <meta name="robots" content="index, follow" />
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.png" />
+  <!-- Canonical -->
+  <link rel="canonical" href={Astro.url.href} />
+
 
   <!-- Open Graph -->
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="id_ID" />
+  <meta property="og:url" content={Astro.url.href} />
+  <meta property="og:image" content="https://smknusantara.id/og-image.png" />
 
   <!-- Schema School -->
   <script type="application/ld+json">
@@ -38,8 +44,13 @@ const {
       "addressLocality": "Bojong Gede",
       "addressCountry": "ID"
     },
-    "telephone": "+62812XXXXXXXX",
-    "foundingDate": "2009"
+    "telephone": "+6289609916121",
+    "foundingDate": "2009",
+    "url": "https://smknusantara.id",
+    "logo": "https://smknusantara.id/logo.png",
+    "sameAs": [
+      "https://www.facebook.com/SMKNusantara"
+    ]
   }
   </script>
 

@@ -3,6 +3,6 @@ import tailwind from "@astrojs/tailwind";
 import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-  site: "https://smknusantara.id",
-  integrations: [tailwind(), sitemap()],
+    site: "https://smknusantara.id",
+    integrations: [tailwind(), sitemap()],
 });
