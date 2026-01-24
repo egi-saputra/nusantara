@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import Logo from '/src/assets/logo.png';
 
 const menuItems = [
-  { name: "Beranda", href: "#home", alt:"Beranda" },
+  // { name: "Beranda", href: "#home", alt:"Beranda" },
   { name: "Tentang Kami", href: "#about", alt:"About Us" },
   {
     name: "Program",
@@ -15,6 +15,15 @@ const menuItems = [
     ],
   },
   { name: "SPMB", href: "/", alt:"Pendaftaran Peserta Didik Baru", },
+  {
+    name: "Aplikasi",
+    href: "https://lms.smknusantara.id",
+    alt:"Aplikasi",
+    submenu: [
+      { name: "LMS NUSANTARA", href: "https://lms.smknusantara.id", alt:"LMS Nusantara", },
+      { name: "SIMSTAL NUSANTARA", href: "https://smknusantara.cloud", alt:"Simstal Nusantara", },
+    ],
+  },
   { name: "Contact", href: "#contact", alt:"Contact", },
   // { name: "LMS", href: "https://lms.smknusantara.id" },
 ];
@@ -23,7 +32,7 @@ const menuItems = [
 <nav
   class="
     fixed w-full z-50
-    bg-white/80 dark:bg-gray-900/80
+    bg-white dark:bg-gray-900
     backdrop-blur-md
     shadow-md
     transition-all duration-300
@@ -43,7 +52,7 @@ const menuItems = [
           decoding="sync"
           class="rounded-full"
         />
-        <span class="sm:text-xl text-base font-bold text-blue-600 dark:text-blue-400">
+        <span class="text-xl font-bold dark:text-white text-blue-900">
           SMK NUSANTARA
         </span>
       </a>
@@ -101,19 +110,38 @@ const menuItems = [
         </button>
 
         <a
-          href="https://lms.smknusantara.id"
+          href="/"
           class="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition"
         >
-          LMS APP
+          Daftar
         </a>
       </div>
 
       <!-- Mobile -->
       <div class="md:hidden flex items-center">
-        <button id="mobile-menu-btn" aria-label="Buka menu navigasi">
-          <svg role="img" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button
+          id="mobile-menu-btn"
+          aria-label="Buka menu navigasi"
+          class="
+            p-2 rounded-lg
+            dark:text-gray-200 text-gray-900
+            transition
+          "
+        >
+          <svg
+            role="img"
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <title>Menu</title>
-            <path stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            <path
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
           </svg>
         </button>
       </div>

@@ -1,60 +1,125 @@
-<section id="home"
-  class="relative sm:h-screen h-96 bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center text-white overflow-hidden"
+---
+import { Image } from "astro:assets";
+import hero1 from "/src/assets/images/hero.svg";
+import hero2 from "/src/assets/images/hero-2.svg";
+import hero3 from "/src/assets/images/hero-3.svg";
+---
+
+<section
+  id="home"
+  class="
+    sticky top-0
+    pt-16
+    sm:min-h-screen
+    bg-gradient-to-br from-blue-600 to-indigo-700
+    text-white
+    overflow-hidden
+    z-10
+  "
 >
-  <!-- Background image (aksen / bulb) -->
-  <!-- <img
-    src="/src/assets/background.svg"
-    alt=""
-    aria-hidden="true"
-    class="absolute inset-0 w-full h-full object-cover pointer-events-none"
-  /> -->
-  <img
-  src="/images/background.svg"
-  alt="Background"
-  aria-hidden="true"
-  class="absolute inset-0 w-full h-full object-cover pointer-events-none bg-wave"
- />
+  <!-- BACKGROUND SLIDER -->
+  <div
+    id="bg-slider"
+    class="flex w-full sm:absolute sm:inset-0 transition-transform duration-700"
+  >
+    <Image
+      src={hero1}
+      alt="Banner Pertama"
+      class="w-full flex-shrink-0 h-auto sm:min-h-screen object-contain sm:object-cover"
+      loading="eager"
+      decoding="async"
+    />
 
-  <div class="relative max-w-7xl sm:mt-16 sm:w-full mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
-    <div class="sm:mb-0 -mb-16">
-      <h2 class="text-2xl md:text-5xl font-bold leading-tight mb-3 sm:mb-6">
+    <Image
+      src={hero2}
+      alt="Banner Kedua"
+      class="w-full flex-shrink-0 h-auto sm:min-h-screen object-contain sm:object-cover"
+      loading="lazy"
+    />
+
+    <Image
+      src={hero3}
+      alt="Banner Ketiga"
+      class="w-full flex-shrink-0 h-auto sm:min-h-screen object-contain sm:object-cover"
+      loading="lazy"
+    />
+  </div>
+
+  <!-- OVERLAY PROFESIONAL -->
+  <!-- <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/20"></div> -->
+
+  <!-- CONTENT -->
+  <!-- <div class="relative z-10 max-w-7xl mt-10 mx-auto px-6">
+    <div class="sm:w-1/2">
+
+      <h1 class="text-3xl md:text-6xl font-extrabold leading-tight mb-6">
         SMK NUSANTARA
-      </h2>
+      </h1>
 
-      <h4 class="text-base md:text-xl sm:inline-block hidden font-bold leading-tight">
-        Sekolah Menengah Kejuruan Pusat Keunggulan (SMK PK)  <br class="sm:inline-block hidden"/> Pertama, Dalam Satuan Pendidikan Korwil Bojong Gede <br class="sm:inline-block hidden"/> Yang Tersertifikasi Dan Berdiri Sejak Tahun 2009.
-      </h4>
-      <!-- <h4 class="text-base md:text-xl font-bold leading-tight">
-        Merupakan sekolah tingkat kejuruan yang tersertifikasi dalam program
-        Pusat Keunggulan (PK) yang diselenggarakan oleh Kementrian Pendidikan
-        (KEMDIKDASMEN) Tahun 2025.
-      </h4> -->
-
-      <p class="sm:mt-6 mt-0 text-sm sm:text-lg opacity-90">
-        Memiliki visi untuk menjadi sekolah vokasi yang dapat menciptakan generasi yang berprestasi, berkarakter, dan siap menghadapi masa depan.
+      <p class="text-sm md:text-lg leading-relaxed text-white/90 mb-6">
+        Sekolah Menengah Kejuruan Pusat Keunggulan (SMK PK) pertama
+        di wilayah Korwil Bojong Gede, tersertifikasi dan berkomitmen
+        mencetak lulusan unggul, berkarakter, serta siap menghadapi
+        dunia kerja dan industri.
       </p>
 
-      <a
-        href="#kontak"
-        class="inline-block mx-auto mt-8 bg-yellow-400 text-gray-900 px-6 py-3 rounded-full font-semibold hover:scale-105 transition"
-      >
-        Daftar Sekarang
-      </a>
-    </div>
+      <div class="flex flex-wrap gap-4 mt-8">
+        <a
+          href="#kontak"
+          class="inline-flex items-center justify-center px-8 py-4
+                 bg-yellow-400 text-gray-900 font-semibold rounded-full
+                 hover:bg-yellow-300 transition"
+        >
+          Daftar Sekarang
+        </a>
 
-    <!-- gambar kanan tetap -->
-    <!-- <img
-      src="/src/assets/astro.svg"
-      alt="Sekolah"
-      class="hidden md:block drop-shadow-xl relative z-10"
-    /> -->
-    <div class="relative hidden md:block w-full h-[420px] overflow-hidden z-10">
-        <div class="carousel-track">
-            <img src="/images/astro.svg" alt="Slide 1" class="carousel-slide" />
-            <img src="/images/astro.svg" alt="Slide 2" class="carousel-slide" />
-            <img src="/images/astro.svg" alt="Slide 3" class="carousel-slide" />
-        </div>
+        <a
+          href="#profil"
+          class="sm:inline-flex hidden items-center justify-center px-8 py-4
+                 border border-white/40 rounded-full
+                 text-white hover:bg-white/10 transition"
+        >
+          Profil Sekolah
+        </a>
+      </div>
     </div>
+  </div> -->
 
+  <!-- BULLET -->
+  <div
+    class="absolute bottom-2 sm:bottom-8 left-1/2 -translate-x-1/2
+           flex gap-3 z-20"
+  >
+    <button class="dot w-2.5 h-2.5 rounded-full bg-white"></button>
+    <button class="dot w-2.5 h-2.5 rounded-full bg-white/40"></button>
+    <button class="dot w-2.5 h-2.5 rounded-full bg-white/40"></button>
   </div>
 </section>
+
+<script>
+  const slider = document.getElementById("bg-slider") as HTMLElement;
+  const dots = document.querySelectorAll<HTMLElement>(".dot");
+  let index: number = 0;
+
+  function showSlide(i: number): void {
+    slider.style.transform = `translateX(-${i * 100}%)`;
+    dots.forEach((dot: HTMLElement, idx: number) => {
+      dot.classList.toggle("bg-white", idx === i);
+      dot.classList.toggle("bg-white/40", idx !== i);
+    });
+  }
+
+  dots.forEach((dot: HTMLElement, i: number) => {
+    dot.addEventListener("click", () => {
+      index = i;
+      showSlide(index);
+    });
+  });
+
+  setInterval((): void => {
+    index = (index + 1) % dots.length;
+    showSlide(index);
+  }, 6000);
+
+  showSlide(0);
+</script>
