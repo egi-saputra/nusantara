@@ -1,13 +1,16 @@
 ---
 import "../styles/global.css";
+
 const {
   title = "SMK Nusantara | SMK Pusat Keunggulan di Bojong Gede",
   description = "SMK Nusantara adalah SMK Pusat Keunggulan di Bojong Gede dengan program akademik dan karakter unggulan sejak 2009."
 } = Astro.props;
+
+import Navbar from "../components/Navbar.astro";
 ---
 
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
   <!-- Basic -->
   <meta charset="UTF-8" />
@@ -17,51 +20,65 @@ const {
   <title>{title}</title>
   <meta name="description" content={description} />
   <meta name="robots" content="index, follow" />
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="/favicon.png" />
-  <!-- Canonical -->
   <link rel="canonical" href={Astro.url.href} />
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/favicon.png" />
 
-  <!-- Open Graph -->
+  <!-- OG -->
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="id_ID" />
   <meta property="og:url" content={Astro.url.href} />
+
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://smknusantara.id/og-image.jpg" />
 
-  <!-- Schema School -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "School",
-    "name": "SMK Nusantara",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Jl. Pendidikan No.1",
-      "addressLocality": "Bojong Gede",
-      "addressCountry": "ID"
-    },
-    "telephone": "+6289609916121",
-    "foundingDate": "2009",
-    "url": "https://smknusantara.id",
-    "logo": "https://smknusantara.id/logo.png",
-    "sameAs": [
-      "https://www.facebook.com/SMKNusantara"
-    ]
-  }
-  </script>
-
-  <!-- Astro -->
   <meta name="generator" content={Astro.generator} />
+
+  <!-- 🌙 DARK MODE GLOBAL -->
+  <script is:inline>
+    const html = document.documentElement;
+
+    const applyIcon = (isDark) => {
+      document.querySelectorAll('[data-dark-icon]').forEach(el => {
+        el.textContent = isDark ? '☀️' : '🌙';
+      });
+    };
+
+    const initTheme = () => {
+      const isDark = localStorage.theme === 'dark';
+      html.classList.toggle('dark', isDark);
+      applyIcon(isDark);
+    };
+
+    const toggleDarkMode = () => {
+      const isDark = html.classList.toggle('dark');
+      localStorage.theme = isDark ? 'dark' : 'light';
+      applyIcon(isDark);
+    };
+
+    // expose ke global (PENTING)
+    window.toggleDarkMode = toggleDarkMode;
+
+    // init pertama kali
+    initTheme();
+
+    document.addEventListener('astro:page-load', () => {
+      initTheme();
+
+      document
+        .querySelectorAll('[data-dark-toggle]')
+        .forEach(btn => {
+          btn.onclick = toggleDarkMode;
+        });
+    });
+  </script>
 </head>
 
-<body>
+<body class="bg-white dark:bg-black text-gray-900 dark:text-white transition-colors duration-300">
+  <!-- <Navbar /> -->
   <slot />
-
-  <script type="module" src="/scripts/main.js"></script>
 </body>
 </html>

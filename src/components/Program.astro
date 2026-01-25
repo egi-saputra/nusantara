@@ -2,9 +2,9 @@
 import { Book, Activity, Star } from "lucide-astro";
 ---
 
-<section id="program" class="relative z-20 sm:py-28 py-12 bg-black/95">
+<section id="program" class="sm:py-28 py-12 bg-white dark:bg-black/95">
   <div class="max-w-7xl mx-auto px-6 text-center">
-    <h3 class="text-3xl sm:text-5xl font-bold mb-12 text-white">
+    <h3 class="text-3xl sm:text-5xl font-bold mb-12 text-gray-900 dark:text-white">
       Program Kegiatan Unggulan
     </h3>
 
@@ -13,18 +13,18 @@ import { Book, Activity, Star } from "lucide-astro";
       <!-- Card 1 – Deep Purple -->
       <div class="relative p-8 rounded-2xl
         bg-gradient-to-br from-purple-600/20 via-purple-600/10 to-indigo-700/5
-        backdrop-blur-xl border border-white/10
-        shadow-xl hover:shadow-purple-900/40 hover:border-purple-600
-        hover:-translate-y-3 transition duration-300">
+        backdrop-blur-xl border border-gray-300 dark:border-white/10
+        dark:shadow-xl dark:hover:shadow-purple-900/40 hover:border-purple-600 dark:hover:border-purple-600
+        dark:hover:-translate-y-3 transition duration-300">
 
         <div class="flex justify-center mb-4">
-          <Book class="w-12 h-12 text-purple-300 hover:text-purple-200 transition-colors" />
+          <Book class="w-12 h-12 text-purple-700 dark:text-purple-300 dark:hover:text-purple-200 transition-colors" />
         </div>
 
-        <h4 class="text-xl font-semibold mb-2 text-white">
+        <h4 class="text-xl font-semibold mb-2 text-gray-800 dark:text-white">
           Akademik Unggul
         </h4>
-        <p class="text-purple-200/80">
+        <p class="dark:text-purple-200/80 text-purple-800">
           Kurikulum nasional + pengayaan olimpiade
         </p>
       </div>
@@ -32,37 +32,37 @@ import { Book, Activity, Star } from "lucide-astro";
       <!-- Card 2 – Deep Blue -->
       <div class="relative p-8 rounded-2xl
         bg-gradient-to-br from-blue-600/20 via-sky-600/10 to-cyan-700/5
-        backdrop-blur-xl border border-white/10 hover:border-blue-600
-        shadow-xl hover:shadow-blue-900/40
-        hover:-translate-y-3 transition duration-300">
+        backdrop-blur-xl border border-gray-300 dark:border-white/10 dark:hover:border-blue-600 hover:border-blue-600
+        dark:shadow-xl dark:hover:shadow-blue-900/40
+        dark:hover:-translate-y-3 transition duration-300">
 
         <div class="flex justify-center mb-4">
-          <Activity class="w-12 h-12 text-sky-300 hover:text-sky-200 transition-colors" />
+          <Activity class="w-12 h-12 text-sky-600 dark:text-sky-300 dark:hover:text-sky-200 transition-colors" />
         </div>
 
-        <h4 class="text-xl font-semibold mb-2 text-white">
+        <h4 class="text-xl font-semibold mb-2 text-gray-800 dark:text-white">
           Ekstrakurikuler
         </h4>
-        <p class="text-sky-200/80">
-          Olahraga, seni, robotik, dan pramuka
+        <p class="dark:text-sky-200/80 text-sky-800">
+          Paskibra, Futsal, Pencak Silat, dan Pramuka
         </p>
       </div>
 
       <!-- Card 3 – Deep Orange -->
       <div class="relative p-8 rounded-2xl
         bg-gradient-to-br from-yellow-600/20 via-amber-600/10 to-orange-700/5
-        backdrop-blur-xl border border-white/10 hover:border-amber-600
-        shadow-xl hover:shadow-orange-900/40
-        hover:-translate-y-3 transition duration-300">
+        backdrop-blur-xl border border-gray-300 dark:border-white/10 dark:hover:border-amber-600 hover:border-amber-600
+        dark:shadow-xl dark:hover:shadow-orange-900/40
+        dark:hover:-translate-y-3 transition duration-300">
 
         <div class="flex justify-center mb-4">
-          <Star class="w-12 h-12 text-amber-300 hover:text-amber-200 transition-colors" />
+          <Star class="w-12 h-12 text-amber-600 dark:text-amber-300 dark:hover:text-amber-200 transition-colors" />
         </div>
 
-        <h4 class="text-xl font-semibold mb-2 text-white">
+        <h4 class="text-xl font-semibold mb-2 text-gray-800 dark:text-white">
           Karakter & Akhlak
         </h4>
-        <p class="text-amber-200/80">
+        <p class="text-amber-800 dark:text-amber-200/80">
           Pembinaan karakter dan disiplin siswa
         </p>
       </div>

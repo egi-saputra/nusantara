@@ -3,70 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CONTAINER UTAMA */
-.carousel {
-    width: 100%;
-    max-width: 1100px;
-    height: 340px;
-    margin: 40px auto;
-    overflow: hidden;
-    position: relative;
-}
-
-/* TRACK */
-.carousel-track {
-    display: flex;
-    width: 300%;
-    height: 100%;
-    animation: slideCarousel 12s cubic-bezier(0.77, 0, 0.175, 1) infinite;
-}
-
-/* ITEM */
-.carousel-item {
-    width: 100%;
-    height: 100%;
-    flex-shrink: 0;
-}
-
-/* INNER (RUANG SHADOW) */
-.carousel-inner {
-    width: 100%;
-    height: 100%;
-    padding: 18px;
-    box-sizing: border-box;
-}
-
-/* IMAGE */
-.carousel-slide {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* SVG = WAJIB */
-    border-radius: 18px;
-
-    box-shadow:
-        0 12px 25px rgba(0, 0, 0, 0.25),
-        0 30px 60px rgba(0, 0, 0, 0.18);
-
-    transition: transform 0.6s ease;
-}
-
-/* ANIMASI */
-@keyframes slideCarousel {
-    0%,
-    30% {
-        transform: translateX(0);
-    }
-    35%,
-    65% {
-        transform: translateX(-100%);
-    }
-    70%,
-    100% {
-        transform: translateX(-200%);
-    }
-}
-
 /* ===================== */
+html {
+    scroll-behavior: smooth;
+}
 
 .bg-wave {
     animation: waveFlow 22s ease-in-out infinite;

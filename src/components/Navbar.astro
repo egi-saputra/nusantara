@@ -99,14 +99,14 @@ const menuItems = [
       <!-- Right Desktop -->
       <div class="hidden md:flex items-center space-x-3">
         <button
-          id="dark-toggle" aria-label="Darkmode Toggle"
+          data-dark-toggle onclick="toggleDarkMode()" aria-label="Darkmode Toggle"
           class="
             p-2 rounded-md
             bg-gray-200/70 dark:bg-gray-700/70
             transition transform hover:scale-110
           "
         >
-          <span id="dark-icon">🌙</span>
+          <span data-dark-icon>🌙</span>
         </button>
 
         <a
@@ -210,10 +210,10 @@ const menuItems = [
 
     <div class="flex justify-between items-center p-4">
       <button aria-label="Mobile Darkmode Toggle"
-        id="dark-toggle-mobile"
+        data-dark-toggle onclick="toggleDarkMode()"
         class="p-2 rounded-md bg-gray-200/70 dark:bg-gray-700/70 transition transform hover:scale-110"
       >
-        <span id="dark-icon-mobile">🌙</span>
+        <span data-dark-icon>🌙</span>
       </button>
 
       <a href="https://lms.smknusantara.id" class="px-4 py-2 bg-blue-600 text-white rounded-md">
@@ -225,35 +225,10 @@ const menuItems = [
 </nav>
 
 <script is:inline>
-  const html = document.documentElement;
-
-  const desktopToggle = document.getElementById('dark-toggle');
-  const mobileToggle = document.getElementById('dark-toggle-mobile');
-
-  const desktopIcon = document.getElementById('dark-icon');
-  const mobileIcon = document.getElementById('dark-icon-mobile');
-
   const menuBtn = document.getElementById('mobile-menu-btn');
   const menu = document.getElementById('mobile-menu');
 
   const submenuBtns = document.querySelectorAll('[data-submenu-btn]');
-
-  /* ---------- DARK MODE ---------- */
-  if (localStorage.theme === 'dark') {
-    html.classList.add('dark');
-    desktopIcon.textContent = '☀️';
-    mobileIcon.textContent = '☀️';
-  }
-
-  function toggleDark() {
-    const isDark = html.classList.toggle('dark');
-    localStorage.theme = isDark ? 'dark' : 'light';
-    desktopIcon.textContent = isDark ? '☀️' : '🌙';
-    mobileIcon.textContent = isDark ? '☀️' : '🌙';
-  }
-
-  desktopToggle?.addEventListener('click', toggleDark);
-  mobileToggle?.addEventListener('click', toggleDark);
 
   /* ---------- MOBILE MENU ---------- */
   function openMenu() {

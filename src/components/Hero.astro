@@ -8,13 +8,11 @@ import hero3 from "/src/assets/images/hero-3.svg";
 <section
   id="home"
   class="
-    sticky top-0
     pt-16
+    relative
     sm:min-h-screen
     bg-gradient-to-br from-blue-600 to-indigo-700
     text-white
-    overflow-hidden
-    z-10
   "
 >
   <!-- BACKGROUND SLIDER -->
@@ -24,25 +22,28 @@ import hero3 from "/src/assets/images/hero-3.svg";
   >
     <Image
       src={hero1}
-      alt="Banner Pertama"
+      alt="Banner utama SMK Nusantara"
       class="w-full flex-shrink-0 h-auto sm:min-h-screen object-contain sm:object-cover"
       loading="eager"
-      decoding="async"
+      fetchpriority="high"
     />
 
     <Image
       src={hero2}
-      alt="Banner Kedua"
-      class="w-full flex-shrink-0 h-auto sm:min-h-screen object-contain sm:object-cover"
+      alt="SPMB SMK NUSANTARA"
+      aria-hidden="true"
       loading="lazy"
+      class="hidden sm:block w-full flex-shrink-0 sm:min-h-screen object-cover"
     />
 
     <Image
       src={hero3}
-      alt="Banner Ketiga"
-      class="w-full flex-shrink-0 h-auto sm:min-h-screen object-contain sm:object-cover"
+      alt="Cara Mendaftar SMK Nusantara"
+      aria-hidden="true"
       loading="lazy"
+      class="hidden sm:block w-full flex-shrink-0 sm:min-h-screen object-cover"
     />
+
   </div>
 
   <!-- OVERLAY PROFESIONAL -->
@@ -87,13 +88,27 @@ import hero3 from "/src/assets/images/hero-3.svg";
 
   <!-- BULLET -->
   <div
-    class="absolute bottom-2 sm:bottom-8 left-1/2 -translate-x-1/2
-           flex gap-3 z-20"
+    class="absolute bottom-2 sm:bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20"
+    role="tablist"
+    aria-label="Hero slider navigation"
   >
-    <button class="dot w-2.5 h-2.5 rounded-full bg-white"></button>
-    <button class="dot w-2.5 h-2.5 rounded-full bg-white/40"></button>
-    <button class="dot w-2.5 h-2.5 rounded-full bg-white/40"></button>
+    <button
+      class="dot w-2.5 h-2.5 rounded-full bg-white"
+      aria-label="Slide 1"
+      role="tab"
+    ></button>
+    <button
+      class="dot w-2.5 h-2.5 rounded-full bg-white/40"
+      aria-label="Slide 2"
+      role="tab"
+    ></button>
+    <button
+      class="dot w-2.5 h-2.5 rounded-full bg-white/40"
+      aria-label="Slide 3"
+      role="tab"
+    ></button>
   </div>
+
 </section>
 
 <script>
